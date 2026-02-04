@@ -1,6 +1,6 @@
 # Google Summer of Code 2025 — MoFA
 
-> [中文版](./README-zh.md) | English Version
+> [中文版](./README-zh.md) |  English Version
 
 Welcome to MoFA's GSoC 2025 page.
 

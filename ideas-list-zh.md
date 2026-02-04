@@ -1,6 +1,6 @@
 # MoFA GSoC 2025 项目提案
 
-> 中文版 | [English Version](./ideas-list.md)
+> 中文版 |  [English Version](./ideas-list.md)
 
 本文档包含 Google Summer of Code 2025 的详细项目提案。整体框架已定，具体细节可在导师指导下根据贡献者建议进行调整。
 
