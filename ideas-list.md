@@ -226,10 +226,9 @@ A complex 5-agent workflow fails intermittently. With the recorder:
 
 * https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-kernel
 * https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
-* https://rr-project.org/ (Record and Replay framework for reference)
 
 __Skills Required__: Rust, data visualization, systems design, debugging tools
 
-__Time Estimate__: 175 hours (12 weeks)
+__Time Estimate__: 140 hours (11 weeks)
 
 __Difficulty__: Hard

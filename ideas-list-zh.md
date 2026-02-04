@@ -226,10 +226,9 @@ __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
 * https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-kernel
 * https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
-* https://rr-project.org/（Record and Replay 框架参考）
 
 __所需技能__: Rust, 数据可视化, 系统设计, 调试工具
 
-__时间估计__: 175 小时（12 周）
+__时间估计__: 140 小时（11 周）
 
 __难度__: 高
