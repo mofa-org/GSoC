@@ -6,7 +6,7 @@
 
 ## 关于 MoFA
 
-[MoFA](https://mofa.ai/)（**Modular Framework for Agents**）是一个用于构建 AI Agent 的开源框架。我们的旗舰产品 **MoFA Studio** 是一个桌面应用，用于创建、运行和分享 AI 驱动的应用——基于 Rust 和 Makepad 构建。
+[MoFA](https://mofa.ai/)（**Modular Framework for Agents**）是一个用于构建 AI Agent 的开源框架。我们的产品 **MoFA Studio** 是一个桌面应用，用于创建、运行和分享 AI 驱动的应用——基于 Rust、Makepad 和 Dora 构建。
 
 我们诚邀 GSoC 贡献者加入，在系统工程、AI 基础设施和开发者工具的交叉领域，挑战真实世界的问题。
 
