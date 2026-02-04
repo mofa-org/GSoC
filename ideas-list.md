@@ -6,7 +6,7 @@ This list contains detailed project ideas for Google Summer of Code 2025. While 
 
 ## About MoFA
 
-[MoFA](https://mofa.ai/) (**Modular Framework for Agents**) is an open-source framework for building AI agents. Our product, **MoFA Studio**, is a desktop application for creating, running, and sharing AI-powered applications — built with Rust, Makepad, and Dora.
+[MoFA](https://mofa.ai/) (**Modular Framework for Agents**) is an open-source framework for building AI agents. Our recent project, **MoFA Studio**, is a desktop application for creating, running, and sharing AI-powered applications — built with Rust, Makepad, and Dora.
 
 We are excited to mentor GSoC contributors on challenging, real-world problems at the intersection of systems engineering, AI infrastructure, and developer tools.
 
