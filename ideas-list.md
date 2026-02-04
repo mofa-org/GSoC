@@ -171,3 +171,65 @@ __Skills Required__: Rust, systems programming, resource management, GPU/edge co
 __Time Estimate__: 140 hours (11 weeks)
 
 __Difficulty__: Hard
+
+---
+
+## Idea 4: Session Recorder & Visual Debugger
+
+### Abstract
+
+Multi-agent systems are notoriously difficult to debug. When agents exchange dozens of messages and state changes, traditional logs become unreadable. This project builds a **time-travel debugger** for MoFA that records complete execution traces and visualizes them as interactive timelines.
+
+Think of it as "Chrome DevTools for Agents" — inspect message flow, replay executions, and inspect agent state at any point in time.
+
+__Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
+
+### Goals & Ideas
+
+* **Event Interception**:
+  - Hook into `mofa-kernel` message bus to capture all agent events
+  - Serialize message flow, state transitions, and tool calls
+  - Efficient storage format for long-running sessions
+
+* **Timeline Visualization**:
+  - Web-based or Makepad-integrated timeline view
+  - See which agent sent what message to whom, when
+  - Filter by agent, message type, or time range
+  - Zoom in/out from millisecond to hour scale
+
+* **State Inspection**:
+  - Capture agent state snapshots at key points
+  - Diff view: compare agent state before/after message handling
+  - Inspect memory, context, and internal variables
+
+* **Time-Travel Debugging**:
+  - Replay recorded sessions at variable speed
+  - Pause, step forward/backward through execution
+  - Set breakpoints on specific message patterns
+  - Re-run specific agent with modified input
+
+* **Integration**:
+  - Standalone web interface (using existing `mofa-monitoring` infrastructure)
+  - Optional Studio panel for seamless development workflow
+  - Export recordings for bug reports or documentation
+
+#### Use Case
+
+A complex 5-agent workflow fails intermittently. With the recorder:
+1. Run with recording enabled
+2. When failure occurs, open the trace
+3. See exact message sequence leading to error
+4. Inspect agent state at last known good point
+5. Replay with modifications to test fixes
+
+#### Refs
+
+* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-kernel
+* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
+* https://rr-project.org/ (Record and Replay framework for reference)
+
+__Skills Required__: Rust, data visualization, systems design, debugging tools
+
+__Time Estimate__: 175 hours (12 weeks)
+
+__Difficulty__: Hard
