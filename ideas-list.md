@@ -1,6 +1,6 @@
 # MoFA GSoC 2025 Project Ideas
 
-> [中文版](./ideas-list-zh.md) | English Version
+> [中文版](./ideas-list-zh.md) |  English Version
 
 This list contains detailed project ideas for Google Summer of Code 2025. While the overall outline is defined, internal details are open to modifications based on contributor suggestions under mentor guidance.
 
