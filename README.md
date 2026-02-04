@@ -52,7 +52,7 @@ Before applying:
 
 ---
 
-## What We Look For
+## Who We're Looking For
 
 **You DON'T need:**
 - To be a Rust expert (we're learning too)
@@ -96,7 +96,6 @@ Include time for:
 Tell us:
 - Why MoFA interests you
 - What you hope to learn
-- How this fits your career goals
 
 ---
 
@@ -112,13 +111,6 @@ Tell us:
 ## Contributing Before GSoC
 
 We strongly encourage you to make at least one contribution before submitting your proposal. This helps us assess your ability and helps you understand the codebase.
-
-### Finding Issues
-
-Look for issues labeled:
-- `good first issue` — suitable for newcomers
-- `help wanted` — maintainers actively seeking contributions
-- `documentation` — docs improvements always welcome
 
 ### Contribution Workflow
 
