@@ -30,7 +30,7 @@ git checkout feature/mofa-rs
 cargo build
 ```
 
-**Studio 应用** (Rust + Makepad + Dora):
+**Studio 应用** (Rust + Makepad):
 ```bash
 git clone https://github.com/mofa-org/mofa-studio
 cd mofa-studio
@@ -131,7 +131,7 @@ cd mofa-studio
 
 ### 沟通渠道
 
-- **Discord**: https://discord.gg/hKJZzDMMg9 — 在 #general 自我介绍，在 #gsoc 讨论 GSoC
+- **Discord**: https://discord.gg/hKJZzDMMm9 — 在 #general 自我介绍，在 #gsoc 讨论 GSoC
 - **邮件**: dev@mofa.ai — 用于较长讨论或私人事务
 - **GitHub Issues** — 技术问题、bug 报告、功能请求
 
@@ -147,15 +147,15 @@ cd mofa-studio
 
 **MoFA（Modular Framework for Agents）** 是一个用于构建 AI Agent 的开源框架。
 
-我们的旅程始于一个基于 Python/Dora 的原型，它让我们明白了什么有效（组合、代码可控性）和什么需要改进（比如未针对优化过的基底框架调度和调试的不便）。我们现在正在构建 **MoFA Studio** —— 一个基于 Rust、Makepad 和 Dora 的桌面应用，用于创建和运行 AI 应用——同时也在探索 **mofa-rs**，一个下一代核心，未来可能成为替代基础。
+我们的旅程始于一个基于 Python/Dora 的原型，它让我们明白了什么有效（组合、代码可控性）和什么需要改进（比如未针对优化过的基底框架调度和调试的不便）。我们现在正在构建 **MoFA Studio** —— 一个基于 Rust 和 Makepad 的桌面应用，用于创建和运行 AI 应用，使用 [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) 实现 Apple Silicon 上的本地推理——同时也在探索 **mofa-rs**，一个下一代核心，未来可能成为替代基础。
 
 **官网**: [mofa.ai](https://mofa.ai/)
 
 **关键仓库：**
-- 当前核心 (Python/Dora): [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
-- 下一代核心 (Rust): [github.com/mofa-org/mofa/tree/feature/mofa-rs](https://github.com/mofa-org/mofa/tree/feature/mofa-rs)
-- Studio: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
-- 节点: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
+- 核心运行时: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)（`feature/mofa-rs` 分支）
+- Studio 应用: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
+- Makepad UI 组件: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
+- 节点生态: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
 
 ---
 

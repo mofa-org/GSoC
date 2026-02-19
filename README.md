@@ -30,7 +30,7 @@ git checkout feature/mofa-rs
 cargo build
 ```
 
-**Studio application** (Rust + Makepad + Dora):
+**Studio application** (Rust + Makepad):
 ```bash
 git clone https://github.com/mofa-org/mofa-studio
 cd mofa-studio
@@ -131,7 +131,7 @@ We strongly encourage you to make at least one contribution before submitting yo
 
 ### Communication Channels
 
-- **Discord**: https://discord.gg/hKJZzDMMg9 — introduce yourself in #general, GSoC discussion in #gsoc
+- **Discord**: https://discord.gg/hKJZzDMMm9 — introduce yourself in #general, GSoC discussion in #gsoc
 - **Email**: dev@mofa.ai — for longer discussions or private matters
 - **GitHub Issues** — technical questions, bug reports, feature requests
 
@@ -147,15 +147,15 @@ See [proposal-template.md](./proposal-template.md) for a structured template to 
 
 **MoFA (Modular Framework for Agents)** is an open-source framework for building AI agents.
 
-Our journey started with a Python/Dora-based prototype that taught us what works (composition, controllable code) and what needs improvement (the difficulty of orchestrating and debugging atop an unoptimized substrate). We're now building **MoFA Studio** — a desktop application built with Rust, Makepad, and Dora for creating and running AI applications — while simultaneously exploring **mofa-rs**, a next-generation core that may one day serve as an alternative foundation.
+Our journey started with a Python/Dora-based prototype that taught us what works (composition, controllable code) and what needs improvement (the difficulty of orchestrating and debugging atop an unoptimized substrate). We're now building **MoFA Studio** — a desktop application built with Rust and Makepad for creating and running AI applications, with [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) for on-device ML inference on Apple Silicon — while simultaneously exploring **mofa-rs**, a next-generation core that may one day serve as an alternative foundation.
 
 **Website**: [mofa.ai](https://mofa.ai/)
 
 **Key Repositories:**
-- Current core (Python/Dora): [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
-- Next-gen core (Rust): [github.com/mofa-org/mofa/tree/feature/mofa-rs](https://github.com/mofa-org/mofa/tree/feature/mofa-rs)
-- Studio: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
-- Nodes: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
+- Core runtime: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa) (`feature/mofa-rs` branch)
+- Studio application: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
+- Makepad UI components: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
+- Node ecosystem: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
 
 ---
 
