@@ -1,8 +1,8 @@
-# Google Summer of Code 2025 — MoFA
+# Google Summer of Code 2026 — MoFA
 
 > [中文版](./README-zh.md) |  English Version
 
-Welcome to MoFA's GSoC 2025 page.
+Welcome to MoFA's GSoC 2026 page.
 
 - **Project Ideas**: [ideas-list.md](./ideas-list.md) ([中文版](./ideas-list-zh.md))
 - **Discord**: https://discord.gg/hKJZzDMMm9

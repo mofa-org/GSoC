@@ -1,4 +1,4 @@
-# GSoC 2025 Proposal Template
+# GSoC 2026 Proposal Template
 
 Use this as a starting point for your proposal. Adapt it to your project and style.
 
