@@ -26,7 +26,6 @@ mofa --help
 ```bash
 git clone https://github.com/mofa-org/mofa
 cd mofa
-git checkout feature/mofa-rs
 cargo build
 ```
 
@@ -152,7 +151,7 @@ cd mofa-studio
 **官网**: [mofa.ai](https://mofa.ai/)
 
 **关键仓库：**
-- 核心运行时: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)（`feature/mofa-rs` 分支）
+- 核心运行时: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
 - Studio 应用: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
 - Makepad UI 组件: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
 - 节点生态: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)

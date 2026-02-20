@@ -13,7 +13,7 @@
 __官网:__ [mofa.ai](https://mofa.ai/)
 
 __GitHub 仓库:__
-- 核心运行时: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa) (`feature/mofa-rs` 分支)
+- 核心运行时: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
 - Studio 应用: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
 - Makepad UI 组件: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
 - 节点生态: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
@@ -58,7 +58,7 @@ AgentForge 验证它们的接口兼容，将其组合为流水线，并运行整
 
 #### 参考链接
 
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs
+* https://github.com/mofa-org/mofa/tree/main
 * https://github.com/mofa-org/mofa-studio
 * https://github.com/mofa-org/mofa-node-hub
 * https://makepad.dev/
@@ -118,8 +118,8 @@ __导师__: BH3GEI (Yao Li), Bicheng Lou
 * https://github.com/mofa-org/mofa-studio
 * https://github.com/mofa-org/makepad-chart
 * https://github.com/mofa-org/makepad-d3
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-runtime
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
 
 __所需技能__: Rust, HTTP/WebSocket 服务器 (axum/tokio), 实时数据可视化, Makepad UI
 
@@ -189,8 +189,8 @@ __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
 * https://github.com/mofa-org/mofa-local-llm
 * https://github.com/OminiX-ai/OminiX-MLX
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-foundation
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-runtime
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-foundation
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
 
 __所需技能__: Rust, 系统编程, 资源管理, Apple Silicon / GPU 计算
 
@@ -258,8 +258,8 @@ __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
 #### 参考链接
 
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-kernel
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-kernel
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
 
 __所需技能__: Rust, 数据可视化, 系统设计, 调试工具
 

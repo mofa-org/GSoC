@@ -13,7 +13,7 @@ We mentor GSoC contributors on real-world problems spanning systems engineering,
 __Website:__ [mofa.ai](https://mofa.ai/)
 
 __GitHub Repos:__
-- Core runtime: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa) (`feature/mofa-rs` branch)
+- Core runtime: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
 - Studio application: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
 - Makepad UI components: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
 - Node ecosystem: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
@@ -58,7 +58,7 @@ AgentForge validates their interfaces are compatible, composes them into a pipel
 
 #### Refs
 
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs
+* https://github.com/mofa-org/mofa/tree/main
 * https://github.com/mofa-org/mofa-studio
 * https://github.com/mofa-org/mofa-node-hub
 * https://makepad.dev/
@@ -118,8 +118,8 @@ Contributors may also explore monitoring Dora-based dataflow runtimes if applica
 * https://github.com/mofa-org/mofa-studio
 * https://github.com/mofa-org/makepad-chart
 * https://github.com/mofa-org/makepad-d3
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-runtime
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
 
 __Skills Required__: Rust, HTTP/WebSocket servers (axum/tokio), real-time data visualization, Makepad UI
 
@@ -189,8 +189,8 @@ On a 16GB MacBook, all three cannot be resident simultaneously. The orchestrator
 
 * https://github.com/mofa-org/mofa-local-llm
 * https://github.com/OminiX-ai/OminiX-MLX
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-foundation
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-runtime
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-foundation
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
 
 __Skills Required__: Rust, systems programming, resource management, Apple Silicon / GPU computing
 
@@ -258,8 +258,8 @@ A developer vibe-codes a 5-agent workflow. It works in simple tests but fails in
 
 #### Refs
 
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-kernel
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-kernel
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
 
 __Skills Required__: Rust, data visualization, systems design, debugging tools
 
