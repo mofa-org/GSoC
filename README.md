@@ -11,6 +11,8 @@ Welcome to MoFA's GSoC 2026 page.
 
 **All contributors will be featured on mofa.ai Developer Hall of Fame**
 
+> **Can I start working on ideas now?** Yes. You do not need to wait for the official GSoC application period. Start exploring the codebase, pick up [open tasks](./ideas-list.md#open-tasks--start-contributing-here), and discuss your approach with mentors. Early contributions help both you and us.
+
 ---
 
 ## Getting Started
