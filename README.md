@@ -16,13 +16,7 @@ Welcome to MoFA's GSoC 2026 page.
 
 ### 1. Clone and Build
 
-**Current core** (Python/Dora-based):
-```bash
-pip install mofa-core
-mofa --help
-```
-
-**Next-gen core** (Rust):
+**Core framework** (Rust):
 ```bash
 git clone https://github.com/mofa-org/mofa
 cd mofa
@@ -35,6 +29,8 @@ git clone https://github.com/mofa-org/mofa-studio
 cd mofa-studio
 ./run.sh
 ```
+
+> The legacy Python/Dora-based core (`pip install mofa-core`) is still available but is no longer the focus of active development. GSoC projects target the Rust codebase.
 
 ### 2. Explore
 

@@ -16,13 +16,7 @@
 
 ### 1. 克隆并构建
 
-**当前核心** (Python/Dora):
-```bash
-pip install mofa-core
-mofa --help
-```
-
-**下一代核心** (Rust):
+**核心框架** (Rust):
 ```bash
 git clone https://github.com/mofa-org/mofa
 cd mofa
@@ -35,6 +29,8 @@ git clone https://github.com/mofa-org/mofa-studio
 cd mofa-studio
 ./run.sh
 ```
+
+> 旧版 Python/Dora 核心（`pip install mofa-core`）仍可使用，但已不再是开发重点。GSoC 项目均基于 Rust 代码库。
 
 ### 2. 探索
 
