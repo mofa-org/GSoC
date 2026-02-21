@@ -4,6 +4,49 @@
 
 本文档包含 Google Summer of Code 2026 的详细项目提案。整体框架已定，具体细节可在导师指导下根据贡献者建议进行调整。我们鼓励贡献者提出自己的方案——以下想法是起点，而非刚性规范。
 
+> **开始之前**：请先在相关 GitHub issue 下留言表达兴趣，并简要描述你的思路。**等待维护者分配后再开始编码。** 这可以避免重复劳动。详见[贡献流程](./README-zh.md#在-gsoc-之前贡献)。
+
+## 速查：项目提案与对应仓库
+
+| 项目 | 技能标签 | 主仓库 | 相关仓库 |
+|------|---------|--------|---------|
+| 1. AgentForge | `Rust` `系统设计` `插件架构` | [mofa](https://github.com/mofa-org/mofa)（mofa-kernel、mofa-foundation） | [mofa-studio](https://github.com/mofa-org/mofa-studio)、[mofa-node-hub](https://github.com/mofa-org/mofa-node-hub) |
+| 2. 可观测性面板 | `Rust` `Makepad UI` `HTTP/WebSocket` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3)、[mofa](https://github.com/mofa-org/mofa)（mofa-monitoring） |
+| 3. 边缘模型编排器 | `Rust` `系统编程` `ML 推理` | [mofa](https://github.com/mofa-org/mofa)（mofa-foundation、mofa-runtime） | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm)、[OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 4. 会话记录器与调试器 | `Rust` `系统设计` `数据可视化` | [mofa](https://github.com/mofa-org/mofa)（mofa-kernel、mofa-monitoring） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 5. MoFA Input 迁移 | `Rust` `macOS` `C++/Rust 互操作` `Apple Silicon` | [mofa-input](https://github.com/mofa-org/mofa-input) | [mofa](https://github.com/mofa-org/mofa)（推理层，见项目 3）、[OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 6. Makepad AI 组件库 | `Rust` `Makepad UI` `组件设计` | 新仓库：`makepad-ai-toolkit` | [mofa-studio](https://github.com/mofa-org/mofa-studio)、[makepad-element](https://github.com/mofa-org/makepad-element)、[makepad-chart](https://github.com/mofa-org/makepad-chart) |
+
+> **优先级说明：** 我们的主线开发聚焦于**项目 1、3、4、5**——核心框架、ML 基础设施与产品应用。项目 2 和 6 偏向 Makepad UI 前端开发；如果你对前端/UI 开发有浓厚兴趣，欢迎选择，但它们不在我们的关键路径上。建议大多数申请者优先考虑主线项目。
+
+---
+
+## 开放任务 — 从这里开始贡献
+
+以下是 MoFA 代码库中具体的、可独立完成的任务。它们是在 GSoC 之前或期间熟悉项目的好方式。**在相关 issue 下留言即可认领** —— 见[认领规则](./README-zh.md#我们如何选人)。
+
+| # | 任务 | 仓库 |
+|---|------|------|
+| 1 | 实现或完善框架 runtime（Dora / WASM / Tokio） | [mofa](https://github.com/mofa-org/mofa) |
+| 2 | `mofa-ffi`：多语言 SDK 绑定 | [mofa](https://github.com/mofa-org/mofa) |
+| 3 | 实现或完善消息总线、事件驱动与消息驱动架构 | [mofa](https://github.com/mofa-org/mofa) |
+| 4 | 完善基于 graph 的 workflow 引擎和 DSL | [mofa](https://github.com/mofa-org/mofa) |
+| 5 | `mofa-monitoring` 开发 | [mofa](https://github.com/mofa-org/mofa) |
+| 6 | `mofa-cli` 各子命令的细化开发 | [mofa](https://github.com/mofa-org/mofa) |
+| 7 | 实现 Codex 风格的上下文压缩 | [mofa](https://github.com/mofa-org/mofa) |
+| 8 | 用 MoFA 框架实现经典[智能体设计模式](https://github.com/xindoo/agentic-design-patterns)，并据此迭代改进框架 | [mofa](https://github.com/mofa-org/mofa) |
+| 9 | 丰富内置工具和 skills | [mofa](https://github.com/mofa-org/mofa) |
+| 10 | 增加 RAG 和向量数据库集成 | [mofa](https://github.com/mofa-org/mofa) |
+| 11 | 集成 [socketioxide](https://github.com/Totodore/socketioxide)、AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
+| 12 | 实现框架级控制平面 + gateway | [mofa](https://github.com/mofa-org/mofa) |
+| 13 | 文档撰写 | [mofa](https://github.com/mofa-org/mofa) |
+| 14 | 将 [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) 整合进 mofa 核心框架，作为内置本地推理模块 | [mofa](https://github.com/mofa-org/mofa)、[mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
+| 15 | 为 mofa-local-llm / MoFA Input 做 Linux 推理后端适配（Rust，参考项目 3） | [mofa](https://github.com/mofa-org/mofa)、[mofa-input](https://github.com/mofa-org/mofa-input) |
+
+抱歉，项目目前变动较大，我们还没来得及将这些任务梳理为完善的 issue。我们会尽快根据这些任务以及项目发展中出现的其他小问题，逐步补充 `good first issue` 标签。如果不确定从哪里开始，可在 [Discord](https://discord.gg/hKJZzDMMm9) 中提问。
+
+---
+
 ## 关于 MoFA
 
 [MoFA](https://mofa.ai/)（**Modular Framework for Agents**）是一个用于构建 AI Agent 的开源框架。我们的近期项目 **MoFA Studio** 是一个桌面应用，用于创建、运行和分享 AI 驱动的应用——基于 Rust 和 Makepad 构建，使用 [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) 实现 Apple Silicon 上的本地 ML 推理。
@@ -135,9 +178,11 @@ __难度__: 中
 
 边缘设备上，多个模型（ASR、LLM、TTS、embedding）争夺有限的内存和算力。本项目实现一个内置于 mofa-rs 的智能**模型调度器**，实现 Apple Silicon 设备上的高效多模型编排。
 
-与通过 HTTP 与模型服务器通信的传统方案（如 Ollama）不同，该编排器在 **Rust API 层面直接调用** [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) 模型 crate——`load_model()`、`Generate`、`forward()`——编译期绑定，零序列化开销。这充分利用了 Apple Silicon 统一内存的关键优势：**一个模型的输出张量（如 ASR）可以作为零拷贝 MLX Array 直接传递给另一个模型（如 LLM）**，消除了基于 HTTP 或跨进程架构固有的序列化-反序列化开销。
+与通过 HTTP 与模型服务器通信的传统方案（如 Ollama）不同，该编排器在 **Rust API 层面直接调用**推理后端——`load_model()`、`Generate`、`forward()`——编译期绑定，零序列化开销。
 
-现有原型 [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) 已通过此方案验证了单模型推理。本项目将其扩展为多模型并发调度。
+当前 macOS 实现基于 [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX)，充分利用 Apple Silicon 统一内存的优势：**一个模型的输出张量（如 ASR）可以作为零拷贝 MLX Array 直接传递给另一个模型（如 LLM）**。但编排器应围绕**可插拔的推理后端抽象**（如 `InferenceBackend` trait）设计，不锁定于任何单一上游项目。未来的后端——如原生 Linux/CUDA 后端或替代的 Mac 后端——可由社区或核心团队独立实现。
+
+现有原型 [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) 已在 macOS 上通过 OminiX-MLX 验证了单模型推理。本项目将其扩展为多模型并发调度，并整合进 mofa 核心框架。
 
 __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
@@ -145,7 +190,8 @@ __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
 * **架构设计**:
   - 作为 mofa-rs 的核心组件实现（`mofa-foundation` 层）
-  - 通过 Rust API 直接调用 OminiX-MLX crate（编译期依赖，无 HTTP 中间层）
+  - 定义可插拔的 `InferenceBackend` trait；以 OminiX-MLX 作为默认 macOS 后端实现
+  - 通过 Rust API 直接调用推理后端（编译期依赖，无 HTTP 中间层）
   - 设计 `ModelPool` 管理多个并发加载的模型实例
 
 * **生命周期管理**:
@@ -269,21 +315,21 @@ __难度__: 高
 
 ---
 
-## 项目五：MoFA Input —— 推理栈迁移至 OminiX-MLX
+## 项目五：MoFA Input —— 推理栈迁移至 MoFA 原生推理层
 
 ### 摘要
 
-[MoFA Input](https://github.com/mofa-org/mofa-input) 是一个完全在本地运行的 macOS 全局语音输入法。目前使用 llama.cpp + GGUF 模型进行 ASR（Whisper）和 LLM（Qwen）推理。本项目将推理栈迁移至 [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX)，以针对 Apple Silicon 优化的原生 Rust 推理替代 llama.cpp 后端。
+[MoFA Input](https://github.com/mofa-org/mofa-input) 是一个完全在本地运行的 macOS 全局语音输入法。目前通过 C++ 互操作层使用 llama.cpp + GGUF 模型进行 ASR（Whisper）和 LLM（Qwen）推理。本项目将推理栈迁移至 MoFA 自身的原生 Rust 推理层（macOS 上当前以 [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) 为后端，见项目三），完全替代 C++ llama.cpp 后端。
 
-为什么迁移？MLX 的 Metal GPU 加速在 Apple Silicon 上快于 llama.cpp，统一内存减少开销，且 MoFA 生态其余部分（Studio、mofa-local-llm）已使用 OminiX-MLX。
+为什么迁移？纯 Rust 消除了 C++ 互操作的复杂性，MLX 的 Metal GPU 加速在 Apple Silicon 上快于 llama.cpp，且与 MoFA 的可插拔推理后端（项目三）对齐，确保 MoFA Input 能自动受益于未来的后端改进，无需额外迁移工作。
 
 __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu)
 
 ### 目标与想法
 
-* **ASR 迁移**：将当前基于 llama.cpp 的 Whisper ASR 替换为 OminiX-MLX 的 `funasr-mlx` 或 `funasr-nano-mlx` crate。验证准确率和延迟与当前实现的对比
-* **LLM 迁移**：将 Qwen GGUF 推理替换为 OminiX-MLX 的 `qwen3-mlx` crate（safetensors 格式）。确保流式 token 输出与现有 UI 兼容
-* **Swift-Rust FFI**：调整现有 Swift ↔ Rust FFI 桥接层，调用 OminiX-MLX API 而非 llama.cpp。保持当前 macOS 输入法架构（Fn 热键、悬浮球、历史窗口）
+* **ASR 迁移**：将当前基于 llama.cpp 的 Whisper ASR 替换为 MoFA 推理层（macOS 上如 `funasr-mlx` 或 `funasr-nano-mlx`）。验证准确率和延迟与当前实现的对比
+* **LLM 迁移**：将 Qwen GGUF 推理替换为 MoFA 推理层（macOS 上如 `qwen3-mlx`，safetensors 格式）。确保流式 token 输出与现有 UI 兼容
+* **C++→Rust 迁移**：通过 MoFA 的后端抽象（项目三）以纯 Rust 推理调用取代现有 C++ llm_server（llama.cpp），消除 C++ 互操作层。保持当前 macOS 输入法架构（Fn 热键、悬浮球、历史窗口）
 * **性能基准测试**：在代表性硬件（M1/M2/M3/M4）上对比迁移前后的延迟、内存占用和准确率
 * **模型管理**：集成 `~/.mofa/models/` 模型存储，统一使用 OminiX-MLX 的 safetensors 格式
 
@@ -292,7 +338,7 @@ __导师__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu)
 * https://github.com/mofa-org/mofa-input
 * https://github.com/OminiX-ai/OminiX-MLX
 
-__所需技能__: Rust, Swift, FFI/跨语言互操作, Apple Silicon 开发
+__所需技能__: Rust, C++/Rust 互操作, macOS 开发, Apple Silicon
 
 __时间估计__: 90 小时（8 周）
 

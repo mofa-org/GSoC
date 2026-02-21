@@ -4,6 +4,49 @@
 
 This list contains detailed project ideas for Google Summer of Code 2026. While the overall outline is defined, internal details are open to modifications based on contributor suggestions under mentor guidance. We encourage contributors to propose their own approaches — the ideas below are starting points, not rigid specifications.
 
+> **Before You Start**: Comment on the relevant GitHub issue to express interest and briefly describe your approach. **Wait for a maintainer to assign you before writing code.** This prevents duplicate work. See [Contributing Workflow](./README.md#contributing-before-gsoc) for details.
+
+## Quick Reference: Ideas and Repositories
+
+| Idea | Tags | Primary Repository | Other Repos Involved |
+|------|------|-------------------|---------------------|
+| 1. AgentForge | `Rust` `Systems Design` `Plugin Architecture` | [mofa](https://github.com/mofa-org/mofa) (mofa-kernel, mofa-foundation) | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa-node-hub](https://github.com/mofa-org/mofa-node-hub) |
+| 2. Observability Dashboard | `Rust` `Makepad UI` `HTTP/WebSocket` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [mofa](https://github.com/mofa-org/mofa) (mofa-monitoring) |
+| 3. Edge Model Orchestrator | `Rust` `Systems Programming` `ML Inference` | [mofa](https://github.com/mofa-org/mofa) (mofa-foundation, mofa-runtime) | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 4. Session Recorder & Debugger | `Rust` `Systems Design` `Data Visualization` | [mofa](https://github.com/mofa-org/mofa) (mofa-kernel, mofa-monitoring) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 5. MoFA Input Migration | `Rust` `macOS` `C++/Rust Interop` `Apple Silicon` | [mofa-input](https://github.com/mofa-org/mofa-input) | [mofa](https://github.com/mofa-org/mofa) (inference layer, see Idea 3), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 6. Makepad AI Toolkit | `Rust` `Makepad UI` `Component Design` | New repo: `makepad-ai-toolkit` | [mofa-studio](https://github.com/mofa-org/mofa-studio), [makepad-element](https://github.com/mofa-org/makepad-element), [makepad-chart](https://github.com/mofa-org/makepad-chart) |
+
+> **Note on priorities:** Our mainline development focuses on **Ideas 1, 3, 4, and 5** — the core framework, ML infrastructure, and product applications. Ideas 2 and 6 are Makepad UI–oriented; they are welcome options if you have a strong interest in frontend/UI development, but they are not on our critical path. We recommend most applicants consider the mainline ideas first.
+
+---
+
+## Open Tasks — Start Contributing Here
+
+These are concrete, self-contained tasks across the MoFA codebase. They are a good way to get familiar with the project before or during GSoC. **Comment on the relevant issue to claim one** — see [issue assignment rules](./README.md#how-we-select-contributors).
+
+| # | Task | Repository |
+|---|------|-----------|
+| 1 | Implement or improve framework runtime (Dora / WASM / Tokio) | [mofa](https://github.com/mofa-org/mofa) |
+| 2 | `mofa-ffi`: multi-language SDK bindings | [mofa](https://github.com/mofa-org/mofa) |
+| 3 | Implement or improve message bus, event-driven & message-driven architecture | [mofa](https://github.com/mofa-org/mofa) |
+| 4 | Improve graph-based workflow engine and DSL | [mofa](https://github.com/mofa-org/mofa) |
+| 5 | `mofa-monitoring` development | [mofa](https://github.com/mofa-org/mofa) |
+| 6 | `mofa-cli` — flesh out subcommands | [mofa](https://github.com/mofa-org/mofa) |
+| 7 | Implement Codex-style context compression | [mofa](https://github.com/mofa-org/mofa) |
+| 8 | Implement classic [agentic design patterns](https://github.com/xindoo/agentic-design-patterns) using MoFA, and iterate on the framework | [mofa](https://github.com/mofa-org/mofa) |
+| 9 | Enrich built-in tools and skills | [mofa](https://github.com/mofa-org/mofa) |
+| 10 | Add RAG and vector database integration | [mofa](https://github.com/mofa-org/mofa) |
+| 11 | Integrate [socketioxide](https://github.com/Totodore/socketioxide), AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
+| 12 | Implement framework-level control plane + gateway | [mofa](https://github.com/mofa-org/mofa) |
+| 13 | Documentation writing | [mofa](https://github.com/mofa-org/mofa) |
+| 14 | Integrate [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) into mofa core as the built-in local inference module | [mofa](https://github.com/mofa-org/mofa), [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
+| 15 | Linux inference backend adaptation for mofa-local-llm / MoFA Input (Rust, see Idea 3) | [mofa](https://github.com/mofa-org/mofa), [mofa-input](https://github.com/mofa-org/mofa-input) |
+
+We apologize that the project is undergoing significant changes and we have not yet had time to break these down into well-labeled issues. We will gradually create `good first issue` labels based on these tasks and other smaller issues that arise as the project evolves. If you are unsure where to start, ask in [Discord](https://discord.gg/hKJZzDMMm9).
+
+---
+
 ## About MoFA
 
 [MoFA](https://mofa.ai/) (**Modular Framework for Agents**) is an open-source framework for building AI agents. Our recent project, **MoFA Studio**, is a desktop application for creating, running, and sharing AI-powered applications — built with Rust and Makepad, with [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) for on-device ML inference on Apple Silicon.
@@ -135,9 +178,11 @@ __Difficulty__: Medium
 
 On edge devices, multiple models (ASR, LLM, TTS, embedding) compete for limited memory and compute. This project implements an intelligent **Model Scheduler** built into mofa-rs, enabling efficient multi-model orchestration on Apple Silicon devices.
 
-Unlike traditional approaches that communicate with model servers over HTTP (e.g., Ollama), this orchestrator calls [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) model crates **directly at the Rust API level** — `load_model()`, `Generate`, `forward()` — with compile-time binding and zero serialization overhead. This unlocks a key advantage of Apple Silicon's unified memory: **output tensors from one model (e.g., ASR) can be passed directly to another model (e.g., LLM) as zero-copy MLX Arrays**, eliminating the serialization-deserialization overhead inherent in HTTP-based or cross-process architectures.
+Unlike traditional approaches that communicate with model servers over HTTP (e.g., Ollama), this orchestrator calls inference backends **directly at the Rust API level** — `load_model()`, `Generate`, `forward()` — with compile-time binding and zero serialization overhead.
 
-An existing prototype, [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), already demonstrates single-model inference via this approach. This project extends it to multi-model concurrent scheduling.
+The current macOS implementation uses [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX), which unlocks a key advantage of Apple Silicon's unified memory: **output tensors from one model (e.g., ASR) can be passed directly to another model (e.g., LLM) as zero-copy MLX Arrays**. However, the orchestrator should be designed around a **pluggable inference backend abstraction** (e.g., a `InferenceBackend` trait) so that it is not locked to any single upstream project. Future backends — such as a native Linux/CUDA backend or alternative Mac backends — can be implemented independently by the community or the core team.
+
+An existing prototype, [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), already demonstrates single-model inference on macOS via OminiX-MLX. This project extends it to multi-model concurrent scheduling and integrates it into the mofa core framework.
 
 __Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
@@ -145,7 +190,8 @@ __Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
 
 * **Architecture Design**:
   - Implement as a core component in mofa-rs (`mofa-foundation` layer)
-  - Call OminiX-MLX crates directly via Rust API (compile-time dependency, no HTTP middle layer)
+  - Define a pluggable `InferenceBackend` trait; implement OminiX-MLX as the default macOS backend
+  - Call inference backends directly via Rust API (compile-time dependency, no HTTP middle layer)
   - Design `ModelPool` managing multiple loaded model instances concurrently
 
 * **Lifecycle Management**:
@@ -269,21 +315,21 @@ __Difficulty__: Hard
 
 ---
 
-## Idea 5: MoFA Input — Inference Stack Migration to OminiX-MLX
+## Idea 5: MoFA Input — Inference Stack Migration to MoFA's Native Inference Layer
 
 ### Abstract
 
-[MoFA Input](https://github.com/mofa-org/mofa-input) is a macOS global voice input method that runs entirely on-device. It currently uses llama.cpp with GGUF models for ASR (Whisper) and LLM (Qwen) inference. This project migrates the inference stack to [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX), replacing the llama.cpp backend with native Rust inference optimized for Apple Silicon.
+[MoFA Input](https://github.com/mofa-org/mofa-input) is a macOS global voice input method that runs entirely on-device. It currently uses llama.cpp with GGUF models for ASR (Whisper) and LLM (Qwen) inference via a C++ interop layer. This project migrates the inference stack to MoFA's own native Rust inference layer (currently backed by [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) on macOS, see Idea 3), replacing the C++ llama.cpp backend entirely.
 
-Why migrate? MLX's Metal GPU acceleration is faster than llama.cpp on Apple Silicon, unified memory cuts overhead, and the rest of the MoFA ecosystem (Studio, mofa-local-llm) already uses OminiX-MLX.
+Why migrate? Pure Rust eliminates the C++ interop complexity, MLX's Metal GPU acceleration is faster than llama.cpp on Apple Silicon, and aligning with MoFA's pluggable inference backend (Idea 3) ensures MoFA Input benefits from any future backend improvements without additional migration work.
 
 __Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu)
 
 ### Goals & Ideas
 
-* **ASR Migration**: Replace the current llama.cpp-based Whisper ASR with OminiX-MLX's `funasr-mlx` or `funasr-nano-mlx` crate. Validate accuracy and latency against the current implementation
-* **LLM Migration**: Replace Qwen GGUF inference with OminiX-MLX's `qwen3-mlx` crate (safetensors format). Ensure streaming token output works with the existing UI
-* **Swift-Rust FFI**: Adapt the existing Swift ↔ Rust FFI bridge to call OminiX-MLX APIs instead of llama.cpp. Maintain the current macOS input method architecture (Fn hotkey, floating bubble, history window)
+* **ASR Migration**: Replace the current llama.cpp-based Whisper ASR with MoFA's inference layer (e.g., `funasr-mlx` or `funasr-nano-mlx` on macOS). Validate accuracy and latency against the current implementation
+* **LLM Migration**: Replace Qwen GGUF inference with MoFA's inference layer (e.g., `qwen3-mlx` on macOS, safetensors format). Ensure streaming token output works with the existing UI
+* **C++→Rust Migration**: Replace the existing C++ llm_server (llama.cpp) with pure Rust inference calls via MoFA's backend abstraction (Idea 3), eliminating the C++ interop layer. Maintain the current macOS input method architecture (Fn hotkey, floating bubble, history window)
 * **Performance Benchmarking**: Compare latency, memory usage, and accuracy before and after migration on representative hardware (M1/M2/M3/M4)
 * **Model Management**: Integrate with `~/.mofa/models/` model storage and leverage OminiX-MLX's safetensors format exclusively
 
@@ -292,7 +338,7 @@ __Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu)
 * https://github.com/mofa-org/mofa-input
 * https://github.com/OminiX-ai/OminiX-MLX
 
-__Skills Required__: Rust, Swift, FFI/interop, Apple Silicon development
+__Skills Required__: Rust, C++/Rust interop, macOS development, Apple Silicon
 
 __Time Estimate__: 90 hours (8 weeks)
 

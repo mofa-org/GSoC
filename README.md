@@ -98,12 +98,27 @@ Tell us:
 
 ---
 
-## Evaluation Criteria
+## How We Select Contributors
 
-1. **Communication** > Existing knowledge
-2. **Thoughtfulness** > Code volume
-3. **Independence** > Perfect execution
-4. **Community fit** > Resume credentials
+MoFA is a project in transition. We are rewriting our core in Rust, exploring new UI frameworks, and evolving our architecture as we learn. We are looking for people who want to **learn and build together with us**, not applicants who already know everything.
+
+**What we actually care about:**
+- **Can we communicate?** If you get stuck, will you tell us? If we explain something poorly, will you ask? That matters more than your resume.
+- **Will you show up?** Consistent effort over the summer beats a brilliant start followed by silence.
+- **Can you learn on the fly?** Nobody on our team was a Rust expert when we started either. We care about your willingness to figure things out, not what you already know.
+
+**Issue assignment rules:**
+- Issues are assigned to the **first person who comments** expressing interest, by default.
+- If you want an issue created or already assigned by someone else, comment with your reason — maintainers will reassign if there is a compelling case.
+- If an assignee has no visible progress and no communication for 7 days, maintainers may reassign the issue.
+
+**What happens if multiple people want the same GSoC idea?**
+
+Multiple people may submit proposals for the same idea. We will talk to each of you and try to find a way — maybe scoping the project differently, maybe suggesting an alternative. We would rather work something out than turn people away.
+
+**Do I need a pre-GSoC contribution to apply?**
+
+It helps, but it is not a hard requirement. A small PR or a thoughtful issue comment shows us you can navigate the codebase and communicate — that is the point, not gatekeeping.
 
 ---
 
@@ -115,7 +130,7 @@ We strongly encourage you to make at least one contribution before submitting yo
 
 1. **Comment on the issue** expressing your interest. Briefly describe your approach.
 
-2. **Wait for assignment**. To avoid duplicate work, maintainers will assign the issue. Don't start coding until assigned.
+2. **Wait for assignment**. The issue is assigned to the first person who comments, by default. Don't start coding until assigned. If the issue is already assigned and you believe you have a compelling reason, comment to explain — maintainers will reassign if appropriate.
 
 3. **Fork and create a branch**:
    ```bash
