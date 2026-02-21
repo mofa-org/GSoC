@@ -142,6 +142,14 @@ See [proposal-template.md](./proposal-template.md) for a structured template to 
 
 ---
 
+## Guidance for GSoC Contributors Using AI Tooling
+
+MoFA embraces AI tooling and encourages contributors to use it to improve productivity and quality. However, contributors must avoid irresponsible and unethical practices. You are ultimately responsible for all output generated with the help of AI — review it, understand it, and make sure it meets the project's standards.
+
+For detailed guidance, please refer to Google's official document: [Guidance for GSoC Contributors using AI tooling in GSoC 2026](https://developers.google.com/open-source/gsoc/resources/ai_guidance).
+
+---
+
 ## About MoFA
 
 **MoFA (Modular Framework for Agents)** is an open-source framework for building AI agents.

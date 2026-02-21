@@ -142,6 +142,14 @@ cd mofa-studio
 
 ---
 
+## GSoC 贡献者使用 AI 工具的指引
+
+MoFA 拥抱 AI 工具，并鼓励贡献者使用 AI 工具来提升生产力和代码质量。但贡献者必须避免不负责任和不道德的做法。你需要对 AI 生成的所有输出负最终责任——请审查、理解并确保其符合项目标准。
+
+详细指引请参阅 Google 官方文档：[Guidance for GSoC Contributors using AI tooling in GSoC 2026](https://developers.google.com/open-source/gsoc/resources/ai_guidance)。
+
+---
+
 ## 关于 MoFA
 
 **MoFA（Modular Framework for Agents）** 是一个用于构建 AI Agent 的开源框架。
