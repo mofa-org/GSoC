@@ -176,7 +176,6 @@ Our journey started with a Python/Dora-based prototype that taught us what works
 - Core runtime: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
 - Studio application: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
 - Makepad UI components: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
-- Node ecosystem: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
 
 ---
 
