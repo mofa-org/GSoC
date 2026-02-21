@@ -39,7 +39,7 @@
 | 10 | 增加 RAG 和向量数据库集成 | [mofa](https://github.com/mofa-org/mofa) |
 | 11 | 集成 [socketioxide](https://github.com/Totodore/socketioxide)、AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
 | 12 | 实现框架级控制平面 + gateway | [mofa](https://github.com/mofa-org/mofa) |
-| 13 | 文档撰写 | [mofa](https://github.com/mofa-org/mofa) |
+
 | 14 | 将 [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) 整合进 mofa 核心框架，作为内置本地推理模块 | [mofa](https://github.com/mofa-org/mofa)、[mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
 | 15 | 为 mofa-local-llm / MoFA Input 做 Linux 推理后端适配（Rust，参考项目 3） | [mofa](https://github.com/mofa-org/mofa)、[mofa-input](https://github.com/mofa-org/mofa-input) |
 

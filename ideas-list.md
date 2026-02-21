@@ -39,7 +39,7 @@ These are concrete, self-contained tasks across the MoFA codebase. They are a go
 | 10 | Add RAG and vector database integration | [mofa](https://github.com/mofa-org/mofa) |
 | 11 | Integrate [socketioxide](https://github.com/Totodore/socketioxide), AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
 | 12 | Implement framework-level control plane + gateway | [mofa](https://github.com/mofa-org/mofa) |
-| 13 | Documentation writing | [mofa](https://github.com/mofa-org/mofa) |
+
 | 14 | Integrate [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) into mofa core as the built-in local inference module | [mofa](https://github.com/mofa-org/mofa), [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
 | 15 | Linux inference backend adaptation for mofa-local-llm / MoFA Input (Rust, see Idea 3) | [mofa](https://github.com/mofa-org/mofa), [mofa-input](https://github.com/mofa-org/mofa-input) |
 
