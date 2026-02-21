@@ -4,6 +4,7 @@
 
 欢迎访问 MoFA 的 GSoC 2026 页面。
 
+- **GSoC 2026 组织页面**: https://summerofcode.withgoogle.com/programs/2026/organizations/mofa-org
 - **项目提案**: [ideas-list-zh.md](./ideas-list-zh.md) ([English](./ideas-list.md))
 - **Discord**: https://discord.gg/hKJZzDMMm9
 - **组织联系邮箱**: dev@mofa.ai

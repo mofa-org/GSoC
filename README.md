@@ -4,6 +4,7 @@
 
 Welcome to MoFA's GSoC 2026 page.
 
+- **GSoC 2026 Organization Page**: https://summerofcode.withgoogle.com/programs/2026/organizations/mofa-org
 - **Project Ideas**: [ideas-list.md](./ideas-list.md) ([中文版](./ideas-list-zh.md))
 - **Discord**: https://discord.gg/hKJZzDMMm9
 - **Organization Contact**: dev@mofa.ai
