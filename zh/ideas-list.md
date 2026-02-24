@@ -557,66 +557,64 @@ __难度__: 中
 
 ### 摘要
 
-MoFA 的桌面应用（Studio、moly-ai）基于 [Makepad](https://makepad.dev/) 构建——一个 Rust 编写的 GPU 加速 UI 框架。虽然组织已构建了基础 Makepad 组件（[makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3)、[makepad-element](https://github.com/mofa-org/makepad-element)），但目前缺少**专为 AI 应用设计的可复用组件库**。
+MoFA 的桌面应用（Studio、moly-ai）基于 [Makepad](https://makepad.dev/) 构建——一个 Rust 编写的 GPU 加速 UI 框架。传统“组件列表 + 人工拼装”的方式并不适合 AI 原生产品：Agent 生成代码很快，但面对通用组件库时缺少可控、可验证的任务语义契约。
 
-本项目构建 `makepad-ai-toolkit`——一套为 AI 聊天界面、模型管理和推理可视化量身定制的精美可复用 Makepad 组件。这些组件可立即用于 MoFA Studio 及任何未来基于 Makepad 的 AI 应用。
+本项目保留 `makepad-ai-toolkit` 名称，但核心转向**AI 生成 UI 的运行时模型**：由 Agent 生成结构化 UI 意图/补丁，toolkit 负责校验与安全渲染，Studio/MoFA 运行时负责实时管理。主价值是“可控生成 + 运行时集成”，而不是做一个大而全的通用组件清单。
 
 __导师__: BH3GEI (Yao Li), yangrudan (CookieYang)
 
 ### 目标与想法
 
-* **聊天界面组件**:
-  - 支持 user/assistant/system 角色的聊天气泡组件
-  - 流式文本渲染器（token 实时出现）
-  - 聊天消息内的 Markdown 渲染（代码块、列表、标题）
-  - 代码语法高亮
+* **AI 原生 UI 契约**:
+  - 定义 Agent 生成 UI 的结构化 schema（意图 + 增量补丁）
+  - 支持面向任务语义的 UI 原语与可组合布局，而非仅低层组件调用
+  - 提供校验规则、版本策略和清晰错误报告
 
-* **音频与语音组件**:
-  - 音频波形可视化器（用于 ASR 输入 / TTS 输出）
-  - 带实时振幅显示的录音指示器
-  - 带进度条的音频播放控件
+* **生成运行时**:
+  - 打通 Agent 流式 UI 补丁到 Studio 实时渲染的运行时链路
+  - 增加高风险动作门禁（审批、拒绝、回滚）
+  - 当生成失败时可回退到手工/静态 UI 路径，保证可用性
 
-* **模型管理 UI**:
-  - 带模型元数据（大小、类型、量化）的模型选择下拉框
-  - 下载进度指示器
-  - 模型状态徽章（已加载、卸载中、错误）
+* **MoFA 集成（主交付）**:
+  - 与 `mofa-studio` 集成，使生成 UI 可被实时观察、控制和更新
+  - 与 `mofa` 运行时事件对接（agent 状态、tool 调用、trace 元数据）
+  - 与项目二解耦：项目六提供“生成能力与运行时”，不承担编排产品本体
 
-* **推理可视化**:
-  - Token/秒计数器和延迟显示
-  - 内存使用仪表盘（Apple Silicon 统一内存）
-  - 推理进度指示器（prefill 与 decode 阶段）
-
-* **集成**:
-  - 打包为独立 Makepad crate（`makepad-ai-toolkit`），可发布到 crates.io
-  - 提供示例应用展示每个组件
-  - 文档与常见 AI 应用布局的使用模式
+* **组件工作（有限且有目的）**:
+  - 仅在 AI 生成链路确实需要时补充/完善基础组件
+  - 优先复用现有 Makepad 生态能力，避免重复造轮子
 
 ### 最小验收（MVP）
 
-- 交付可复用组件包，并附文档与示例
-- 至少 2 个组件接入 `mofa-studio` 的真实产品流程
-- 提供组件级测试与 demo 验证步骤
+- 定义并文档化 AI 生成 UI 契约（schema + patch 协议 + 校验规则）
+- 交付一条端到端运行时示例：`agent output -> UI patch stream -> Studio render -> user feedback -> runtime update`
+- 至少 2 条真实 MoFA 工作流支持运行时生成/更新 UI
+- 门禁行为（审批/拒绝/回滚）具备测试覆盖与可复现 demo 步骤
 
 ### Stretch Goals
 
+- 多 provider 生成适配与更细粒度策略控制
+- 更好的 prompt-to-UI 模板与场景预设
 - 发布 crate 并维护版本化发布说明
-- 增强主题与交互模式，提升通用性
 
 ### Out of Scope
 
+- 做大而全通用组件库、但不提供 AI 生成运行时价值
+- 从零重写现有兄弟项目能力（例如 A2UI renderer）
 - 只做组件展示页，不做产品接入
-- 只做视觉重绘，不提供可复用 API 契约
 
 ### 验收标准（Acceptance Criteria）
 
-- 至少 2 个组件在 `mofa-studio` 中接入并用于已发布工作流
-- 组件 API 文档完整，可被外部贡献者复用
-- 示例可运行且行为与文档一致
+- 至少 2 条 MoFA 工作流在 `mofa-studio` 中支持运行时 AI 生成 UI 更新
+- 非法/高风险 UI 补丁可被拦截并提供清晰错误与安全回退
+- 审批/拒绝/回滚路径有测试覆盖且可复现
+- toolkit 契约与运行时 API 文档完整，可被贡献者复用
 
 ### 落仓计划（Repo Landing Plan）
 
 - **主落仓**：`makepad-ai-toolkit`（新仓）
 - **必须联调落地**：`mofa-studio`
+- **必须运行时对接**：`mofa`（事件/trace 接口）
 
 #### 参考链接
 
@@ -624,6 +622,7 @@ __导师__: BH3GEI (Yao Li), yangrudan (CookieYang)
 * https://github.com/mofa-org/makepad-chart
 * https://github.com/mofa-org/makepad-d3
 * https://github.com/mofa-org/makepad-element
+* https://github.com/ZhangHanDong/makepad-component
 * https://makepad.dev/
 
 __所需技能__: Rust, UI/UX 设计, Makepad 框架

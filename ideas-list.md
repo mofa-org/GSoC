@@ -576,71 +576,68 @@ __Difficulty__: Medium
 
 ### Abstract
 
-MoFA's desktop applications (Studio, moly-ai) are built with [Makepad](https://makepad.dev/), a GPU-accelerated UI framework in Rust. While the organization has built foundational Makepad components ([makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-element](https://github.com/mofa-org/makepad-element)), there is currently no **reusable component library specifically designed for AI applications**.
+MoFA's desktop applications (Studio, moly-ai) are built with [Makepad](https://makepad.dev/), a GPU-accelerated UI framework in Rust. Traditional "component catalog + manual composition" workflows are not enough for AI-native products: agents can generate code quickly, but cannot reliably use generic UI libraries without a task-aware UI contract.
 
-This project builds a `makepad-ai-toolkit` — a set of polished, reusable Makepad widgets tailored for AI chat interfaces, model management, and inference visualization. These components will be immediately usable by MoFA Studio and any future Makepad-based AI application.
+This project keeps the `makepad-ai-toolkit` name, but focuses on an **AI-native UI generation model**: agents generate structured UI intents/patches, the toolkit validates and renders them safely, and Studio/MoFA runtime can manage them in real time. The primary value is runtime integration and controllable generation, not building a large generic component list.
 
 __Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
 
 ### Goals & Ideas
 
-* **Chat Interface Components**:
+* **AI-Native UI Contract**:
   
-  - Chat bubble widget with support for user/assistant/system roles
-  - Streaming text renderer (tokens appearing in real-time)
-  - Markdown rendering within chat messages (code blocks, lists, headers)
-  - Code syntax highlighting
+  - Define a structured schema for agent-generated UI intents and incremental UI patches
+  - Support task-oriented primitives and composable layouts for agent products (not just low-level widget calls)
+  - Include validation rules, versioning, and clear error reporting for invalid patches
 
-* **Audio & Voice Components**:
+* **Generation Runtime**:
   
-  - Audio waveform visualizer (for ASR input / TTS output)
-  - Recording indicator with real-time amplitude display
-  - Audio playback controls with seek bar
+  - Build a runtime path where agents can stream UI patches and Studio can apply updates in real time
+  - Add safety gates for high-risk actions (approval, reject, rollback)
+  - Preserve deterministic fallback to manual/static UI when generation fails
 
-* **Model Management UI**:
+* **MoFA Integration (Primary Deliverable)**:
   
-  - Model selector dropdown with model metadata (size, type, quantization)
-  - Download progress indicator
-  - Model status badges (loaded, unloading, error)
+  - Integrate with `mofa-studio` so generated UI can be inspected, controlled, and updated at runtime
+  - Integrate with `mofa` runtime events (agent state, tool calls, trace metadata) as first-class UI data sources
+  - Keep Idea 2 (GUI orchestration) and Idea 6 decoupled: this idea provides generation/runtime capability, not orchestration product scope
 
-* **Inference Visualization**:
+* **Component Work (Limited and Purpose-Driven)**:
   
-  - Token-per-second counter and latency display
-  - Memory usage gauge (unified memory on Apple Silicon)
-  - Inference progress indicator (prefill vs decode phases)
-
-* **Integration**:
-  
-  - Package as a standalone Makepad crate (`makepad-ai-toolkit`) publishable on crates.io
-  - Provide example applications demonstrating each component
-  - Documentation with usage patterns for common AI application layouts
+  - Add or refine base components only when required by AI-native generation flows
+  - Reuse existing Makepad ecosystem work whenever possible
 
 ### MVP
 
-- Deliver a reusable component package with documentation and examples
-- Integrate at least 2 components into real `mofa-studio` product flows
-- Include component-level tests and demo verification steps
+- Define and document the AI-native UI generation contract (schema + patch protocol + validation rules)
+- Implement one end-to-end runtime demo: `agent output -> UI patch stream -> Studio render -> user feedback -> runtime update`
+- Integrate at least 2 real MoFA workflows where UI is generated/updated at runtime
+- Provide guardrail behavior (approve/reject/rollback) with tests and reproducible demo steps
 
 ### Stretch Goals
 
+- Multi-provider generation adapters and richer policy controls
+- Better prompt-to-UI templates and domain presets
 - Publish crate and maintain versioned changelog/release notes
-- Add richer theming/interaction patterns for broader reuse
 
 ### Out of Scope
 
+- Building a large generic component catalog without AI-generation runtime value
+- Re-implementing existing sibling projects (for example A2UI renderer work) from scratch
 - Component gallery with no production integration
-- Pure visual redesign without reusable API contracts
 
 ### Acceptance Criteria
 
-- At least 2 components are integrated into `mofa-studio` and used in shipped workflows
-- Toolkit APIs are documented and reusable by external contributors
-- Examples run successfully and match documented behavior
+- At least 2 MoFA workflows support runtime AI-generated UI updates in `mofa-studio`
+- Invalid/unsafe UI patches are rejected with clear errors and safe fallback behavior
+- Approve/reject/rollback paths are test-covered and reproducible
+- Toolkit contract/runtime APIs are documented and reusable by contributors
 
 ### Repo Landing Plan
 
 - **Main landing repo**: `makepad-ai-toolkit` (new repo)
 - **Required production integration**: `mofa-studio`
+- **Required runtime integration**: `mofa` (event/trace interfaces)
 
 #### Refs
 
@@ -648,6 +645,7 @@ __Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
 * https://github.com/mofa-org/makepad-chart
 * https://github.com/mofa-org/makepad-d3
 * https://github.com/mofa-org/makepad-element
+* https://github.com/ZhangHanDong/makepad-component
 * https://makepad.dev/
 
 __Skills Required__: Rust, UI/UX design, Makepad framework
