@@ -1,4 +1,4 @@
-# GSoC 2025 Proposal Template
+# GSoC 2026 Proposal Template
 
 Use this as a starting point for your proposal. Adapt it to your project and style.
 
@@ -36,6 +36,18 @@ List any prior open source contributions, with links to PRs, issues, or code rev
 | | | |
 
 ## Project Proposal
+
+### Proposal Baseline Checklist
+
+Before submitting, check whether your proposal clearly covers these points:
+
+- [ ] Clear problem definition and why it matters for MoFA
+- [ ] Concrete technical design (modules, interfaces, data flow)
+- [ ] Executable timeline with measurable milestones
+- [ ] Risks and fallback plan (what you will do if Plan A slips)
+- [ ] Evidence of execution before selection (PRs, design docs, prototypes, or benchmarks)
+- [ ] Testing and validation plan
+- [ ] Realistic weekly time commitment and communication plan
 
 ### Abstract (10 lines max)
 

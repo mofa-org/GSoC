@@ -1,56 +1,185 @@
-# MoFA GSoC 2025 Project Ideas
+# MoFA GSoC 2026 Project Ideas
 
-> [中文版](./ideas-list-zh.md) |  English Version
+> English Version
 
-This list contains detailed project ideas for Google Summer of Code 2025. While the overall outline is defined, internal details are open to modifications based on contributor suggestions under mentor guidance.
+This list contains detailed project ideas for Google Summer of Code 2026. While the overall outline is defined, internal details are open to modifications based on contributor suggestions under mentor guidance. We encourage contributors to propose their own approaches — the ideas below are starting points, not rigid specifications.
+
+> **Before You Start**: Comment on the relevant GitHub issue to express interest and briefly describe your approach. **Wait for a maintainer to assign you before writing code.** This prevents duplicate work. See [Contributing Workflow](./README.md#contributing-before-gsoc) for details.
+
+## Quick Reference: Ideas and Repositories
+
+### Core Ideas — Framework & Infrastructure
+
+These are our mainline priorities: the core agent framework, ML orchestration, and developer tooling.
+
+| Idea                           | Tags                                          | Primary Repository                                                       | Other Repos Involved                                                                                                |
+| ------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| 1. AgentForge                  | `Rust` `Systems Design` `Plugin Architecture` | [mofa](https://github.com/mofa-org/mofa) (mofa-kernel, mofa-foundation)  | [mofa-studio](https://github.com/mofa-org/mofa-studio)                                                              |
+| 3. Unified Inference Orchestrator | `Rust` `Systems Programming` `Local + Cloud Inference` | [mofa](https://github.com/mofa-org/mofa) (mofa-foundation, mofa-runtime) | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 4. Session Recorder & Debugger | `Rust` `Systems Design` `Data Visualization`  | [mofa](https://github.com/mofa-org/mofa) (mofa-kernel, mofa-monitoring)  | [mofa-studio](https://github.com/mofa-org/mofa-studio)                                                              |
+
+### Community Ideas — UI & Applications
+
+These are valuable projects with a focus on frontend, product applications, and platform integration. They are not on the critical path but are welcome if you have strong interest in these areas.
+
+| Idea                       | Tags                                              | Primary Repository                                     | Other Repos Involved                                                                                                                                                               |
+| -------------------------- | ------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2. Observability Dashboard | `Rust` `Makepad UI` `HTTP/WebSocket`              | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [mofa](https://github.com/mofa-org/mofa) (mofa-monitoring)       |
+| 5. MoFA Input Migration    | `Rust` `macOS` `C++/Rust Interop` `Apple Silicon` | [mofa-input](https://github.com/mofa-org/mofa-input)   | [mofa](https://github.com/mofa-org/mofa) (inference layer, see Idea 3), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX)                                                      |
+| 6. Makepad AI Toolkit      | `Rust` `Makepad UI` `Component Design`            | New repo: `makepad-ai-toolkit`                         | [mofa-studio](https://github.com/mofa-org/mofa-studio), [makepad-element](https://github.com/mofa-org/makepad-element), [makepad-chart](https://github.com/mofa-org/makepad-chart) |
+
+## CFP Index (English Only)
+
+- Framework & Infrastructure Track: [MoFA, an AI Native Framework for Agent](./ideas/framework-for-ai/call-for-proposal.md)
+- Model Orchestration Track: [MoFA Agents: Support All Models](./ideas/mofa-agents/call-for-proposal.md)
+- Human-Computer Interaction Track: [MoFA's HCI for AI Native Agent Framework](./ideas/studio-for-ai/call-for-proposal.md)
+- Critical Analysis Track: [Why MoFA](./ideas/why-mofa/call-for-proposal.md)
+
+---
+
+## Open Tasks — Start Contributing Here
+
+These are concrete, self-contained tasks across the MoFA codebase. They are a good way to get familiar with the project before or during GSoC. **Comment on the relevant issue to claim one** — see [issue assignment rules](./README.md#how-we-select-contributors).
+
+| # | Task | Repository |
+|---|------|-----------|
+| 1 | Implement or improve framework runtime (Dora / WASM / Tokio) | [mofa](https://github.com/mofa-org/mofa) |
+| 2 | `mofa-ffi`: multi-language SDK bindings | [mofa](https://github.com/mofa-org/mofa) |
+| 3 | Implement or improve message bus, event-driven & message-driven architecture | [mofa](https://github.com/mofa-org/mofa) |
+| 4 | Improve graph-based workflow engine and DSL | [mofa](https://github.com/mofa-org/mofa) |
+| 5 | `mofa-monitoring` development | [mofa](https://github.com/mofa-org/mofa) |
+| 6 | `mofa-cli` — flesh out subcommands | [mofa](https://github.com/mofa-org/mofa) |
+| 7 | Implement Codex-style context compression | [mofa](https://github.com/mofa-org/mofa) |
+| 8 | Implement classic [agentic design patterns](https://github.com/xindoo/agentic-design-patterns) using MoFA, and iterate on the framework | [mofa](https://github.com/mofa-org/mofa) |
+| 9 | Enrich built-in tools and skills | [mofa](https://github.com/mofa-org/mofa) |
+| 10 | Add RAG and vector database integration | [mofa](https://github.com/mofa-org/mofa) |
+| 11 | Integrate [socketioxide](https://github.com/Totodore/socketioxide), AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
+| 12 | Implement framework-level control plane + gateway | [mofa](https://github.com/mofa-org/mofa) |
+| 13 | Integrate [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) into mofa core as the built-in local inference module | [mofa](https://github.com/mofa-org/mofa), [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
+| 14 | Linux inference backend adaptation for mofa-local-llm (Rust, see Idea 3) | [mofa](https://github.com/mofa-org/mofa) |
+| 15 | Refactor MoFA Studio's Dora dataflow dependency using mofa-rs native runtime | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa](https://github.com/mofa-org/mofa) |
+| 16 | Cron-based periodic Agent execution, designed for high concurrency and massive message notification scenarios | [mofa](https://github.com/mofa-org/mofa) |
+| 17 | Human-in-the-loop: pause at any node for manual review | [mofa](https://github.com/mofa-org/mofa) |
+| 18 | Support visual debugging | [mofa](https://github.com/mofa-org/mofa) |
+| 19 | MessageGraph implementation | [mofa](https://github.com/mofa-org/mofa) |
+| 20 | Gap analysis: identify and implement missing capabilities for agent platform scenarios by benchmarking against other agent frameworks | [mofa](https://github.com/mofa-org/mofa) |
+
+We apologize that the project is undergoing significant changes and we have not yet had time to break these down into well-labeled issues. We will gradually create `good first issue` labels based on these tasks and other smaller issues that arise as the project evolves. If you are unsure where to start, ask in [Discord](https://discord.gg/hKJZzDMMm9).
+
+
+
+While AI coding can rapidly implement simple functionalities, for a framework, mere implementation is insufficient—practical applicability and productivity must be considered. We aim for every feature to meet enterprise‑grade delivery standards. AI cannot judge whether a feature aligns with the framework’s philosophy, and this is precisely where the value of a programmer shines. As a "programmer‑magician" who weaves code with AI, you infuse the framework with soul through unique insight and experience. Therefore, we expect each PR to be validated in real‑world practice, ensuring it genuinely delivers value and serves a tangible purpose. We recommend seeking authentic use‑case scenarios under examples/to verify and iteratively refine our framework, making it more robust and well‑rounded.
+
+---
 
 ## About MoFA
 
-[MoFA](https://mofa.ai/) (**Modular Framework for Agents**) is an open-source framework for building AI agents. Our recent project, **MoFA Studio**, is a desktop application for creating, running, and sharing AI-powered applications — built with Rust, Makepad, and Dora.
+[MoFA](https://mofa.ai/) (**Modular Framework for Agents**) is an open-source framework for building AI agents. Our recent project, **MoFA Studio**, is a desktop application for creating, running, and sharing AI-powered applications — built with Rust and Makepad, with [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) for on-device ML inference on Apple Silicon.
 
-We are excited to mentor GSoC contributors on challenging, real-world problems at the intersection of systems engineering, AI infrastructure, and developer tools.
+We mentor GSoC contributors on real-world problems spanning systems engineering, AI infrastructure, and developer tools.
 
 __Website:__ [mofa.ai](https://mofa.ai/)
 
 __GitHub Repos:__
-- Core runtime: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa) (`feature/mofa-rs` branch)
+
+- Core runtime: [github.com/mofa-org/mofa](https://github.com/mofa-org/mofa)
 - Studio application: [github.com/mofa-org/mofa-studio](https://github.com/mofa-org/mofa-studio)
-- Node ecosystem: [github.com/mofa-org/mofa-node-hub](https://github.com/mofa-org/mofa-node-hub)
+- Makepad UI components: [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-flow](https://github.com/mofa-org/makepad-flow), [makepad-element](https://github.com/mofa-org/makepad-element)
 
 __Organization Contact:__ dev@mofa.ai
 __GSoC Contributor Guidance:__ [README.md](./README.md)
 
 ---
 
-## Idea 1: AppGen — The App Generator
+## Idea 1: AgentForge — Composable Plugin System for Collaborative AI Development
 
 ### Abstract
 
-MoFA Studio currently hosts 8+ built-in apps and supports WebView plugins. However, creating new apps requires manual coding. **AppGen** will be a built-in Studio app that allows users to generate personalized applications from natural language descriptions.
+In the age of vibe coding, individual developers can generate agent code rapidly with LLMs. However, **merging outputs from multiple vibe coders into a coherent system remains the hardest unsolved problem** — human review bandwidth is the bottleneck, not code generation speed.
 
-Users describe what they want (e.g., "a tool that fetches weather and generates a daily report"), and AppGen will intelligently select from [mofa-node-hub](https://github.com/mofa-org/mofa-node-hub) (400+ nodes), compose workflows, and generate a working Studio app with Makepad UI automatically.
+**AgentForge** addresses this as a runtime-native capability in mofa-rs: Layer 1 uses AI to generate contract-first micro-modules, and Layer 2 lets a higher-level agent or a human control composition and system-level decisions. The framework handles validation, conflict detection, auditability, and rollback — enabling team-scale vibe coding without merge hell.
 
-__Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu)
+__Mentors__: BH3GEI (Yao Li), lijingrs (AmosLi)
 
 ### Goals & Ideas
 
-* **Semantic Node Search**: Index [mofa-node-hub](https://github.com/mofa-org/mofa-node-hub) (400+ nodes) with vector embeddings; retrieve relevant components from natural language queries
-* **Flow Synthesis**: Convert high-level descriptions to executable dataflows using mofa-rs runtime
-* **Makepad UI Generation**: Generate intuitive Makepad-based interfaces from data schemas; support form-based, chat-based, and dashboard-based layouts
-* **Self-Integration**: Generated apps can be automatically embedded into Studio as WebView plugins or native Rust apps
-* **Customization**: Allow visual refinement of UI and logic after initial generation
-* **Export & Share**: Package generated apps for distribution or sharing
+* **Two-Layer Collaboration Model**:
+  
+  - **Layer 1 (AI-generated micro-modules)**: Generate small, self-contained modules under strict contracts (input/output schemas, dependencies, tests, risk tags)
+  - **Layer 2 (composition & system control)**: A higher-level agent or human reviewer controls architecture-level composition, quality gates, merge/reject decisions, and rollback
+
+* **Runtime-Native Vibe Flow**:
+  
+  - Integrate vibe task lifecycle directly into `mofa-runtime` (plan -> generate -> validate -> gate -> merge/rollback)
+  - Treat outputs as verifiable artifacts (patch/test/report), not free-form text only
+  - Keep the same control model available through CLI/runtime APIs; UI is optional, not the core deliverable
+
+* **Plugin Contract**: Define a stable `PluginManifest` with JSON Schema contracts for plugin inputs/outputs, state schema, and lifecycle hooks
+* **Compatibility Validation**: Provide a `validate` command to check contract compatibility, schema/type mismatch, and composition safety before runtime
+* **Composition Executor**: Implement DAG-based plugin orchestration and execution with integration tests
+* **Runtime Isolation**: Use Wasm sandboxing as the default isolation boundary for plugins
+
+### MVP
+
+- Land `PluginManifest` and JSON Schema contracts in the main `mofa` repo
+- Define the Layer 1 micro-module contract (I/O schema, dependency metadata, test/risk metadata)
+- Implement `validate` command for compatibility checks
+- Deliver one Layer 2 controller path (higher-level agent or human-driven) for composition decisions and quality gates
+- Deliver one end-to-end runtime flow: `intent -> micro-modules -> composition -> gate -> merge/rollback`
+- Build a DAG-based composition executor for contract-driven plugin wiring
+- Provide a minimal runnable plugin example under Wasm sandbox
+- Provide 3 collaboration scenarios (parallel edits on one module, cross-module dependency composition, rollback after failing gates)
+- Add integration tests for composition and failure paths
+
+### Stretch Goals
+
+- Semantic node search over `mofa-node-hub`
+- Natural-language-to-flow synthesis
+- Auto-generated UI for plugin configuration/output
+
+### Out of Scope
+
+- Full no-code workflow generator as primary deliverable
+- Production-grade plugin marketplace/distribution system
+- IDE product features or large Studio UI surfaces as primary deliverables
+- Prompt-only vibe demos without verifiable patch/test/report artifacts
+
+### Acceptance Criteria
+
+- `validate` catches contract incompatibility before execution
+- Layer 1 outputs can be composed through Layer 2 control with explicit gate decisions (merge/reject/rollback)
+- At least one composition conflict and one rollback path are covered in tests
+- All stages emit auditable records for reproduction (inputs, gate decisions, outputs)
+- The same flow supports Layer 2 control by either a higher-level agent or a human reviewer
+- 3 example collaboration scenarios run end-to-end in CI
+- Plugin composition code and tests are merged in the main `mofa` repo
+
+### Repo Landing Plan
+
+- **Main landing repo**: `mofa` (`mofa-kernel` / `mofa-foundation`)
+- **Optional demo integration**: `mofa-studio`
+
+#### Example Scenario
+
+Three developers each vibe code an agent component:
+
+- Developer A: a web scraping agent plugin
+- Developer B: a summarization agent plugin
+- Developer C: a notification agent plugin
+
+AgentForge validates their interfaces are compatible, composes them into a pipeline, and runs the combined system — without any of the three developers reading each other's code.
 
 #### Refs
 
+* https://github.com/mofa-org/mofa/tree/main
+
 * https://github.com/mofa-org/mofa-studio
-* https://github.com/mofa-org/mofa-node-hub
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs
+
 * https://makepad.dev/
 
-__Skills Required__: Rust, Makepad UI, LLM integration, natural language processing
+__Skills Required__: Rust, plugin architecture design, type systems, LLM integration
 
-__Time Estimate__: 120 hours (10 weeks)
+__Time Estimate__: 175 hours (medium project size)
 
 __Difficulty__: Hard
 
@@ -60,42 +189,58 @@ __Difficulty__: Hard
 
 ### Abstract
 
-MoFA-rs includes a monitoring foundation with metrics collection capabilities. This project will build a **complete Dashboard server** with REST APIs and WebSocket support, and integrate these capabilities directly into MoFA Studio, providing real-time visibility into agent execution.
+MoFA Studio runs complex AI pipelines involving multiple models (ASR, LLM, TTS) and agent interactions. Currently, when something goes wrong or runs slowly, developers have limited visibility into what's happening inside. This project will build a **real-time observability dashboard** embedded directly into MoFA Studio, providing developers with instant insight into model performance, resource usage, and agent behavior.
 
-The current `mofa-monitoring` crate has metrics collection; this project will extend it with a production-ready HTTP/WebSocket server and Studio-side visualization.
+The dashboard will leverage MoFA Studio's existing [makepad-chart](https://github.com/mofa-org/makepad-chart) and [makepad-d3](https://github.com/mofa-org/makepad-d3) GPU-accelerated visualization components.
 
-__Mentors__: BH3GEI (Yao Li), Bicheng Lou
+__Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
 
 ### Goals & Ideas
 
-* **Dashboard Server Development**:
-  - Build HTTP server (using axum or similar) exposing REST APIs for metrics
-  - Implement WebSocket endpoint for real-time streaming updates
-  - Design efficient metrics aggregation and caching
+* **Backend Metrics Service**: Build a runtime metrics service with REST + WebSocket APIs
+* **Studio Panels**: Add real-time observability panels in MoFA Studio
+* **Bottleneck Visibility**: Surface latency/throughput/queue/model-state signals for practical debugging
 
-* **API Design & Implementation**:
-  - `/api/agents` — list all agents with status
-  - `/api/agents/{id}` — detailed agent metrics
-  - `/api/metrics` — system-wide metrics snapshot
-  - `/api/flows` — dataflow execution status
-  - WebSocket `/ws` — real-time event stream
+### Scope Boundary (vs Idea 4)
 
-* **Studio Integration**:
-  - Makepad-based real-time visualization panels
-  - Agent status display (running, paused, error states)
-  - Message flow visualization with call chain tracing
-  - Resource usage dashboard (CPU, memory, model loading)
-  - Log aggregation with intelligent filtering
+- Idea 2 is for online observability only
+- Session replay, time-travel debugging, and breakpointing belong to Idea 4
 
-* **Hybrid Runtime Support**:
-  - Support both Dora-based (current) and mofa-rs-native runtimes
-  - Unified interface for monitoring across backends
+### MVP
+
+- Stable `/api/agents`, `/api/metrics`, and WebSocket `/ws`
+- At least 4 core views in Studio: latency, throughput, queue depth, model load state
+- One end-to-end scenario showing bottleneck localization
+- Basic tests and reproducible setup docs
+
+### Stretch Goals
+
+- Unified monitoring across additional runtime backends (including Dora-based flows)
+- More advanced correlation views and filtering UX
+
+### Out of Scope
+
+- Time-travel replay/debugger capabilities
+- Full historical trace reconstruction (Idea 4 scope)
+
+### Acceptance Criteria
+
+- Backend metrics service and Studio panels are both delivered
+- API contracts are documented and exercised in tests
+- Operators can identify at least one real bottleneck from the dashboard output
+
+### Repo Landing Plan
+
+- **Main landing repo**: `mofa-studio` (UI + API service integration)
+- **Supporting integration**: `mofa` (`mofa-monitoring` / `mofa-runtime`)
 
 #### Refs
 
 * https://github.com/mofa-org/mofa-studio
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-runtime
+* https://github.com/mofa-org/makepad-chart
+* https://github.com/mofa-org/makepad-d3
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
 
 __Skills Required__: Rust, HTTP/WebSocket servers (axum/tokio), real-time data visualization, Makepad UI
 
@@ -105,70 +250,141 @@ __Difficulty__: Medium
 
 ---
 
-## Idea 3: Edge Model Orchestrator
+## Idea 3: Unified Inference Orchestrator (Local + Cloud)
 
 ### Abstract
 
-Edge devices running AI applications face a unique challenge: multiple models (ASR, LLM, TTS, embedding) compete for limited memory and GPU resources. This project implements an intelligent **Model Lifecycle Manager** as a core component of the `mofa-foundation` layer, enabling efficient multi-model orchestration at the edge.
+MoFA agents should run with one inference contract across **local runtimes and cloud APIs**. This project builds a unified inference orchestration layer in mofa-rs: pluggable backends, policy-based routing, and runtime-level lifecycle/scheduling.
 
-The orchestrator will be integrated with mofa-rs runtime, serving as a foundational service that manages model loading, scheduling, and resource allocation.
+For local inference, MoFA should call backends directly at the Rust API level (`load_model()`, `Generate`, `forward()`) with no HTTP middle layer when possible. For cloud inference, MoFA should provide provider adapters (OpenAI-compatible API first) under the same framework abstraction.
 
-__Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
+The current macOS path with [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) is a strong local reference, especially for unified-memory zero-copy pipelines. But final deliverables must land in the main `mofa` repo and work with both local and cloud backends. [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) is a prototype/reference repo, not the final landing target.
+
+__Mentors__: BH3GEI (Yao Li), lijingrs (AmosLi)
+
+### Platform Scope & Hardware Access
+
+- MoFA inference is not macOS-only. Our vision is a general, pluggable framework across macOS, Linux, and future backends.
+- This idea is not local-only either. Proposal scope must include **at least one local backend path and one cloud API adapter path**.
+- Project deliverables must be integrated into the mofa-rs mainline (`mofa-foundation` / `mofa-runtime`), not kept as a standalone demo.
+- `mofa-local-llm` is for prototyping and experiments; production deliverables must land in the main `mofa` repo.
+- Cross-platform is a core requirement: proposals should include one implemented local backend (macOS or Linux) plus a clear compatibility plan for the other platform.
+- If you need specific hardware or remote servers for final validation, discuss it with mentors early.
+
+### Delivery Boundaries (Recommended)
+
+- **Must land in the main `mofa` repo**: backend abstractions, local/cloud routing policy, scheduler core, lifecycle management, `mofa-runtime` integration, and core tests.
+- **Can remain in `mofa-local-llm`**: demo GUI, standalone demo server, and experimental scripts/prototypes.
+- **Recommended flow**: validate quickly in `mofa-local-llm`, then migrate stable capabilities into the main `mofa` repo.
+
+### Track Options
+
+- **Core requirement (mandatory)**: one unified inference path that supports both local and cloud adapters under one API contract.
+- **Implementation focus (choose one local backend for primary validation)**:
+  - macOS focus: prioritize OminiX-MLX integration and unified-memory scheduling behavior
+  - Linux focus: prioritize Linux backend adaptation + scheduler + benchmarking
+- Cross-platform compatibility design for the non-primary platform is mandatory.
 
 ### Goals & Ideas
 
 * **Architecture Design**:
-  - Implement as a service component in `mofa-foundation` layer (above `mofa-runtime`, below business logic)
-  - Design clean API for `mofa-runtime` to invoke orchestration services
-  - Support pluggable backends (Ollama, llama.cpp, custom model servers)
+  
+  - Implement as a core component in mofa-rs (`mofa-foundation` layer)
+  - Define a pluggable backend abstraction for local runtimes and cloud providers
+  - Implement OminiX-MLX as the default macOS local backend and at least one OpenAI-compatible cloud adapter
+  - Keep one unified request/response contract for agents, regardless of local or cloud execution
+  - Design `ModelPool` (local models) and provider session management (cloud)
 
 * **Lifecycle Management**:
+  
   - On-demand model loading with async initialization
-  - Idle timeout-based automatic unloading
-  - Memory pressure monitoring and proactive management
+  - Idle timeout-based automatic unloading (LRU eviction)
+  - Memory pressure monitoring on Apple Silicon unified memory
   - Graceful shutdown with state preservation
 
 * **Smart Scheduling**:
-  - Route requests to optimal models based on task type (ASR/LLM/TTS), latency requirements, and availability
-  - Support model parallelism and batching where applicable
-  - Priority-based preemptive scheduling
+  
+  - Route requests to local or cloud backends based on policy (e.g., local-first, latency-first, cost-first)
+  - Route requests to the right model based on task type (ASR/LLM/TTS) and availability
+  - Memory-aware admission control: reject or defer requests when memory is constrained
+  - Provider-aware retry/failover for cloud calls
+  - Dynamic precision degradation (e.g., auto-switch from 8-bit to 4-bit quantization under pressure)
 
-* **Resource Management**:
-  - Enforce memory/GPU quotas with graceful preemption
-  - Model swapping strategies (LRU, priority-based, predictive)
-  - Resource usage tracking and reporting to monitoring system
+* **Inference Pipeline**:
+  
+  - Chain multiple models into a pipeline (ASR → LLM → TTS) with zero-copy tensor passing via MLX Arrays where local backends support it
+  - Support hybrid pipelines (e.g., local ASR/TTS + cloud LLM, or local-first with cloud fallback)
+  - Streaming token output from LLM directly into TTS input
+  - Per-stage latency tracking and bottleneck reporting
 
 * **Degradation Strategies**:
+  
   - Auto-fallback to smaller models when primary models fail or resources are constrained
   - Quality-of-service levels with corresponding model selections
-  - Circuit breaker pattern for unreliable model services
 
 * **Integration**:
-  - Seamless integration with existing `mofa-foundation/llm` provider system
-  - Expose orchestration decisions to Studio observability dashboard
+  
+  - Expose scheduling state and metrics to the Studio observability dashboard (Idea 2)
+  - Provide clean API for agents to request inference without managing model lifecycle
+
+### MVP
+
+- Land unified inference abstractions in the main `mofa` repo
+- Deliver at least one local backend + one cloud API adapter under the same runtime contract
+- Implement scheduler core, lifecycle management, and local/cloud routing policies with tests
+- Integrate with `mofa-runtime` so agents can request inference via one unified API
+- Provide reproducible benchmarks (latency, throughput, memory usage, local-vs-cloud routing behavior)
+
+### Stretch Goals
+
+- Multi-cloud provider support and cost-aware routing
+- Dynamic precision switching policies with workload-aware tuning
+- Additional backend implementations beyond the selected track
+
+### Out of Scope
+
+- Shipping GUI-only demos without mainline runtime integration
+- Local-only designs that cannot interoperate with cloud APIs
+- Platform-specific one-off hacks that bypass backend abstraction
+
+### Acceptance Criteria
+
+- Core orchestration code is merged into `mofa-foundation` / `mofa-runtime`
+- Same agent API can run through local, cloud, and hybrid paths via configuration
+- Chosen local track (macOS or Linux) has end-to-end runnable path with tests
+- At least one failover scenario (local unavailable -> cloud fallback, or reverse) is tested
+- Benchmarks are documented and reproducible by mentors
+
+### Repo Landing Plan
+
+- **Main landing repo**: `mofa` (`mofa-foundation` / `mofa-runtime`)
+- **Prototype/reference repo**: `mofa-local-llm` (non-final deliverables)
 
 #### Example Scenario
 
 A voice assistant pipeline with:
-- Whisper (ASR, 2GB VRAM)
-- Qwen (LLM, 8GB VRAM)
-- GPT-SoVITS (TTS, 4GB VRAM)
 
-Total exceeds available memory. The orchestrator will:
-- Keep LLM resident (core functionality)
-- Load ASR on voice input, unload after 30s idle
-- Load TTS only during synthesis
-- Fallback to smaller models if loading fails
+- FunASR (ASR, ~2GB)
+- Qwen (LLM, ~8GB)
+- GPT-SoVITS (TTS, ~4GB)
+
+On a 16GB MacBook, all three cannot be resident simultaneously. The orchestrator will:
+
+- Keep local ASR/TTS active for low-latency interaction
+- Route LLM to local by default, with cloud fallback when local memory pressure or latency thresholds are exceeded
+- If local LLM is available, pass tensors via zero-copy local path; otherwise switch to cloud adapter without changing agent code
+- Recover to local path when resources return to healthy state
 
 #### Refs
 
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-foundation
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-runtime
-* https://github.com/ollama/ollama
+* https://github.com/mofa-org/mofa-local-llm
+* https://github.com/OminiX-ai/OminiX-MLX
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-foundation
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
 
-__Skills Required__: Rust, systems programming, resource management, GPU/edge computing
+__Skills Required__: Rust, systems programming, resource management, Apple Silicon or Linux GPU computing
 
-__Time Estimate__: 140 hours (11 weeks)
+__Time Estimate__: 175 hours (medium project size)
 
 __Difficulty__: Hard
 
@@ -178,57 +394,270 @@ __Difficulty__: Hard
 
 ### Abstract
 
-Multi-agent systems are notoriously difficult to debug. When agents exchange dozens of messages and state changes, traditional logs become unreadable. This project builds a **time-travel debugger** for MoFA that records complete execution traces and visualizes them as interactive timelines.
+Multi-agent systems are notoriously difficult to debug. When agents exchange dozens of messages and state changes, traditional logs become unreadable. This is especially true in the era of vibe coding, where LLM-generated agent code often works in demo but fails in production with no clear explanation.
 
-Think of it as "Chrome DevTools for Agents" — inspect message flow, replay executions, and inspect agent state at any point in time.
+This project builds a **time-travel debugger** for MoFA — a differentiating capability that gives developers a reason to run their agents on mofa-rs. Think of it as "Chrome DevTools for Agents": load any agent (hand-written or vibe-coded), record its execution, inspect message flow, and replay with modifications.
 
-__Mentors__: BH3GEI (Yao Li), Xiaokuge (Zonghuan Wu), Bicheng Lou
+Building this debugger will also serve as an **architectural audit** for mofa-rs — the process of adding instrumentation hooks will force the framework to define clear internal APIs for event capture, state snapshots, and message interception.
+
+__Mentors__: BH3GEI (Yao Li), lijingrs (AmosLi)
+
+### Phased Delivery Plan (Required)
+
+1. Event capture + storage + CLI replay
+2. Timeline UI
+3. Breakpoints + state diffing
+
+### Schema Versioning Requirement
+
+- Define event schema and schema versioning strategy first
+- Backward/forward compatibility expectations must be documented before scaling features
 
 ### Goals & Ideas
 
 * **Event Interception**:
+  
   - Hook into `mofa-kernel` message bus to capture all agent events
   - Serialize message flow, state transitions, and tool calls
   - Efficient storage format for long-running sessions
+  - Define a clear, stable Hook API that becomes part of mofa-rs's public contract
 
 * **Timeline Visualization**:
-  - Web-based or Makepad-integrated timeline view
+  
+  - Makepad-integrated or web-based timeline view
   - See which agent sent what message to whom, when
   - Filter by agent, message type, or time range
   - Zoom in/out from millisecond to hour scale
 
 * **State Inspection**:
+  
   - Capture agent state snapshots at key points
   - Diff view: compare agent state before/after message handling
   - Inspect memory, context, and internal variables
 
 * **Time-Travel Debugging**:
+  
   - Replay recorded sessions at variable speed
   - Pause, step forward/backward through execution
   - Set breakpoints on specific message patterns
   - Re-run specific agent with modified input
 
+* **Vibe Coding Support**:
+  
+  - Load and debug agents generated by LLMs without modification
+  - Identify common failure patterns in vibe-coded agents
+  - Export recordings for bug reports or as context for LLM-assisted fixing
+
 * **Integration**:
-  - Standalone web interface (using existing `mofa-monitoring` infrastructure)
+  
   - Optional Studio panel for seamless development workflow
   - Export recordings for bug reports or documentation
 
+### MVP
+
+- Event capture hooks in `mofa-kernel`
+- Durable storage format with schema versioning
+- CLI replay capable of deterministic step-through for recorded sessions
+
+### Stretch Goals
+
+- Rich timeline UI interactions and breakpoint UX
+- LLM-assisted failure pattern analysis
+
+### Out of Scope
+
+- UI-only trace viewer without reliable replay core
+- Unversioned ad-hoc trace formats
+
+### Acceptance Criteria
+
+- Same input + same runtime version can replay key failure traces deterministically
+- Schema versioning and migration notes are documented
+- CLI replay and at least one UI path are available
+
+### Repo Landing Plan
+
+- **Main landing repo**: `mofa` (`mofa-kernel` / `mofa-monitoring`)
+- **Optional UI integration**: `mofa-studio`
+
 #### Use Case
 
-A complex 5-agent workflow fails intermittently. With the recorder:
-1. Run with recording enabled
+A developer vibe-codes a 5-agent workflow. It works in simple tests but fails intermittently with real data. With the recorder:
+
+1. Load the vibe-coded agents into mofa-rs with recording enabled
 2. When failure occurs, open the trace
 3. See exact message sequence leading to error
 4. Inspect agent state at last known good point
 5. Replay with modifications to test fixes
+6. Export the trace as context for LLM to generate a fix
 
 #### Refs
 
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-kernel
-* https://github.com/mofa-org/mofa/tree/feature/mofa-rs/crates/mofa-monitoring
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-kernel
+* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
 
 __Skills Required__: Rust, data visualization, systems design, debugging tools
 
-__Time Estimate__: 140 hours (11 weeks)
+__Time Estimate__: 175 hours (medium project size)
 
 __Difficulty__: Hard
+
+---
+
+## Idea 5: MoFA Input — Inference Stack Migration to MoFA's Native Inference Layer
+
+### Abstract
+
+[MoFA Input](https://github.com/mofa-org/mofa-input) is a macOS global voice input method that runs entirely on-device. It currently uses llama.cpp with GGUF models for ASR (Whisper) and LLM (Qwen) inference via a C++ interop layer. This project migrates the inference stack to MoFA's own native Rust inference layer (currently backed by [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) on macOS, see Idea 3), replacing the C++ llama.cpp backend entirely.
+
+Why migrate? Pure Rust eliminates the C++ interop complexity, MLX's Metal GPU acceleration is faster than llama.cpp on Apple Silicon, and aligning with MoFA's pluggable inference backend (Idea 3) ensures MoFA Input benefits from any future backend improvements without additional migration work.
+
+__Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
+
+### Scope Options
+
+- **Scoped option (90h)**: ASR migration + interface layer integration
+- **Full option (175h)**: ASR + LLM + full C++ to Rust migration
+
+### Rollback Strategy (Required)
+
+- Keep legacy path behind feature flags during migration
+- If latency/accuracy regress beyond agreed thresholds, system must switch back safely
+
+### Goals & Ideas
+
+* **ASR Migration**: Replace the current llama.cpp-based Whisper ASR with MoFA's inference layer (e.g., `funasr-mlx` or `funasr-nano-mlx` on macOS). Validate accuracy and latency against the current implementation
+* **LLM Migration**: Replace Qwen GGUF inference with MoFA's inference layer (e.g., `qwen3-mlx` on macOS, safetensors format). Ensure streaming token output works with the existing UI
+* **C++→Rust Migration**: Replace the existing C++ llm_server (llama.cpp) with pure Rust inference calls via MoFA's backend abstraction (Idea 3), eliminating the C++ interop layer. Maintain the current macOS input method architecture (Fn hotkey, floating bubble, history window)
+* **Performance Benchmarking**: Compare latency, memory usage, and accuracy before and after migration on representative hardware (M1/M2/M3/M4)
+* **Model Management**: Integrate with `~/.mofa/models/` model storage and leverage OminiX-MLX's safetensors format exclusively
+
+### MVP
+
+- Complete the selected scope option with measurable benchmark report
+- Add feature-flag rollback path to legacy inference stack
+- Ensure compatibility with current MoFA Input interaction model
+
+### Stretch Goals
+
+- Complete full migration if starting from scoped option
+- Broaden model compatibility and tuning presets
+
+### Out of Scope
+
+- Removing rollback path before production confidence
+- Unmeasured migration with no before/after benchmark evidence
+
+### Acceptance Criteria
+
+- Migration path is functional and benchmarked on representative hardware
+- Rollback path is tested and documented
+- No critical regression in core user flow (voice input to text output)
+
+### Repo Landing Plan
+
+- **Main landing repo**: `mofa-input`
+- **Shared backend dependencies**: `mofa` inference abstractions from Idea 3
+
+#### Refs
+
+* https://github.com/mofa-org/mofa-input
+* https://github.com/OminiX-ai/OminiX-MLX
+
+__Skills Required__: Rust, C++/Rust interop, macOS development, Apple Silicon
+
+__Time Estimate__: 90 hours (scoped) or 175 hours (full migration)
+
+__Difficulty__: Medium
+
+---
+
+## Idea 6: Makepad AI Application Toolkit
+
+### Abstract
+
+MoFA's desktop applications (Studio, moly-ai) are built with [Makepad](https://makepad.dev/), a GPU-accelerated UI framework in Rust. While the organization has built foundational Makepad components ([makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [makepad-element](https://github.com/mofa-org/makepad-element)), there is currently no **reusable component library specifically designed for AI applications**.
+
+This project builds a `makepad-ai-toolkit` — a set of polished, reusable Makepad widgets tailored for AI chat interfaces, model management, and inference visualization. These components will be immediately usable by MoFA Studio and any future Makepad-based AI application.
+
+__Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
+
+### Goals & Ideas
+
+* **Chat Interface Components**:
+  
+  - Chat bubble widget with support for user/assistant/system roles
+  - Streaming text renderer (tokens appearing in real-time)
+  - Markdown rendering within chat messages (code blocks, lists, headers)
+  - Code syntax highlighting
+
+* **Audio & Voice Components**:
+  
+  - Audio waveform visualizer (for ASR input / TTS output)
+  - Recording indicator with real-time amplitude display
+  - Audio playback controls with seek bar
+
+* **Model Management UI**:
+  
+  - Model selector dropdown with model metadata (size, type, quantization)
+  - Download progress indicator
+  - Model status badges (loaded, unloading, error)
+
+* **Inference Visualization**:
+  
+  - Token-per-second counter and latency display
+  - Memory usage gauge (unified memory on Apple Silicon)
+  - Inference progress indicator (prefill vs decode phases)
+
+* **Integration**:
+  
+  - Package as a standalone Makepad crate (`makepad-ai-toolkit`) publishable on crates.io
+  - Provide example applications demonstrating each component
+  - Documentation with usage patterns for common AI application layouts
+
+### MVP
+
+- Deliver a reusable component package with documentation and examples
+- Integrate at least 2 components into real `mofa-studio` product flows
+- Include component-level tests and demo verification steps
+
+### Stretch Goals
+
+- Publish crate and maintain versioned changelog/release notes
+- Add richer theming/interaction patterns for broader reuse
+
+### Out of Scope
+
+- Component gallery with no production integration
+- Pure visual redesign without reusable API contracts
+
+### Acceptance Criteria
+
+- At least 2 components are integrated into `mofa-studio` and used in shipped workflows
+- Toolkit APIs are documented and reusable by external contributors
+- Examples run successfully and match documented behavior
+
+### Repo Landing Plan
+
+- **Main landing repo**: `makepad-ai-toolkit` (new repo)
+- **Required production integration**: `mofa-studio`
+
+#### Refs
+
+* https://github.com/mofa-org/mofa-studio
+* https://github.com/mofa-org/makepad-chart
+* https://github.com/mofa-org/makepad-d3
+* https://github.com/mofa-org/makepad-element
+* https://makepad.dev/
+
+__Skills Required__: Rust, UI/UX design, Makepad framework
+
+__Time Estimate__: 90 hours (8 weeks)
+
+__Difficulty__: Medium
+
+---
+
+## Optional Chinese Translation
+
+- Ideas list: [zh/ideas-list.md](./zh/ideas-list.md)
