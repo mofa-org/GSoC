@@ -41,28 +41,43 @@ These are valuable projects with a focus on frontend, product applications, and 
 
 These are concrete, self-contained tasks across the MoFA codebase. They are a good way to get familiar with the project before or during GSoC. **Comment on the relevant issue to claim one** — see [issue assignment rules](./README.md#how-we-select-contributors).
 
-| # | Task | Repository |
-|---|------|-----------|
-| 1 | Implement or improve framework runtime (Dora / WASM / Tokio) | [mofa](https://github.com/mofa-org/mofa) |
-| 2 | `mofa-ffi`: multi-language SDK bindings | [mofa](https://github.com/mofa-org/mofa) |
-| 3 | Implement or improve message bus, event-driven & message-driven architecture | [mofa](https://github.com/mofa-org/mofa) |
-| 4 | Improve graph-based workflow engine and DSL | [mofa](https://github.com/mofa-org/mofa) |
-| 5 | `mofa-monitoring` development | [mofa](https://github.com/mofa-org/mofa) |
-| 6 | `mofa-cli` — flesh out subcommands | [mofa](https://github.com/mofa-org/mofa) |
-| 7 | Implement Codex-style context compression | [mofa](https://github.com/mofa-org/mofa) |
-| 8 | Implement classic [agentic design patterns](https://github.com/xindoo/agentic-design-patterns) using MoFA, and iterate on the framework | [mofa](https://github.com/mofa-org/mofa) |
-| 9 | Enrich built-in tools and skills | [mofa](https://github.com/mofa-org/mofa) |
-| 10 | Add RAG and vector database integration | [mofa](https://github.com/mofa-org/mofa) |
-| 11 | Integrate [socketioxide](https://github.com/Totodore/socketioxide), AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
-| 12 | Implement framework-level control plane + gateway | [mofa](https://github.com/mofa-org/mofa) |
-| 13 | Integrate [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) into mofa core as the built-in local inference module | [mofa](https://github.com/mofa-org/mofa), [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
-| 14 | Linux inference backend adaptation for mofa-local-llm (Rust, see Idea 3) | [mofa](https://github.com/mofa-org/mofa) |
-| 15 | Refactor MoFA Studio's Dora dataflow dependency using mofa-rs native runtime | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa](https://github.com/mofa-org/mofa) |
-| 16 | Cron-based periodic Agent execution, designed for high concurrency and massive message notification scenarios | [mofa](https://github.com/mofa-org/mofa) |
-| 17 | Human-in-the-loop: pause at any node for manual review | [mofa](https://github.com/mofa-org/mofa) |
-| 18 | Support visual debugging | [mofa](https://github.com/mofa-org/mofa) |
-| 19 | MessageGraph implementation | [mofa](https://github.com/mofa-org/mofa) |
-| 20 | Gap analysis: identify and implement missing capabilities for agent platform scenarios by benchmarking against other agent frameworks | [mofa](https://github.com/mofa-org/mofa) |
+| #   | Task | Repository |
+| --- | --- | --- |
+| 1   | Implement or improve framework runtime (Dora / WASM / Tokio) | [mofa](https://github.com/mofa-org/mofa) |
+| 2   | `mofa-ffi`: multi-language SDK bindings | [mofa](https://github.com/mofa-org/mofa) |
+| 3   | Implement or improve message bus, event-driven & message-driven architecture | [mofa](https://github.com/mofa-org/mofa) |
+| 4   | Improve graph-based workflow engine and DSL | [mofa](https://github.com/mofa-org/mofa) |
+| 5   | `mofa-monitoring` development | [mofa](https://github.com/mofa-org/mofa) |
+| 6   | `mofa-cli` — flesh out subcommands | [mofa](https://github.com/mofa-org/mofa) |
+| 7   | Implement Codex-style context compression | [mofa](https://github.com/mofa-org/mofa) |
+| 8   | Implement classic [agentic design patterns](https://github.com/xindoo/agentic-design-patterns) using MoFA, and iterate on the framework | [mofa](https://github.com/mofa-org/mofa) |
+| 9   | Enrich built-in tools and skills | [mofa](https://github.com/mofa-org/mofa) |
+| 10  | Add RAG and vector database integration | [mofa](https://github.com/mofa-org/mofa) |
+| 11  | Integrate [socketioxide](https://github.com/Totodore/socketioxide), AWS S3 SDK | [mofa](https://github.com/mofa-org/mofa) |
+| 12  | Implement framework-level control plane + gateway | [mofa](https://github.com/mofa-org/mofa) |
+| 13  | Integrate [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) into mofa core as the built-in local inference module | [mofa](https://github.com/mofa-org/mofa), [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) |
+| 14  | Linux inference backend adaptation for mofa-local-llm (Rust, see Idea 3) | [mofa](https://github.com/mofa-org/mofa) |
+| 15  | Refactor MoFA Studio's Dora dataflow dependency using mofa-rs native runtime | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa](https://github.com/mofa-org/mofa) |
+| 16  | Cron-based periodic Agent execution, designed for high concurrency and massive message notification scenarios | [mofa](https://github.com/mofa-org/mofa) |
+| 17  | Human-in-the-loop: pause at any node for manual review | [mofa](https://github.com/mofa-org/mofa) |
+| 18  | Support visual debugging | [mofa](https://github.com/mofa-org/mofa) |
+| 19  | MessageGraph implementation | [mofa](https://github.com/mofa-org/mofa) |
+| 20  | Gap analysis: identify and implement missing capabilities for agent platform scenarios by benchmarking against other agent frameworks | [mofa](https://github.com/mofa-org/mofa) |
+| 21  | Integrate TTS and ASR services from **2–3 cloud vendors**, while strictly adhering to the **design principles of microkernel architecture**. | [mofa](https://github.com/mofa-org/mofa) |
+| 22  | Establishing a Framework-Level Agent with End-to-End Voice Integration (ASR → LLM → TTS) | [mofa](https://github.com/mofa-org/mofa) |
+| 23  | Security Governance (PII Redaction, Content Moderation, Tool Permission Sandbox) | [mofa](https://github.com/mofa-org/mofa) |
+| 24  | Complete `mofa-cli` subcommand implementations — `agent logs`, `plugin install/uninstall`, plugin repository integration (currently stub commands) | [mofa](https://github.com/mofa-org/mofa) |
+| 25  | Implement OpenAI/Anthropic-compatible API Gateway — `/v1/chat/completions` endpoint, multi-backend load balancing, rate limiting, request routing | [mofa](https://github.com/mofa-org/mofa) |
+| 26  | Implement production-grade observability — Prometheus metrics, OpenTelemetry tracing, structured logging, alerting rules | [mofa](https://github.com/mofa-org/mofa) |
+| 27  | Implement complete RAG Pipeline — Document loading, chunking, embedding, vector storage (Qdrant), retrieval with full workflow | [mofa](https://github.com/mofa-org/mofa) |
+| 28  | Implement Agent testing framework — Unit testing, integration testing, Mock tools, standard test utilities for Agent development | [mofa](https://github.com/mofa-org/mofa) |
+| 29  | Agent state persistence and recovery — Checkpoint/restore Agent execution state for fault tolerance and resumption | [mofa](https://github.com/mofa-org/mofa) |
+| 30  | Streaming response optimization — Unified abstraction for SSE/WebSocket streaming across LLM providers | [mofa](https://github.com/mofa-org/mofa) |
+| 31  | Error handling and retry mechanisms — Fault tolerance, retry strategies, graceful degradation for Agent execution | [mofa](https://github.com/mofa-org/mofa) |
+| 32  | Enhanced plugin hot-reloading — Runtime plugin dynamic loading/unloading/updating without framework restart | [mofa](https://github.com/mofa-org/mofa) |
+| 33  | Agent performance benchmarking — Standardized performance test suite and benchmark data for Agent execution | [mofa](https://github.com/mofa-org/mofa) |
+| 34  | Tool execution sandbox — Secure isolated execution environment for untrusted Tools | [mofa](https://github.com/mofa-org/mofa) |
+| 35  | Multi-modal Agent capabilities — Image, audio, video input/output support for multi-modal LLMs | [mofa](https://github.com/mofa-org/mofa) | 
 
 We apologize that the project is undergoing significant changes and we have not yet had time to break these down into well-labeled issues. We will gradually create `good first issue` labels based on these tasks and other smaller issues that arise as the project evolves. If you are unsure where to start, ask in [Discord](https://discord.gg/hKJZzDMMm9).
 
