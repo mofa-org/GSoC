@@ -79,6 +79,34 @@ These are concrete, self-contained tasks across the MoFA codebase. They are a go
 | 34  | Tool execution sandbox — Secure isolated execution environment for untrusted Tools | [mofa](https://github.com/mofa-org/mofa) |
 | 35  | Multi-modal Agent capabilities — Image, audio, video input/output support for multi-modal LLMs | [mofa](https://github.com/mofa-org/mofa) | 
 
+### Openwork Spotlight (Not a GSoC Idea): Discord Collaboration Assistant with `mofaclaw`
+
+This is an **openwork** exploration item under the Open Tasks section. It is **not** one of the formal GSoC ideas above.
+
+**Goal**
+- Build a Discord-facing collaboration assistant (intended to gradually replace the current OpenClaw usage in group workflows) to showcase real MoFA framework capabilities.
+
+**Proposed Scope (for now)**
+- GitHub operations tools in Discord:
+  - Create issues, summarize PRs, assign owners, label triage support.
+- Webhook -> Discord thread mapping:
+  - Route issue/PR events into stable Discord channels/threads.
+- Repository knowledge Q&A:
+  - Answer questions from docs/README/issues with source links.
+- Daily/periodic summaries:
+  - New issues, PR review queue, and blocked items.
+- Duplicate detection hints:
+  - Suggest potentially duplicate questions/issues before new ones are filed.
+- Reliability mechanisms:
+  - Retry, idempotency, queueing, and rate limiting.
+- Compatibility with existing commands:
+  - Keep alias compatibility for common OpenClaw commands during migration.
+
+**Current Guardrails**
+- No automatic issue close permissions in this openwork scope.
+- No audit log module in this phase.
+- No observability dashboard requirement in this phase.
+
 We apologize that the project is undergoing significant changes and we have not yet had time to break these down into well-labeled issues. We will gradually create `good first issue` labels based on these tasks and other smaller issues that arise as the project evolves. If you are unsure where to start, ask in [Discord](https://discord.gg/hKJZzDMMm9).
 
 
