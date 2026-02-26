@@ -17,6 +17,8 @@ Welcome to MoFA's GSoC 2026 page.
 
 > **Can I start working on ideas now?** Yes. You do not need to wait for the official GSoC application period. Start exploring the codebase, pick up [open tasks](./ideas-list.md#open-tasks--start-contributing-here), and discuss your approach with mentors. Early contributions help both you and us.
 
+["Disclaimer"  for GSoC applications](disclaimer.md)
+
 ## GSoC 2026 Key Dates (Official)
 
 All times below are in UTC:
@@ -45,6 +47,7 @@ Short version:
 ### 1. Clone and Build
 
 **Core framework** (Rust):
+
 ```bash
 git clone https://github.com/mofa-org/mofa
 cd mofa
