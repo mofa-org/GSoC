@@ -89,164 +89,654 @@ __组织联系邮箱:__ dev@mofa.ai
 __GSoC 贡献者指南:__ [README.md](./README.md)
 
 ---
+## 项目 1: Cognitive Gateway — AI Agent 与物理-数字世界的神经接口
 
-## 项目一：AgentForge —— 面向协作式 AI 开发的可组合插件系统
+### 参考平台
 
-### 摘要
+**AgentGateway** — Linux 基金会的 AI Agent 网关平台，提供 LLM/MCP/A2A 协议支持、智能路由、安全和可观测性。
 
-在 vibe coding 时代，单个开发者可以借助 LLM 快速生成 Agent 代码。然而，**将多位 vibe coder 的产出合并为一个连贯系统仍然是最大的未解难题**——人类的 review 带宽才是瓶颈，而非代码生成速度。
+**Plano** — AI 原生代理服务器，提供代理编排、模型路由、过滤器链和提示目标管理。
 
-**AgentForge** 通过 mofa-rs 上“运行时原生”的两层协作模型来解决这个问题：第一层由 AI 生成契约优先的微模块，第二层由高阶 Agent 或人类负责组合与系统级决策。框架负责验证、冲突检测、可审计记录与回滚——实现团队级 vibe coding 而无合并噩梦。
+本项目综合参考上述平台，并扩展 IoT 能力抽象层以实现物理世界交互。
 
-__导师__: BH3GEI (Yao Li), lijingrs (AmosLi)
+### 简要描述
 
-### 目标与想法
+构建一个 Rust 原生的高性能网关，将 AI Agent 连接到数字世界（LLM、MCP 工具、A2A 通信）和物理世界（IoT 设备、传感器、执行器），使 Agent 能够通过语义能力 API 感知和交互现实世界。
 
-* **两层协作模型**:
-  - **第一层（AI 生成微模块）**：在严格契约下生成小而自包含的模块（输入/输出 schema、依赖元数据、测试与风险标签）
-  - **第二层（组合与系统控制）**：由高阶 Agent 或人类评审者负责架构级组合、质量门禁、合并/拒绝决策与回滚
+### 详细描述
 
-* **运行时原生的 Vibe 流程**:
-  - 将 vibe 任务生命周期直接接入 `mofa-runtime`（plan -> generate -> validate -> gate -> merge/rollback）
-  - 产出必须是可验证工件（patch/test/report），而不是只输出自由文本
-  - 通过 CLI/运行时 API 即可使用同一控制模型；UI 只是可选入口，不是核心交付
+当今的 AI Agent 被困在数字世界中——它们可以处理文本、生成图像、调用 API，但无法感知或交互周围的物理世界。同时，传统 API 网关在处理有状态的 AI 协议（如 MCP、A2A）时面临根本性挑战。本项目构建 **Cognitive Gateway**，一个从第一性原理出发、专为 AI Agent 通信设计的统一神经系统。
 
-* **插件契约**：定义稳定的 `PluginManifest` 与 JSON Schema 契约（输入/输出、状态模式、生命周期钩子）
-* **兼容性校验**：提供 `validate` 命令，在运行前检查契约兼容、类型/模式冲突与组合安全性
-* **组合执行器**：实现基于 DAG 的插件编排与执行，并覆盖集成测试
-* **运行时隔离**：以 Wasm sandbox 作为默认插件隔离机制，降低插件间干扰风险
+**架构设计**：
 
-### 最小验收（MVP）
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        AI Agents                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                    Northbound API (REST/WebSocket)
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Cognitive Gateway                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │  Router      │  │  Filter      │  │  Capability          │  │
+│  │  (路由引擎)   │  │  Chain       │  │  Registry            │  │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │  Auth/RBAC   │  │  Rate        │  │  Event Bus           │  │
+│  │  (安全层)    │  │  Limiter     │  │  (事件总线)          │  │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                    Southbound Adapters
+                              ▼
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│ LLM API     │  │ MCP Server  │  │ IoT Hub     │  │ Agent-to-   │
+│ (OpenAI等)  │  │ (工具联邦)  │  │ (HA/MQTT)   │  │ Agent (A2A) │
+└─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
+```
 
-- 在 `mofa` 主仓落地 `PluginManifest` 与 JSON Schema 契约
-- 定义第一层微模块契约（I/O schema、依赖元数据、测试/风险元数据）
-- 实现 `validate` 校验命令
-- 交付一条第二层控制路径（高阶 Agent 或人工驱动），用于组合决策与质量门禁
-- 交付一条端到端运行时流程：`intent -> micro-modules -> composition -> gate -> merge/rollback`
-- 实现基于 DAG 的组合执行器
-- 提供 Wasm sandbox 下的最小可运行插件样例
-- 提供 3 类协作场景（同模块并行修改、跨模块依赖组合、门禁失败后的回滚）
-- 补齐组合与失败路径的集成测试
+**数字世界接口**（对标 AgentGateway + Plano）：
+- **LLM 网关**：多提供商统一接口（OpenAI、Anthropic、Gemini）、推理感知路由、token 计数与成本归属
+- **MCP 网关**：工具联邦、OpenAPI 到 MCP 转换、工具发现与注册
+- **A2A 网关**：Agent 到 Agent 安全通信、能力发现、协作协议
+- **智能路由**：负载均衡、熔断、故障转移、基于模型队列的调度
+- **过滤器链**：请求/响应预处理、内容审核、提示注入防护
+- **安全层**：认证（JWT、API Key、OAuth 2.0）、授权（RBAC + CEL 表达式）、审计日志
 
-### Stretch Goals
+**物理世界接口**（IoT 能力抽象）：
+- **能力抽象层**：语义 API（`speaker.tts()`、`camera.capture()`、`sensor.subscribe()`、`light.setBrightness()`）
+- **适配器插件**：Home Assistant、MQTT Broker、RTSP、厂商云 API
+- **事件流**：设备在线/离线、状态变更、运动检测、语音唤醒
+- **数字孪生**：设备模拟、场景回放、离线测试
 
-- 基于 `mofa-node-hub` 的语义节点检索
-- 自然语言到流程组合的自动生成
-- 插件配置/输出的自动化 UI 生成
+### 预期成果（Deliverables）
 
-### Out of Scope
+**Phase 1: 核心框架（第 1-4 周）**
+- `mofa-gateway` crate 基础架构
+- 路由引擎：基于 trie 的路径匹配、负载均衡策略
+- 过滤器链框架：可插拔的请求/响应处理管道
+- 配置系统：YAML 配置 + 热更新支持
 
-- 把完整 no-code 工作流生成器作为主交付
-- 一步到位的生产级插件市场/分发系统
-- 将 IDE 产品功能或大规模 Studio 界面作为主交付
-- 只有 prompt 演示、没有 patch/test/report 可验证工件的 vibe 流程
+**Phase 2: 数字世界接口（第 5-10 周）**
+- LLM 网关：OpenAI 兼容 API、多提供商路由、token 遥测
+- MCP 网关：工具注册、调用代理、OpenAPI 转换
+- A2A 网关基础：Agent 发现、安全通信
+- 认证授权：JWT 验证、RBAC 策略引擎
 
-### 验收标准（Acceptance Criteria）
+**Phase 3: 物理世界接口（第 11-16 周）**
+- 能力抽象层：`Capability` trait、`CapabilityRegistry`、schema 版本管理
+- Home Assistant 适配器：REST/WebSocket API 集成
+- MQTT 适配器：订阅/发布、设备发现
+- 事件总线：发布/订阅、事件过滤、持久化
 
-- `validate` 能在运行前拦截契约不兼容
-- 第一层产出可经由第二层控制完成组合，并有明确门禁决策（合并/拒绝/回滚）
-- 至少覆盖 1 类组合冲突与 1 条回滚路径测试
-- 全流程具备可审计记录，可复现关键输入、门禁决策与输出
-- 同一流程支持“高阶 Agent 控制”与“人工控制”两种第二层模式
-- 3 类协作场景可在 CI 中端到端跑通
-- 组合框架与测试代码已并入 `mofa` 主仓
+**Phase 4: 集成与部署（第 17-20 周）**
+- 控制平面：REST API（`GET /capabilities`、`POST /invoke`）、WebSocket 事件流
+- 端到端演示：3 个场景（纯数字、纯物理、混合协作）
+- Docker Compose 部署方案
+- 文档：架构设计、API 参考、适配器开发指南
 
-### 落仓计划（Repo Landing Plan）
+### 最小可行产品（MVP）
 
-- **主落仓**：`mofa`（`mofa-kernel` / `mofa-foundation`）
-- **可选演示接入**：`mofa-studio`
+参与者需在绑定期结束前交付以下 MVP 以证明能力：
+- 可运行的网关服务，支持 HTTP 请求路由
+- 至少 1 个 LLM 提供商（OpenAI）的路由支持
+- 至少 1 个 IoT 适配器（Home Assistant 或 MQTT）
+- 基本的认证（API Key）和限流功能
+- 简单的命令行演示脚本
 
-#### 示例场景
+### 扩展目标（Stretch Goals）
 
-三位开发者各自 vibe code 一个 Agent 组件：
-- 开发者 A：一个网页抓取 Agent 插件
-- 开发者 B：一个摘要生成 Agent 插件
-- 开发者 C：一个通知推送 Agent 插件
-
-AgentForge 验证它们的接口兼容，将其组合为流水线，并运行整个系统——三位开发者无需阅读彼此的代码。
-
-#### 参考链接
-
-* https://github.com/mofa-org/mofa/tree/main
-* https://github.com/mofa-org/mofa-studio
-
-* https://makepad.dev/
-
-__所需技能__: Rust, 插件架构设计, 类型系统, LLM 集成
-
-__时间估计__: 175 小时（中等规模）
-
-__难度__: 高
-
----
-
-## 项目二：Studio 可观测性面板
-
-### 摘要
-
-MoFA Studio 运行涉及多个模型（ASR、LLM、TTS）和 Agent 交互的复杂 AI 流水线。目前，当出现问题或运行缓慢时，开发者对内部状况的可见性有限。本项目将构建一个**实时可观测面板**，直接嵌入 MoFA Studio，为开发者提供对模型性能、资源使用和 Agent 行为的即时洞察。
-
-该面板将利用 MoFA Studio 现有的 [makepad-chart](https://github.com/mofa-org/makepad-chart) 和 [makepad-d3](https://github.com/mofa-org/makepad-d3) GPU 加速可视化组件。
-
-__导师__: BH3GEI (Yao Li), yangrudan (CookieYang)
-
-### 范围边界（与项目四区分）
-
-- 本项目聚焦**在线观测与实时可视化**。
-- 本项目不包含会话重放、时间旅行调试、断点调试（这些属于项目四）。
-- 重点是把指标采集、聚合、推送和 Studio 面板打通。
-
-### 目标与想法
-
-* **后端指标服务**：构建运行时指标服务（REST + WebSocket）
-* **Studio 可视化面板**：在 Studio 内落地实时观测面板
-* **瓶颈可见性**：让开发者能直接看到延迟、吞吐、队列、模型状态等关键信号
-
-### 最小验收（MVP）
-
-- 稳定提供 `/api/agents`、`/api/metrics` 与 WebSocket `/ws`。
-- 在 Studio 中落地至少 4 类核心视图：延迟、吞吐、队列深度、模型加载状态。
-- 提供至少 1 个端到端示例，能定位出实际瓶颈。
-- 提供基础测试与使用文档，支持他人复现。
-
-### Stretch Goals
-
-- 统一接入更多编排后端的监控（含 Dora 流程）
-- 增强关联分析视图与筛选体验
-
-### Out of Scope
-
-- 会话重放、时间旅行调试能力
-- 完整历史轨迹重建（属于项目四）
+- **高级路由**：推理感知路由（GPU 队列深度、KV cache 利用率）
+- **完整语音链路**：流式音频、连续对话、打断控制
+- **可观测性集成**：OpenTelemetry 追踪、Prometheus 指标、Grafana 仪表板
+- **更多适配器**：Zigbee、Socket.IO、厂商云 API（如小米、涂鸦）
+- **数字孪生框架**：设备模拟、场景回放
 
 ### 验收标准（Acceptance Criteria）
 
-- 后端指标服务与 Studio 面板两部分都交付
-- API 契约有文档且有测试覆盖
-- 面板输出可用于定位至少 1 类真实瓶颈
+- [ ] Agent 侧代码不包含具体协议细节，仅通过能力 API 访问服务
+- [ ] 网关可持续运行 24 小时无崩溃，支持配置热更新
+- [ ] 至少 2 类异构后端（LLM + IoT）在同一能力层下可工作
+- [ ] 事件/能力 schema 有版本策略，文档中说明兼容规则
+- [ ] 单元测试覆盖率 ≥ 70%，集成测试覆盖核心场景
+- [ ] 提供可复现的部署文档和演示脚本
 
-### 落仓计划（Repo Landing Plan）
+### 所需技能
 
-- **主落仓**：`mofa-studio`（UI + 指标服务集成）
-- **配套集成**：`mofa`（`mofa-monitoring` / `mofa-runtime`）
+- **必需**：扎实的 Rust 编程能力（async/await、trait 设计、错误处理）
+- **必需**：理解 API 网关模式和反向代理原理
+- **必需**：熟悉 HTTP/WebSocket 协议
+- **优先**：IoT 协议经验（MQTT、Home Assistant）
+- **优先**：事件驱动架构和消息队列经验
+- **优先**：LLM API 集成经验（OpenAI、Anthropic）
 
-#### 参考链接
+### 难度
 
-* https://github.com/mofa-org/mofa-studio
-* https://github.com/mofa-org/makepad-chart
-* https://github.com/mofa-org/makepad-d3
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
+**高**（350 小时）
 
-__所需技能__: Rust, HTTP/WebSocket 服务器 (axum/tokio), 实时数据可视化, Makepad UI
+### 导师
 
-__时间估计__: 90 小时（8 周）
+待定
 
-__难度__: 中
+## 项目 2: Cognitive Observatory — AI Agent 系统的全景监控台
+
+### 参考平台
+
+**LangSmith** — LangChain 提供的统一 LLM 应用开发平台，涵盖可观测性、评估、提示工程和部署管理。本项目实现完整的 LangSmith 功能集，包括分布式追踪、实时监控、洞察分析、评估框架、提示版本控制和监控仪表板。
+
+### 简要描述
+
+构建一个 LangSmith 级别的可观测性与评估平台，为 AI Agent 生命周期的各个阶段提供全景式可见性——从开发调试、质量评估到生产监控和持续改进。
+
+### 详细描述
+
+当多 Agent 系统做出错误决策时，问题不是"哪里出错了？"——而是"我该从哪里开始找？"传统调试工具对 AI 系统的独特挑战视而不见：非确定性 LLM 输出、分布式 Agent 决策、复杂的工作流拓扑。
+
+本项目构建 **Cognitive Observatory**，实现 LangSmith 的完整功能矩阵：
+
+**可观测性（Observability）**：
+- **请求追踪（Tracing）**：详细调用链路、错误与延迟定位、非侵入式集成、OpenTelemetry 兼容
+- **实时监控（Monitoring）**：预构建仪表板（请求数、错误率、P50/P99 延迟、Token 使用量、成本）、自定义图表、Webhook 警报
+- **洞察分析（Insights）**：对话聚类、问题定位、模式发现
+
+**评估（Evaluation）**：
+- **离线评估**：数据集管理、基准测试、回归检测、单元测试、回测
+- **在线评估**：实时质量监控、异常检测、生产反馈收集
+- **评估器**：人工评审、代码评估、LLM-as-judge、成对比较
+- **持续改进**：评估结果关联追踪、问题转测试用例
+
+**提示工程（Prompt Engineering）**：
+- **提示中心**：提示模板存储、变量机制、Playground 即时测试
+- **版本控制**：提交记录、标签标记、分支与合并
+- **性能评估**：提示与数据集关联、自动评分、多版本对比
+
+**部署与协作**：
+- **多工作区**：组织/工作区层级管理、环境隔离
+- **权限控制**：RBAC 角色（管理员/编辑/观察者）、自定义角色
+- **数据管理**：加密存储、数据驻留、敏感数据屏蔽
+
+### 预期成果（Deliverables）
+
+**Phase 1: 核心追踪与可观测性（第 1-4 周）**
+- `mofa-observability` crate 基础架构
+- OpenTelemetry 兼容的分布式追踪系统
+- LLM 遥测：提示/响应日志、Token 计数、成本归属
+- 基础监控仪表板：请求统计、错误率、延迟分布
+- 追踪数据存储：内存 + PostgreSQL 后端
+
+**Phase 2: 评估框架（第 5-10 周）**
+- 离线评估系统：数据集管理、测试用例组织
+- 评估器框架：`Evaluator` trait、LLM-as-judge、代码评估
+- 在线评估：实时质量监控、异常检测规则
+- 评估结果存储与查询 API
+- 回归检测与基准测试工具
+
+**Phase 3: 提示工程与时间旅行（第 11-16 周）**
+- 提示中心：模板存储、变量系统、版本控制
+- 提示 Playground：即时测试、多轮对话模拟
+- 时间旅行调试：状态快照、对话回放、反事实探索
+- 洞察分析：对话聚类、模式发现算法
+- 人类反馈集成：标注队列、评分系统
+
+**Phase 4: 仪表板与集成（第 17-20 周）**
+- Web 仪表板增强：React 前端、实时 WebSocket 推送
+- 警报系统：阈值配置、Webhook 通知（Slack/邮件）
+- Grafana 集成：Prometheus 指标导出
+- RBAC 权限控制：角色管理、API 密钥
+- Docker Compose 部署方案
+- 文档：API 参考、用户指南、集成示例
+
+### 最小可行产品（MVP）
+
+参与者需在绑定期结束前交付以下 MVP 以证明能力：
+- 可运行的追踪服务，支持 HTTP/gRPC 数据摄入
+- 至少 1 种评估器（LLM-as-judge 或代码评估）
+- 基础 Web 仪表板，显示追踪列表和详情
+- 简单的离线评估流程（数据集 → 评估 → 结果）
+- 命令行工具提交追踪数据
+
+### 扩展目标（Stretch Goals）
+
+- **高级洞察**：AI 驱动的自动问题诊断、根因分析
+- **多租户支持**：完整的工作区隔离、组织管理
+- **SSO 集成**：OAuth 2.0、SAML 企业认证
+- **性能优化**：追踪数据压缩、冷热分层存储
+- **SDK 支持**：Python/TypeScript SDK 便于应用集成
+- **Agent 部署**：集成 LangSmith 风格的 Agent Server
+
+### 验收标准（Acceptance Criteria）
+
+- [ ] 追踪系统可捕获完整的 Agent 执行链路（输入、输出、工具调用、LLM 请求）
+- [ ] 支持 OpenTelemetry 标准导入导出，与 Jaeger/Grafana 兼容
+- [ ] 评估框架支持至少 3 种评估器类型
+- [ ] 离线评估可对数据集执行并生成评分报告
+- [ ] 在线评估可实时检测生产异常并触发警报
+- [ ] 提示版本控制支持提交历史、标签、回滚
+- [ ] 时间旅行调试可回放任意历史会话
+- [ ] Web 仪表板响应时间 < 500ms，支持实时更新
+- [ ] 单元测试覆盖率 ≥ 70%，集成测试覆盖核心场景
+- [ ] 提供可复现的部署文档和演示脚本
+
+### 所需技能
+
+- **必需**：扎实的 Rust 编程能力（async/await、trait 设计、错误处理）
+- **必需**：理解 OpenTelemetry 和分布式追踪原理
+- **必需**：熟悉 SQL 数据库（PostgreSQL）和数据建模
+- **优先**：可观测性工具经验（Jaeger、Grafana、Prometheus）
+- **优先**：前端经验（TypeScript/React）
+- **优先**：LLM 评估方法（LLM-as-judge、RAGAS 等）
+
+### 难度
+
+**高**（350 小时）
+
+### 导师
+
+待定
+
+## 项目 3: Neural Workflow Engine — 带时间持久化和响应式流的状态图
+
+### 参考平台
+
+**LangGraph** — 一个用于构建有状态、多参与者 LLM 应用的库，构建在 LangChain 之上。本项目实现完整的 LangGraph 功能，包括 StateGraph、检查点、流式处理、人机协同和持久化。
+
+### 简要描述
+
+构建一个 LangGraph 风格的工作流引擎，具备自动检查点、崩溃恢复和响应式流，使复杂的 AI 工作流像数据库事务一样可靠。
+
+### 详细描述
+
+复杂的 AI 工作流不是线性的——它们分支、循环、并行化，有时还会失败。**Neural Workflow Engine** 提供类似大脑的架构来编排这些复杂模式，并内置时间持久化。
+
+**StateGraph 架构**：
+- 动态拓扑：循环、条件边、运行时路由
+- 状态管理：带差异更新的不可变快照
+- 并行执行，含 fork/join 模式
+- 错误处理，含补偿事务
+
+**时间持久化**：
+- 自动检查点（基于时间、步骤、谓词）
+- 多后端存储：内存、PostgreSQL、SQLite、S3、Redis
+- 带增量压缩的高效序列化
+- 崩溃恢复，自动状态恢复
+
+**响应式流**：
+- 流式优先设计，含背压
+- 流控制策略：缓冲、丢弃、节流、取最新
+- 并发管理，含优先队列
+- 流组合：合并、拆分、过滤、转换
+
+### 预期成果
+
+- `CheckpointManager` trait，支持可插拔后端
+- 可配置背压的 `StreamingExecutor`
+- 高效二进制编码的 `StateSerializer`
+- 含故障注入测试的恢复模块
+- 动态拓扑修改 API
+- 工作流版本控制
+- 基准测试套件
+- LangGraph 迁移指南
+
+### 所需技能
+
+- **必需**：扎实的 Rust（异步、序列化、数据库）
+- **必需**：理解图算法和状态机
+- **优先**：流式系统经验
+- **优先**：时序数据库经验
+
+### 难度
+
+**高**（350 小时）
+
+### 导师
+
+待定
 
 ---
 
-## 项目三：统一推理编排器（本地 + 云端）
+## 项目 四: Cognitive Swarm Orchestrator — 认知集群编排与人机协同治理
+
+### 参考平台
+
+**OpenClaw** — 7×24 小时任务自动化平台，强调单 Agent 执行能力。本项目**不复制** OpenClaw 的自动化路线，而是构建 **Swarm 编排层**。
+
+**ZeroClaw** — 轻量级 Rust Agent 运行时，强调性能。本项目**不竞争**运行时，而是构建**协作治理层**。
+
+**差异化定位**：2026 是"编排时代"——从单个超级 Agent 到专业化 Agent **Swarm 协作**。本项目构建 MoFA 生态系统的**核心编排与治理引擎**。
+
+### 简要描述
+
+构建一个 **Swarm 编排引擎**，协调多个专业化 Agent 协作完成复杂任务，结合 MoFA 的 Gateway（能力接入）、Smith（可观测性）、SDK（多语言）形成完整生态闭环，并通过人机协同（HITL）机制确保关键决策受人类监督。
+
+### 详细描述
+
+**问题**：OpenClaw 证明了单 Agent 自动化的价值，但复杂任务需要**多 Agent 协作**——就像公司依赖不同角色的团队而非一个全能员工。2026 的趋势是从"寒武纪大爆发"（模型多样性）到"物种收敛"（**编排与集成**）。
+
+**解决方案**：**Cognitive Swarm Orchestrator** 是 MoFA 生态系统的"大脑中枢"，它不直接执行任务，而是：
+1. **理解任务** → 分解为子任务
+2. **组建团队** → 动态匹配 Agent 能力
+3. **编排协作** → 选择最优协作模式
+4. **监督执行** → 通过 Smith 可观测
+5. **治理决策** → 关键节点人类审批
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     MoFA Ecosystem Integration                   │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐   ┌─────────────────────────────────────────┐  │
+│  │   Gateway   │←→│         Cognitive Swarm Orchestrator      │  │
+│  │ (能力接入)   │   │  ┌─────────┐ ┌─────────┐ ┌──────────┐   │  │
+│  └─────────────┘   │  │ Task    │ │ Swarm   │ │  HITL    │   │  │
+│                    │  │ Analyzer│ │ Composer│ │ Governor │   │  │
+│  ┌─────────────┐   │  └─────────┘ └─────────┘ └──────────┘   │  │
+│  │    SDK     │←→│       ↓            ↓            ↓         │  │
+│  │ (多语言)    │   │  ┌─────────────────────────────────────┐ │  │
+│  └─────────────┘   │  │     Coordination Patterns Engine     │ │  │
+│                    │  │  Sequential │ Parallel │ Debate │ ... │ │  │
+│  ┌─────────────┐   │  └─────────────────────────────────────┘ │  │
+│  │   Smith    │←→└─────────────────────────────────────────┘  │
+│  │ (可观测性)  │                                               │
+│  └─────────────┘                                               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**核心模块**：
+
+**1. Task Analyzer（任务分析器）**
+- LLM 驱动的任务分解：复杂任务 → 子任务 DAG
+- 依赖分析与关键路径识别
+- 子任务难度与风险评级（用于 HITL 决策）
+- 输出结构化执行计划
+
+**2. Swarm Composer（集群编排器）**
+- **动态团队组建**：基于 Agent 能力注册表自动匹配
+- **7 种协作模式**：Sequential、Parallel、Debate、Consensus、MapReduce、Supervision、Routing
+- **LLM 模式推荐**：根据任务特征自动选择最优模式
+- **负载均衡**：考虑 Agent 繁忙度、成功率、专业领域
+
+**3. HITL Governor（人机协同治理器）**
+- **5 阶段 Secretary 模式**：Receive → Clarify → Schedule → Monitor → Report
+- **智能审批路由**：基于风险等级路由到合适的审批人
+- **上下文组装**：人类审核前自动汇总关键信息
+- **AI 辅助决策**：生成决策建议与风险分析
+- **升级机制**：超时/争议自动升级
+
+**4. Governance Layer（治理层）**
+- **SLA 管理**：截止日期追踪、延迟预警
+- **审计追踪**：完整决策链路记录（满足合规要求）
+- **多通道通知**：WebSocket、Email、Slack、Telegram、钉钉
+- **RBAC 权限**：角色定义、能力授权
+
+**5. Ecosystem Integration（生态集成）**
+- **Gateway 集成**：通过能力 API 访问物理/数字世界（Speaker、Camera、Sensor 等）
+- **Smith 集成**：追踪数据自动上报、评估结果反馈优化
+- **SDK 集成**：Python/Go/Kotlin/Swift 编排 API
+
+### 预期成果（Deliverables）
+
+**Phase 1: 核心编排引擎（第 1-4 周）**
+- `mofa-orchestrator` crate 基础架构
+- `TaskAnalyzer`：任务分解、DAG 生成
+- `SwarmComposer`：动态团队组建、能力匹配
+- 基础协调模式：Sequential、Parallel
+
+**Phase 2: 协作模式与 HITL（第 5-10 周）**
+- 完整 7 种协作模式实现
+- `HITLGovernor`：5 阶段 Secretary 生命周期
+- 审批工作流引擎：角色路由、升级机制
+- AI 辅助决策：上下文组装、建议生成
+
+**Phase 3: 治理与生态集成（第 11-16 周）**
+- `GovernanceLayer`：SLA 管理、审计追踪
+- 多通道通知适配器（Slack、Telegram、Email、钉钉）
+- Gateway 集成：能力 API 调用
+- Smith 集成：追踪数据上报、评估反馈
+
+**Phase 4: SDK 与生产就绪（第 17-20 周）**
+- 编排 API 多语言绑定（Python/Go/Kotlin/Swift）
+- Web Dashboard：Swarm 状态、审批队列、审计日志
+- CLI 工具：`mofa swarm deploy`、`mofa swarm status`
+- Docker Compose 部署方案
+- 文档：编排指南、最佳实践、集成示例
+
+### 最小可行产品（MVP）
+
+参与者需在绑定期结束前交付以下 MVP 以证明能力：
+- 可运行的编排服务，支持任务分解和子任务调度
+- 至少 2 种协作模式（Sequential + Parallel）的完整实现
+- 基础 HITL 流程：人工审批 API + 简单 Web 界面
+- 与 Gateway 的集成演示（通过能力 API 调用设备）
+- 简单的命令行演示：`mofa swarm run examples/swarm_demo.yaml`
+
+### 扩展目标（Stretch Goals）
+
+- **高级模式**：Debate、Consensus 模式的 LLM 驱动优化
+- **自适应调度**：基于历史数据的学习型任务分配
+- **跨集群编排**：多租户、多区域 Swarm 协作
+- **Smith 深度集成**：编排质量评估、自动模式推荐
+- **声明式 DSL**：YAML 定义 Swarm 编排规则
+
+### 验收标准（Acceptance Criteria）
+
+- [ ] 支持至少 5 种协作模式，可通过 API 动态选择
+- [ ] 任务分解生成有效的 DAG，支持依赖并行执行
+- [ ] HITL 流程完整：审批请求 → 人工响应 → 执行继续
+- [ ] 审计追踪覆盖所有关键决策节点
+- [ ] 与 Gateway 集成：Agent 可通过能力 API 访问设备
+- [ ] 与 Smith 集成：追踪数据自动上报
+- [ ] 单元测试覆盖率 ≥ 70%，集成测试覆盖核心场景
+- [ ] 提供可复现的部署文档和演示脚本
+
+### 与竞品对比
+
+| 特性 | OpenClaw | ZeroClaw | **本项目 (Swarm Orchestrator)** |
+|------|----------|----------|-------------------------------|
+| **定位** | 单 Agent 自动化 | 轻量运行时 | **多 Agent 编排** |
+| **执行模式** | 独立执行 | 独立执行 | **协作编排** |
+| **HITL** | 基础 | 无 | **完整治理流程** |
+| **可观测** | 基础日志 | 无 | **Smith 集成** |
+| **能力接入** | 有限 | 无 | **Gateway 集成** |
+| **多语言** | 无 | 无 | **SDK 集成** |
+
+### 所需技能
+
+- **必需**：扎实的 Rust 编程（async/await、trait 设计）
+- **必需**：理解分布式系统和协作模式
+- **必需**：理解 DAG 和任务调度原理
+- **优先**：LLM 应用开发经验（提示工程、Agent 模式）
+- **优先**：工作流引擎或编排系统经验
+- **优先**：通知系统和消息队列经验
+
+### 难度
+
+**高**（350 小时）
+
+### 导师
+
+待定
+
+---
+
+## 项目 五: Cognitive Mesh Platform — 认知网格：共享记忆、可扩展智能与多语言生态
+
+### 参考平台
+
+**LangChain** — 全面的 LLM 应用框架。本项目实现 LangChain 的记忆系统、RAG 基础设施。
+
+**UniFFI + Plugin Ecosystems** — Mozilla 的多语言绑定 + 现代插件架构。本项目构建完整的可扩展生态。
+
+**设计理念**：将"集体智能"与"可扩展性"深度融合——**知识通过插件扩展，能力通过多语言传播**。
+
+### 简要描述
+
+构建一个**认知网格平台**，通过多层记忆和 RAG 基础设施实现知识共享，通过双运行时插件系统实现能力扩展，通过多语言 SDK 实现生态普及——让 Agent 的智能可积累、可扩展、可普及。
+
+### 详细描述
+
+**问题**：单个 Agent 受限于训练数据和上下文窗口。更严重的是，每个开发者都在重复构建相似的记忆系统、向量存储、嵌入流水线——**智能无法积累，能力无法复用**。
+
+**解决方案**：**Cognitive Mesh Platform** 构建一个知识共享与能力扩展的统一平台：
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     Cognitive Mesh Platform                      │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Polyglot SDK Layer (UniFFI)                    ││
+│  │   Python │ Go │ Kotlin │ Swift │ Rust Native               ││
+│  │   PyPI   │ Go Modules │ Maven │ SPM │ crates.io            ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                              ↓                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Collective Intelligence Core                   ││
+│  │  ┌────────────┐ ┌────────────┐ ┌────────────────────────┐  ││
+│  │  │  Memory    │ │    RAG     │ │  Embedding Pipeline    │  ││
+│  │  │  System    │ │  Engine    │ │  (Multi-Provider)      │  ││
+│  │  │ (3-Layer)  │ │ (Hybrid)   │ │                        │  ││
+│  │  └────────────┘ └────────────┘ └────────────────────────┘  ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                              ↓                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Extensibility Layer                            ││
+│  │  ┌────────────┐ ┌────────────┐ ┌────────────────────────┐  ││
+│  │  │  Plugin    │ │  WASM +    │ │  Plugin Marketplace    │  ││
+│  │  │  System    │ │  Rhai      │ │  (Registry + Sandbox)  │  ││
+│  │  │ (Dual)     │ │  Runtime   │ │                        │  ││
+│  │  └────────────┘ └────────────┘ └────────────────────────┘  ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                              ↓                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Storage Backends (Pluggable)                   ││
+│  │  Qdrant │ pgvector │ Milvus │ Redis │ S3 │ PostgreSQL      ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**核心模块**：
+
+**1. Multi-Layer Memory System（多层记忆系统）**
+- **情景记忆 (Episodic)**：对话历史、交互日志、事件序列
+- **语义记忆 (Semantic)**：向量编码的事实、知识、概念
+- **程序记忆 (Procedural)**：学到的技能、策略、工作流
+- **巩固引擎 (Consolidation)**：LLM 驱动的自动知识提取
+- **记忆衰减**：基于重要性和访问频率的自动清理
+
+**2. RAG Infrastructure（RAG 基础设施）**
+- **向量存储抽象**：统一的 `VectorStore` trait
+- **多后端支持**：Qdrant、pgvector、Milvus、内存 HNSW
+- **混合搜索**：稠密向量 + BM25 稀疏检索
+- **智能分块**：语义分块、滑动窗口、递归分割
+- **重排序**：Cross-encoder 精排
+
+**3. Embedding Pipeline（嵌入流水线）**
+- **多提供商**：OpenAI、Cohere、本地模型 (ONNX)
+- **批处理**：高效批量嵌入
+- **缓存层**：嵌入结果缓存
+- **维度归一化**：不同模型的统一接口
+
+**4. Dual-Runtime Plugin System（双运行时插件系统）**
+- **编译时层**：Rust 原生插件 + WebAssembly (WASM)
+- **运行时层**：Rhai 脚本，支持热重载
+- **跨运行时桥接**：WASM ↔ Rhai 互操作
+- **安全沙箱**：资源限制、能力授权
+- **插件市场**：签名验证、依赖解析、版本管理
+
+**5. Polyglot SDK Suite（多语言 SDK 套件）**
+- **Python SDK**：asyncio、类型提示、PyPI、Jupyter 集成
+- **Go SDK**：Goroutine 友好、上下文传播、Go modules
+- **Kotlin SDK**：协程、DSL 风格构建器、Maven Central
+- **Swift SDK**：Swift async/await、SwiftUI 集成、SPM
+- **跨语言一致性测试**：确保行为一致
+
+### 预期成果（Deliverables）
+
+**Phase 1: 核心记忆与 RAG（第 1-5 周）**
+- `mofa-memory` crate：三层记忆系统
+- `MemoryConsolidator`：LLM 驱动的知识提取
+- `VectorStore` trait + Qdrant 实现
+- `HybridSearcher`：稠密 + 稀疏检索
+- 基础嵌入流水线
+
+**Phase 2: 插件系统（第 6-10 周）**
+- `mofa-plugins` 增强：WASM + Rhai 双运行时
+- `PluginBridge`：跨运行时互操作
+- `PluginSandbox`：安全沙箱
+- 热重载机制
+- 基础插件市场原型
+
+**Phase 3: 多语言 SDK（第 11-16 周）**
+- UniFFI 接口定义
+- Python SDK（PyPI 发布）
+- Go SDK（Go modules）
+- Kotlin SDK（Maven Central）
+- Swift SDK（SPM）
+- 跨语言测试套件
+
+**Phase 4: 存储后端与生态（第 17-22 周）**
+- pgvector、Milvus、Redis 后端
+- 插件市场完整功能（签名、依赖、版本）
+- CLI 工具：`mofa plugin install/publish`
+- 文档门户：快速入门、API 参考、示例库
+- 性能基准测试
+
+### 最小可行产品（MVP）
+
+参与者需在绑定期结束前交付以下 MVP 以证明能力：
+- 三层记忆系统基本实现（Episodic + Semantic）
+- 至少 1 个向量存储后端（Qdrant 或 pgvector）
+- 基础 RAG 流程：文档 → 分块 → 嵌入 → 检索 → 生成
+- 至少 2 种语言 SDK（Python + Go 或 Kotlin）
+- 简单的插件加载演示（Rhai 脚本）
+
+### 扩展目标（Stretch Goals）
+
+- **知识图谱**：实体抽取、关系推理、图检索
+- **高级巩固**：多轮对话自动总结、关键信息提取
+- **插件 IDE 集成**：VS Code 插件、调试工具
+- **分布式记忆**：跨节点记忆同步、联邦学习
+- **性能优化**：向量索引优化、缓存策略、批处理
+
+### 验收标准（Acceptance Criteria）
+
+- [ ] 三层记忆系统完整实现，支持持久化
+- [ ] 至少 3 种向量存储后端可用（Qdrant、pgvector、内存）
+- [ ] 混合搜索准确率 ≥ 85%（在标准数据集上）
+- [ ] 插件系统支持 WASM 和 Rhai 双运行时
+- [ ] 4 种语言 SDK 行为一致性测试通过
+- [ ] 插件市场支持签名验证和依赖解析
+- [ ] 单元测试覆盖率 ≥ 70%，集成测试覆盖核心场景
+- [ ] 提供可复现的部署文档和演示脚本
+
+### 生态价值
+
+| 层级 | 价值 |
+|------|------|
+| **知识共享** | Agent 智能可积累，避免重复构建 |
+| **能力扩展** | 社区可贡献新的记忆后端、嵌入提供商 |
+| **生态普及** | 任何语言开发者都能访问 MoFA 能力 |
+| **插件生态** | 形成良性循环：用户越多 → 插件越多 → 价值越大 |
+
+### 所需技能
+
+- **必需**：扎实的 Rust 编程（async/await、trait 设计、FFI）
+- **必需**：理解向量数据库和嵌入
+- **必需**：至少精通 2 种目标语言（Python/Go/Kotlin/Swift）
+- **优先**：RAG 系统经验
+- **优先**：WebAssembly 运行时经验
+- **优先**：包分发和发布经验
+
+### 难度
+
+**高**（350 小时）
+
+### 导师
+
+待定
+
+---
+
+## 项目六：统一推理编排器（本地 + 云端）
 
 ### 摘要
 
@@ -378,7 +868,7 @@ __难度__: 高
 
 ---
 
-## 项目四：会话记录器与可视化调试器
+## 项目七：会话记录器与可视化调试器
 
 ### 摘要
 
@@ -485,136 +975,70 @@ __难度__: 高
 
 ---
 
-## 项目五：MoFA Input —— 推理栈迁移至 MoFA 原生推理层
+## 项目八：Makepad AI 应用组件库
 
 ### 摘要
 
-[MoFA Input](https://github.com/mofa-org/mofa-input) 是一个完全在本地运行的 macOS 全局语音输入法。目前通过 C++ 互操作层使用 llama.cpp + GGUF 模型进行 ASR（Whisper）和 LLM（Qwen）推理。本项目将推理栈迁移至 MoFA 自身的原生 Rust 推理层（macOS 上当前以 [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) 为后端，见项目三），完全替代 C++ llama.cpp 后端。
+MoFA 的桌面应用（Studio、moly-ai）基于 [Makepad](https://makepad.dev/) 构建——一个 Rust 编写的 GPU 加速 UI 框架。虽然组织已构建了基础 Makepad 组件（[makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3)、[makepad-element](https://github.com/mofa-org/makepad-element)），但目前缺少**专为 AI 应用设计的可复用组件库**。
 
-为什么迁移？纯 Rust 消除了 C++ 互操作的复杂性，MLX 的 Metal GPU 加速在 Apple Silicon 上快于 llama.cpp，且与 MoFA 的可插拔推理后端（项目三）对齐，确保 MoFA Input 能自动受益于未来的后端改进，无需额外迁移工作。
-
-__导师__: BH3GEI (Yao Li), yangrudan (CookieYang)
-
-### 范围选项
-
-- **收敛版（90h）**：ASR 迁移 + 接口层集成
-- **全量版（175h）**：ASR + LLM + C++ 到 Rust 全量迁移
-
-### 回退策略（强制）
-
-- 迁移期间保留旧路径 feature flag
-- 若延迟/准确率超出约定阈值，可安全切回旧路径
-
-### 目标与想法
-
-* **ASR 迁移**：将当前基于 llama.cpp 的 Whisper ASR 替换为 MoFA 推理层（macOS 上如 `funasr-mlx` 或 `funasr-nano-mlx`）。验证准确率和延迟与当前实现的对比
-* **LLM 迁移**：将 Qwen GGUF 推理替换为 MoFA 推理层（macOS 上如 `qwen3-mlx`，safetensors 格式）。确保流式 token 输出与现有 UI 兼容
-* **C++→Rust 迁移**：通过 MoFA 的后端抽象（项目三）以纯 Rust 推理调用取代现有 C++ llm_server（llama.cpp），消除 C++ 互操作层。保持当前 macOS 输入法架构（Fn 热键、悬浮球、历史窗口）
-* **性能基准测试**：在代表性硬件（M1/M2/M3/M4）上对比迁移前后的延迟、内存占用和准确率
-* **模型管理**：集成 `~/.mofa/models/` 模型存储，统一使用 OminiX-MLX 的 safetensors 格式
-
-### 最小验收（MVP）
-
-- 完成所选范围，并给出可复现 benchmark 报告
-- 实现并验证旧栈回退路径（feature flag）
-- 保证与现有输入法核心交互链路兼容
-
-### Stretch Goals
-
-- 在收敛版基础上推进到全量迁移
-- 扩展更多模型兼容与性能调优预设
-
-### Out of Scope
-
-- 未保留回退路径就直接替换线上核心链路
-- 无迁移前后对比数据的“无测量迁移”
-
-### 验收标准（Acceptance Criteria）
-
-- 迁移链路可运行，且在代表性硬件上有基准数据
-- 回退策略经过测试并有文档
-- 核心用户路径（语音输入到文本输出）无严重回归
-
-### 落仓计划（Repo Landing Plan）
-
-- **主落仓**：`mofa-input`
-- **共享依赖**：`mofa`（项目三的推理抽象层）
-
-#### 参考链接
-
-* https://github.com/mofa-org/mofa-input
-* https://github.com/OminiX-ai/OminiX-MLX
-
-__所需技能__: Rust, C++/Rust 互操作, macOS 开发, Apple Silicon
-
-__时间估计__: 90 小时（收敛版）或 175 小时（全量版）
-
-__难度__: 中
-
----
-
-## 项目六：Makepad AI 应用组件库
-
-### 摘要
-
-MoFA 的桌面应用（Studio、moly-ai）基于 [Makepad](https://makepad.dev/) 构建——一个 Rust 编写的 GPU 加速 UI 框架。传统“组件列表 + 人工拼装”的方式并不适合 AI 原生产品：Agent 生成代码很快，但面对通用组件库时缺少可控、可验证的任务语义契约。
-
-本项目保留 `makepad-ai-toolkit` 名称，但核心转向**AI 生成 UI 的运行时模型**：由 Agent 生成结构化 UI 意图/补丁，toolkit 负责校验与安全渲染，Studio/MoFA 运行时负责实时管理。主价值是“可控生成 + 运行时集成”，而不是做一个大而全的通用组件清单。
+本项目构建 `makepad-ai-toolkit`——一套为 AI 聊天界面、模型管理和推理可视化量身定制的精美可复用 Makepad 组件。这些组件可立即用于 MoFA Studio 及任何未来基于 Makepad 的 AI 应用。
 
 __导师__: BH3GEI (Yao Li), yangrudan (CookieYang)
 
 ### 目标与想法
 
-* **AI 原生 UI 契约**:
-  - 定义 Agent 生成 UI 的结构化 schema（意图 + 增量补丁）
-  - 支持面向任务语义的 UI 原语与可组合布局，而非仅低层组件调用
-  - 提供校验规则、版本策略和清晰错误报告
+* **聊天界面组件**:
+  - 支持 user/assistant/system 角色的聊天气泡组件
+  - 流式文本渲染器（token 实时出现）
+  - 聊天消息内的 Markdown 渲染（代码块、列表、标题）
+  - 代码语法高亮
 
-* **生成运行时**:
-  - 打通 Agent 流式 UI 补丁到 Studio 实时渲染的运行时链路
-  - 增加高风险动作门禁（审批、拒绝、回滚）
-  - 当生成失败时可回退到手工/静态 UI 路径，保证可用性
+* **音频与语音组件**:
+  - 音频波形可视化器（用于 ASR 输入 / TTS 输出）
+  - 带实时振幅显示的录音指示器
+  - 带进度条的音频播放控件
 
-* **MoFA 集成（主交付）**:
-  - 与 `mofa-studio` 集成，使生成 UI 可被实时观察、控制和更新
-  - 与 `mofa` 运行时事件对接（agent 状态、tool 调用、trace 元数据）
-  - 与项目二解耦：项目六提供“生成能力与运行时”，不承担编排产品本体
+* **模型管理 UI**:
+  - 带模型元数据（大小、类型、量化）的模型选择下拉框
+  - 下载进度指示器
+  - 模型状态徽章（已加载、卸载中、错误）
 
-* **组件工作（有限且有目的）**:
-  - 仅在 AI 生成链路确实需要时补充/完善基础组件
-  - 优先复用现有 Makepad 生态能力，避免重复造轮子
+* **推理可视化**:
+  - Token/秒计数器和延迟显示
+  - 内存使用仪表盘（Apple Silicon 统一内存）
+  - 推理进度指示器（prefill 与 decode 阶段）
+
+* **集成**:
+  - 打包为独立 Makepad crate（`makepad-ai-toolkit`），可发布到 crates.io
+  - 提供示例应用展示每个组件
+  - 文档与常见 AI 应用布局的使用模式
 
 ### 最小验收（MVP）
 
-- 定义并文档化 AI 生成 UI 契约（schema + patch 协议 + 校验规则）
-- 交付一条端到端运行时示例：`agent output -> UI patch stream -> Studio render -> user feedback -> runtime update`
-- 至少 2 条真实 MoFA 工作流支持运行时生成/更新 UI
-- 门禁行为（审批/拒绝/回滚）具备测试覆盖与可复现 demo 步骤
+- 交付可复用组件包，并附文档与示例
+- 至少 2 个组件接入 `mofa-studio` 的真实产品流程
+- 提供组件级测试与 demo 验证步骤
 
 ### Stretch Goals
 
-- 多 provider 生成适配与更细粒度策略控制
-- 更好的 prompt-to-UI 模板与场景预设
 - 发布 crate 并维护版本化发布说明
+- 增强主题与交互模式，提升通用性
 
 ### Out of Scope
 
-- 做大而全通用组件库、但不提供 AI 生成运行时价值
-- 从零重写现有兄弟项目能力（例如 A2UI renderer）
 - 只做组件展示页，不做产品接入
+- 只做视觉重绘，不提供可复用 API 契约
 
 ### 验收标准（Acceptance Criteria）
 
-- 至少 2 条 MoFA 工作流在 `mofa-studio` 中支持运行时 AI 生成 UI 更新
-- 非法/高风险 UI 补丁可被拦截并提供清晰错误与安全回退
-- 审批/拒绝/回滚路径有测试覆盖且可复现
-- toolkit 契约与运行时 API 文档完整，可被贡献者复用
+- 至少 2 个组件在 `mofa-studio` 中接入并用于已发布工作流
+- 组件 API 文档完整，可被外部贡献者复用
+- 示例可运行且行为与文档一致
 
 ### 落仓计划（Repo Landing Plan）
 
 - **主落仓**：`makepad-ai-toolkit`（新仓）
 - **必须联调落地**：`mofa-studio`
-- **必须运行时对接**：`mofa`（事件/trace 接口）
 
 #### 参考链接
 
@@ -622,7 +1046,6 @@ __导师__: BH3GEI (Yao Li), yangrudan (CookieYang)
 * https://github.com/mofa-org/makepad-chart
 * https://github.com/mofa-org/makepad-d3
 * https://github.com/mofa-org/makepad-element
-* https://github.com/ZhangHanDong/makepad-component
 * https://makepad.dev/
 
 __所需技能__: Rust, UI/UX 设计, Makepad 框架
