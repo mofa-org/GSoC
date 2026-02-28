@@ -153,6 +153,8 @@ It helps, but it is not a hard requirement. A small PR or a thoughtful issue com
 
 We strongly encourage you to make at least one contribution before submitting your proposal. This helps us assess your ability and helps you understand the codebase.
 
+We encourage you to transcend the perspective of individual features and take a holistic architectural view. The goal is to organically integrate various capabilities to establish a cohesive and comprehensive system.
+
 ### Contribution Workflow
 
 1. **Comment on the issue** expressing your interest. Briefly describe your approach.
