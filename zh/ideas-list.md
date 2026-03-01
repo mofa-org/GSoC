@@ -10,23 +10,14 @@
 
 ## 速查：项目提案与对应仓库
 
-### 核心项目 — 框架与基础设施
-
-以下为主线优先方向：核心 Agent 框架、ML 编排与开发者工具。
+当前 ideas 统一按编号放在一张表里（不再区分主线/社区）。
 
 | 项目 | 技能标签 | 主仓库 | 相关仓库 |
 |------|---------|--------|---------|
 | 1. Cognitive Gateway | `Rust` `网关系统` `系统设计` | [mofa](https://github.com/mofa-org/mofa)（`mofa-kernel`、`mofa-foundation`） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 2. Cognitive Observatory | `Rust` `可观测性` `评估体系` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [mofa](https://github.com/mofa-org/mofa)（`mofa-monitoring`）、[makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3) |
 | 3. 认知计算网格（Cognitive Compute Mesh） | `Rust` `系统编程` `本地 + 云端推理` | [mofa](https://github.com/mofa-org/mofa)（`mofa-foundation`、`mofa-runtime`） | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm)、[OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
 | 4. Cognitive Swarm Orchestrator | `Rust` `多智能体编排` `人机协同治理` | [mofa](https://github.com/mofa-org/mofa)（`mofa-foundation`、`mofa-runtime`） | [mofa-studio](https://github.com/mofa-org/mofa-studio)、[mofa-sdk](https://github.com/mofa-org/mofa/tree/main/crates/mofa-sdk) |
-
-### 社区项目 — UI 与应用
-
-以下项目聚焦前端、产品应用与平台集成。不在关键路径上，但若你对这些方向有浓厚兴趣，欢迎选择。
-
-| 项目 | 技能标签 | 主仓库 | 相关仓库 |
-|------|---------|--------|---------|
-| 2. Cognitive Observatory | `Rust` `可观测性` `评估体系` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [mofa](https://github.com/mofa-org/mofa)（`mofa-monitoring`）、[makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3) |
 | 5. Cognitive Workflow Engine | `Rust` `工作流编排` `可视化` | [mofa](https://github.com/mofa-org/mofa)（`mofa-kernel`、`mofa-foundation`） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 | 6. Cognitive Agent Testing & Evaluation Platform | `Rust` `测试框架` `质量评估` | [mofa](https://github.com/mofa-org/mofa) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 
