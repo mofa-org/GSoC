@@ -5,6 +5,8 @@
 This list contains detailed project ideas for Google Summer of Code 2026. While the overall outline is defined, internal details are open to modifications based on contributor suggestions under mentor guidance. We encourage contributors to propose their own approaches — the ideas below are starting points, not rigid specifications.
 
 > **Before You Start**: Comment on the relevant GitHub issue to express interest and briefly describe your approach. **Wait for a maintainer to assign you before writing code.** This prevents duplicate work. See [Contributing Workflow](./README.md#contributing-before-gsoc) for details.
+>
+> **Proposal quality baseline**: Your proposal must include an architecture blueprint (component boundaries, interface contracts, data flow, failure/recovery strategy, and test plan). Evaluation is based on quality and depth, not quantity.
 
 ## Quick Reference: Ideas and Repositories
 

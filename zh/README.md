@@ -10,6 +10,7 @@
 
 - **GSoC 2026 组织页面**: https://summerofcode.withgoogle.com/programs/2026/organizations/mofa-org
 - **项目提案**: [ideas-list.md](./ideas-list.md) ([English](../ideas-list.md))
+- **贡献者文档（mdBook）**: https://mofa.ai/mofa/
 - **Discord**: https://discord.gg/hKJZzDMMm9
 - **组织联系邮箱**: dev@mofa.ai
 
@@ -62,6 +63,7 @@ cd mofa-studio
 
 ### 2. 探索
 
+- 阅读 MoFA mdBook 文档：https://mofa.ai/mofa/
 - 阅读 mofa 仓库中的 `docs/architecture.md`
 - 学习 mofa-rs 中的 `examples/`: `monitoring_dashboard`, `multi_agent_coordination`, `react_agent`
 - 本地构建并运行 Studio
@@ -105,6 +107,15 @@ cd mofa-studio
 - 有可行的前进路径
 - 能将工作分解为里程碑
 - 准备好随着需求演进进行调整
+
+### 架构蓝图（必填）
+
+你的 proposal 不能只给功能清单，必须包含架构蓝图。至少请覆盖：
+- 组件边界与职责划分
+- 接口契约与数据流设计
+- 失败处理、回滚与恢复策略
+- 测试计划与验证方法
+- 主线集成的分阶段交付里程碑
 
 ### 时间规划
 
@@ -169,6 +180,7 @@ MoFA 是一个转型中的项目。我们正在用 Rust 重写核心、探索新
 
 ### PR 质量要求
 
+- **评估基于质量和深度，而非数量。** 我们更看重架构一致性、可测试性与可维护性。
 - **尽量避免纯骨架 PR。** 必须附带可运行的 example 和测试，证明功能可用。如果改动较大，请确保你清楚代码细节以便后续维护。
 - **持续迭代，非一次性提交。** 你需要能够持续维护此 PR 相关功能直至其相对完善。
 - **鼓励使用 AI 工具**，但须理解所提交之代码，避免不可维护代码的提交。

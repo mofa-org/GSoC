@@ -10,6 +10,7 @@ Welcome to MoFA's GSoC 2026 page.
 
 - **GSoC 2026 Organization Page**: https://summerofcode.withgoogle.com/programs/2026/organizations/mofa-org
 - **Project Ideas**: [ideas-list.md](./ideas-list.md)
+- **Contributor Docs (mdBook)**: https://mofa.ai/mofa/
 - **Discord**: https://discord.gg/hKJZzDMMm9
 - **Organization Contact**: dev@mofa.ai
 
@@ -65,6 +66,7 @@ cd mofa-studio
 
 ### 2. Explore
 
+- Read the MoFA mdBook docs: https://mofa.ai/mofa/
 - Read `docs/architecture.md` in the mofa repository
 - Study `examples/` in mofa-rs: `monitoring_dashboard`, `multi_agent_coordination`, `react_agent`
 - Build and run Studio locally
@@ -108,6 +110,15 @@ Don't aim for perfection. Show us you:
 - Have a plausible path forward
 - Can break the work into milestones
 - Are prepared to adapt as requirements evolve
+
+### Architecture Blueprint (Required)
+
+Your proposal must include an architecture blueprint, not only a feature list. At minimum, include:
+- Component boundaries and responsibilities
+- Interface contracts and data flow
+- Failure handling, rollback, and recovery strategy
+- Test plan and validation approach
+- Delivery milestones for mainline integration
 
 ### Timeline
 
@@ -174,6 +185,7 @@ We encourage you to transcend the perspective of individual features and take a 
 
 ### PR Quality Expectations
 
+- **Evaluation is based on quality and depth, not quantity.** We care about architectural coherence, testability, and maintainability.
 - **Avoid skeleton-only PRs.** Include runnable examples and tests that demonstrate the feature works. If the change is large, make sure you understand the code well enough to maintain it going forward.
 - **Iterate continuously.** Do not treat a PR as a one-time submission. You are expected to maintain and improve the feature until it is reasonably complete.
 - **We encourage AI tooling**, but you must understand the code you submit. Avoid submitting code you cannot explain or maintain.
