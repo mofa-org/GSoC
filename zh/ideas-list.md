@@ -16,9 +16,9 @@
 
 | 项目 | 技能标签 | 主仓库 | 相关仓库 |
 |------|---------|--------|---------|
-| 1. AgentForge | `Rust` `系统设计` `插件架构` | [mofa](https://github.com/mofa-org/mofa)（mofa-kernel、mofa-foundation） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
-| 3. 统一推理编排器 | `Rust` `系统编程` `本地 + 云端推理` | [mofa](https://github.com/mofa-org/mofa)（mofa-foundation、mofa-runtime） | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm)、[OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
-| 4. 会话记录器与调试器 | `Rust` `系统设计` `数据可视化` | [mofa](https://github.com/mofa-org/mofa)（mofa-kernel、mofa-monitoring） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 1. Cognitive Gateway | `Rust` `网关系统` `系统设计` | [mofa](https://github.com/mofa-org/mofa)（`mofa-kernel`、`mofa-foundation`） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 3. 认知计算网格（Cognitive Compute Mesh） | `Rust` `系统编程` `本地 + 云端推理` | [mofa](https://github.com/mofa-org/mofa)（`mofa-foundation`、`mofa-runtime`） | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm)、[OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 4. Cognitive Swarm Orchestrator | `Rust` `多智能体编排` `人机协同治理` | [mofa](https://github.com/mofa-org/mofa)（`mofa-foundation`、`mofa-runtime`） | [mofa-studio](https://github.com/mofa-org/mofa-studio)、[mofa-sdk](https://github.com/mofa-org/mofa/tree/main/crates/mofa-sdk) |
 
 ### 社区项目 — UI 与应用
 
@@ -26,9 +26,9 @@
 
 | 项目 | 技能标签 | 主仓库 | 相关仓库 |
 |------|---------|--------|---------|
-| 2. 可观测性面板 | `Rust` `Makepad UI` `HTTP/WebSocket` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3)、[mofa](https://github.com/mofa-org/mofa)（mofa-monitoring） |
-| 5. MoFA Input 迁移 | `Rust` `macOS` `C++/Rust 互操作` `Apple Silicon` | [mofa-input](https://github.com/mofa-org/mofa-input) | [mofa](https://github.com/mofa-org/mofa)（推理层，见项目 3）、[OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
-| 6. Makepad AI 组件库 | `Rust` `Makepad UI` `组件设计` | 新仓库：`makepad-ai-toolkit` | [mofa-studio](https://github.com/mofa-org/mofa-studio)、[makepad-element](https://github.com/mofa-org/makepad-element)、[makepad-chart](https://github.com/mofa-org/makepad-chart) |
+| 2. Cognitive Observatory | `Rust` `可观测性` `评估体系` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [mofa](https://github.com/mofa-org/mofa)（`mofa-monitoring`）、[makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3) |
+| 5. Cognitive Workflow Engine | `Rust` `工作流编排` `可视化` | [mofa](https://github.com/mofa-org/mofa)（`mofa-kernel`、`mofa-foundation`） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 6. Cognitive Agent Testing & Evaluation Platform | `Rust` `测试框架` `质量评估` | [mofa](https://github.com/mofa-org/mofa) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 
 ## CFP 索引（统一英文版）
 

@@ -14,21 +14,20 @@ This list contains detailed project ideas for Google Summer of Code 2026. While 
 
 These are our mainline priorities: the core agent framework, ML orchestration, and developer tooling.
 
-| Idea                           | Tags                                          | Primary Repository                                                       | Other Repos Involved                                                                                                |
-| ------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| 1. AgentForge                  | `Rust` `Systems Design` `Plugin Architecture` | [mofa](https://github.com/mofa-org/mofa) (mofa-kernel, mofa-foundation)  | [mofa-studio](https://github.com/mofa-org/mofa-studio)                                                              |
-| 3. Unified Inference Orchestrator | `Rust` `Systems Programming` `Local + Cloud Inference` | [mofa](https://github.com/mofa-org/mofa) (mofa-foundation, mofa-runtime) | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
-| 4. Session Recorder & Debugger | `Rust` `Systems Design` `Data Visualization`  | [mofa](https://github.com/mofa-org/mofa) (mofa-kernel, mofa-monitoring)  | [mofa-studio](https://github.com/mofa-org/mofa-studio)                                                              |
+| Idea | Tags | Primary Repository | Other Repos Involved |
+| --- | --- | --- | --- |
+| 1. Cognitive Gateway | `Rust` `Gateway` `Systems Design` | [mofa](https://github.com/mofa-org/mofa) (`mofa-kernel`, `mofa-foundation`) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
+| 3. Cognitive Compute Mesh | `Rust` `Systems Programming` `Local + Cloud Inference` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
+| 4. Cognitive Workflow Engine | `Rust` `Workflow Orchestration` `DSL` | [mofa](https://github.com/mofa-org/mofa) (`mofa-kernel`, `mofa-foundation`) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 
 ### Community Ideas — UI & Applications
 
 These are valuable projects with a focus on frontend, product applications, and platform integration. They are not on the critical path but are welcome if you have strong interest in these areas.
 
-| Idea                       | Tags                                              | Primary Repository                                     | Other Repos Involved                                                                                                                                                               |
-| -------------------------- | ------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2. Observability Dashboard | `Rust` `Makepad UI` `HTTP/WebSocket`              | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3), [mofa](https://github.com/mofa-org/mofa) (mofa-monitoring)       |
-| 5. MoFA Input Migration    | `Rust` `macOS` `C++/Rust Interop` `Apple Silicon` | [mofa-input](https://github.com/mofa-org/mofa-input)   | [mofa](https://github.com/mofa-org/mofa) (inference layer, see Idea 3), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX)                                                      |
-| 6. Makepad AI Toolkit      | `Rust` `Makepad UI` `Component Design`            | New repo: `makepad-ai-toolkit`                         | [mofa-studio](https://github.com/mofa-org/mofa-studio), [makepad-element](https://github.com/mofa-org/makepad-element), [makepad-chart](https://github.com/mofa-org/makepad-chart) |
+| Idea | Tags | Primary Repository | Other Repos Involved |
+| --- | --- | --- | --- |
+| 2. Cognitive Observatory | `Rust` `Observability` `Evaluation` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [mofa](https://github.com/mofa-org/mofa) (`mofa-monitoring`), [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3) |
+| 5. Cognitive Swarm Orchestrator | `Rust` `Multi-Agent` `HITL Governance` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa-sdk](https://github.com/mofa-org/mofa/tree/main/crates/mofa-sdk) |
 
 ## CFP Index (English Only)
 
