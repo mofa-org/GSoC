@@ -8,11 +8,11 @@
 >
 > **Proposal 基线要求**：你的 proposal 必须包含架构蓝图（组件边界、接口契约、数据流、故障/恢复策略、测试计划）。评估基于质量与深度，而非数量。
 
-## 速查：项目提案与对应仓库
+## 速查：Idea 提案与对应仓库
 
 当前 ideas 统一按编号放在一张表里（不再区分主线/社区）。
 
-| 项目 | 技能标签 | 主仓库 | 相关仓库 |
+| Idea | 技能标签 | 主仓库 | 相关仓库 |
 |------|---------|--------|---------|
 | 1. Cognitive Gateway | `Rust` `网关系统` `系统设计` | [mofa](https://github.com/mofa-org/mofa)（`mofa-kernel`、`mofa-foundation`） | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 | 2. Cognitive Observatory | `Rust` `可观测性` `评估体系` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [mofa](https://github.com/mofa-org/mofa)（`mofa-monitoring`）、[makepad-chart](https://github.com/mofa-org/makepad-chart)、[makepad-d3](https://github.com/mofa-org/makepad-d3) |

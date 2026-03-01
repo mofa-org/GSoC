@@ -1,4 +1,4 @@
-# MoFA GSoC 2026 Project Ideas
+# MoFA GSoC 2026 Idea List
 
 > English Version
 
@@ -19,6 +19,7 @@ All current ideas are listed below in one table (ordered by idea number).
 | 3. Cognitive Compute Mesh | `Rust` `Systems Programming` `Local + Cloud Inference` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
 | 4. Cognitive Workflow Engine | `Rust` `Workflow Orchestration` `DSL` | [mofa](https://github.com/mofa-org/mofa) (`mofa-kernel`, `mofa-foundation`) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 | 5. Cognitive Swarm Orchestrator | `Rust` `Multi-Agent` `HITL Governance` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa-sdk](https://github.com/mofa-org/mofa/tree/main/crates/mofa-sdk) |
+| 6. Cognitive Agent Testing & Evaluation Platform | `Rust` `Testing Framework` `Quality Evaluation` | [mofa](https://github.com/mofa-org/mofa) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 
 ## CFP Index (English Only)
 
