@@ -136,568 +136,1316 @@ __GSoC Contributor Guidance:__ [README.md](./README.md)
 
 ---
 
-## Idea 1: AgentForge — Composable Plugin System for Collaborative AI Development
+## Idea 1: Cognitive Gateway — Neural Interface Between AI Agents and the Physical-Digital World + Cache & Plugin Registry Ecosystem
 
-### Abstract
+### Reference Platform
 
-In the age of vibe coding, individual developers can generate agent code rapidly with LLMs. However, **merging outputs from multiple vibe coders into a coherent system remains the hardest unsolved problem** — human review bandwidth is the bottleneck, not code generation speed.
+**AgentGateway** — Linux Foundation's AI Agent gateway platform providing LLM/MCP/A2A protocol support, intelligent routing, security, and observability.
 
-**AgentForge** addresses this as a runtime-native capability in mofa-rs: Layer 1 uses AI to generate contract-first micro-modules, and Layer 2 lets a higher-level agent or a human control composition and system-level decisions. The framework handles validation, conflict detection, auditability, and rollback — enabling team-scale vibe coding without merge hell.
+**Plano** — AI-native proxy server providing agent orchestration, model routing, filter chains, and prompt target management.
 
-__Mentors__: BH3GEI (Yao Li), lijingrs (AmosLi)
+**crates.io** — Rust's official package registry with versioning, dependencies, and publishing workflow.
 
-### Goals & Ideas
+This project combines the above platforms and extends IoT capability abstraction, distributed cache system, and plugin registry ecosystem for physical world interaction and ecosystem extension.
 
-* **Two-Layer Collaboration Model**:
-  
-  - **Layer 1 (AI-generated micro-modules)**: Generate small, self-contained modules under strict contracts (input/output schemas, dependencies, tests, risk tags)
-  - **Layer 2 (composition & system control)**: A higher-level agent or human reviewer controls architecture-level composition, quality gates, merge/reject decisions, and rollback
+### Brief Description
 
-* **Runtime-Native Vibe Flow**:
-  
-  - Integrate vibe task lifecycle directly into `mofa-runtime` (plan -> generate -> validate -> gate -> merge/rollback)
-  - Treat outputs as verifiable artifacts (patch/test/report), not free-form text only
-  - Keep the same control model available through CLI/runtime APIs; UI is optional, not the core deliverable
+Build a Rust-native high-performance gateway connecting AI Agents to the digital world (LLM, MCP tools, A2A communication) and physical world (IoT devices, sensors, actuators), enabling agents to perceive and interact with the real world through semantic capability APIs. Also provides a **Distributed Cache Layer** to reduce backend calls, and **Plugin Registry Infrastructure** for capability adapter discovery and installation.
 
-* **Plugin Contract**: Define a stable `PluginManifest` with JSON Schema contracts for plugin inputs/outputs, state schema, and lifecycle hooks
-* **Compatibility Validation**: Provide a `validate` command to check contract compatibility, schema/type mismatch, and composition safety before runtime
-* **Composition Executor**: Implement DAG-based plugin orchestration and execution with integration tests
-* **Runtime Isolation**: Use Wasm sandboxing as the default isolation boundary for plugins
+### Detailed Description
 
-### MVP
+Today's AI Agents are trapped in the digital world—they can process text, generate images, call APIs, but cannot perceive or interact with the surrounding physical world. Meanwhile, traditional API gateways face fundamental challenges when handling stateful AI protocols like MCP and A2A. This project builds **Cognitive Gateway**, a unified nervous system designed from first principles for AI Agent communication.
 
-- Land `PluginManifest` and JSON Schema contracts in the main `mofa` repo
-- Define the Layer 1 micro-module contract (I/O schema, dependency metadata, test/risk metadata)
-- Implement `validate` command for compatibility checks
-- Deliver one Layer 2 controller path (higher-level agent or human-driven) for composition decisions and quality gates
-- Deliver one end-to-end runtime flow: `intent -> micro-modules -> composition -> gate -> merge/rollback`
-- Build a DAG-based composition executor for contract-driven plugin wiring
-- Provide a minimal runnable plugin example under Wasm sandbox
-- Provide 3 collaboration scenarios (parallel edits on one module, cross-module dependency composition, rollback after failing gates)
-- Add integration tests for composition and failure paths
+**Architecture**:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        AI Agents                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                    Northbound API (REST/WebSocket)
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Cognitive Gateway                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │  Router      │  │  Filter      │  │  Capability          │  │
+│  │  (Routing)   │  │  Chain       │  │  Registry            │  │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │  Auth/RBAC   │  │  Rate        │  │  Event Bus           │  │
+│  │  (Security)  │  │  Limiter     │  │                      │  │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                    Southbound Adapters
+                              ▼
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│ LLM API     │  │ MCP Server  │  │ IoT Hub     │  │ Agent-to-   │
+│ (OpenAI)    │  │ (Tool Fed)  │  │ (HA/MQTT)   │  │ Agent (A2A) │
+└─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
+```
+
+**Digital World Interface** (aligned with AgentGateway + Plano):
+- **LLM Gateway**: Multi-provider unified interface (OpenAI, Anthropic, Gemini), inference-aware routing, token counting and cost attribution
+- **MCP Gateway**: Tool federation, OpenAPI to MCP conversion, tool discovery and registration
+- **A2A Gateway**: Agent-to-Agent secure communication, capability discovery, collaboration protocols
+- **Intelligent Routing**: Load balancing, circuit breaking, failover, model queue-based scheduling
+- **Filter Chain**: Request/response preprocessing, content moderation, prompt injection protection
+- **Security Layer**: Authentication (JWT, API Key, OAuth 2.0), authorization (RBAC + CEL expressions), audit logging
+
+**Physical World Interface** (IoT Capability Abstraction):
+- **Capability Abstraction Layer**: Semantic APIs (`speaker.tts()`, `camera.capture()`, `sensor.subscribe()`, `light.setBrightness()`)
+- **Adapter Plugins**: Home Assistant, MQTT Broker, RTSP, vendor cloud APIs
+- **Event Streams**: Device online/offline, state changes, motion detection, voice wake-up
+- **Digital Twin**: Device simulation, scenario replay, offline testing
+
+**Distributed Cache Layer** (New):
+- **Multi-Level Cache**: L1 (in-memory) → L2 (Redis) → L3 (PostgreSQL)
+- **Cache Invalidation**: TTL-based, event-driven, manual invalidation
+- **Cross-Node Sync**: Cache coherence across distributed nodes
+- **Cache Warming**: Preload frequently accessed LLM responses and IoT states
+- **Smart Cache Keys**: Semantic similarity-based cache hits
+
+**Plugin Registry Infrastructure** (New):
+- **Plugin Registry API**: REST API for publishing, searching, downloading plugins
+- **Signature Verification**: Ed25519 cryptographic signatures for plugin authenticity
+- **CLI Tools**: `mofa plugin install/publish/search/verify`
+- **Capability Discovery**: Schema-based plugin capability matching
+
+### Expected Outcomes
+
+**Phase 1: Core Framework (Weeks 1-4)**
+- `mofa-gateway` crate foundation
+- Routing engine: trie-based path matching, load balancing strategies
+- Filter chain framework: pluggable request/response processing pipeline
+- Configuration system: YAML config + hot reload support
+
+**Phase 2: Digital World Interface (Weeks 5-10)**
+- LLM Gateway: OpenAI-compatible API, multi-provider routing, token telemetry
+- MCP Gateway: Tool registration, invocation proxy, OpenAPI conversion
+- A2A Gateway basics: Agent discovery, secure communication
+- Authentication/Authorization: JWT verification, RBAC policy engine
+
+**Phase 3: Physical World Interface (Weeks 11-16)**
+- Capability Abstraction Layer: `Capability` trait, `CapabilityRegistry`, schema versioning
+- Home Assistant adapter: REST/WebSocket API integration
+- MQTT adapter: subscribe/publish, device discovery
+- Event Bus: pub/sub, event filtering, persistence
+
+**Phase 4: Integration & Deployment (Weeks 17-20)**
+- Control plane: REST API (`GET /capabilities`, `POST /invoke`), WebSocket event stream
+- End-to-end demo: 3 scenarios (pure digital, pure physical, hybrid collaboration)
+- Docker Compose deployment
+- Documentation: architecture design, API reference, adapter development guide
+
+**Phase 5: Cache & Plugin Ecosystem (Weeks 21-24)**
+- L1/L2/L3 multi-level cache implementation
+- Cross-node cache synchronization mechanism
+- Plugin registry API with signature verification
+- CLI tools: `mofa plugin install/publish/search/verify`
+- Cache hit rate monitoring and optimization
+
+### Minimum Viable Product (MVP)
+
+Participants must deliver the following MVP before the bonding period ends:
+- Running gateway service with HTTP request routing
+- At least 1 LLM provider (OpenAI) routing support
+- At least 1 IoT adapter (Home Assistant or MQTT)
+- Basic authentication (API Key) and rate limiting
+- L1 in-memory cache basic implementation
+- Simple plugin registry API (CRUD operations)
+- Simple command-line demo script
 
 ### Stretch Goals
 
-- Semantic node search over `mofa-node-hub`
-- Natural-language-to-flow synthesis
-- Auto-generated UI for plugin configuration/output
-
-### Out of Scope
-
-- Full no-code workflow generator as primary deliverable
-- Production-grade plugin marketplace/distribution system
-- IDE product features or large Studio UI surfaces as primary deliverables
-- Prompt-only vibe demos without verifiable patch/test/report artifacts
+- **Advanced routing**: Inference-aware routing (GPU queue depth, KV cache utilization)
+- **Complete voice pipeline**: Streaming audio, continuous dialogue, interruption control
+- **Observability integration**: OpenTelemetry tracing, Prometheus metrics, Grafana dashboard
+- **More adapters**: Zigbee, Socket.IO, vendor cloud APIs (Xiaomi, Tuya)
+- **Digital twin framework**: Device simulation, scenario replay
 
 ### Acceptance Criteria
 
-- `validate` catches contract incompatibility before execution
-- Layer 1 outputs can be composed through Layer 2 control with explicit gate decisions (merge/reject/rollback)
-- At least one composition conflict and one rollback path are covered in tests
-- All stages emit auditable records for reproduction (inputs, gate decisions, outputs)
-- The same flow supports Layer 2 control by either a higher-level agent or a human reviewer
-- 3 example collaboration scenarios run end-to-end in CI
-- Plugin composition code and tests are merged in the main `mofa` repo
+- [ ] Agent-side code does not contain specific protocol details, only accesses services through capability APIs
+- [ ] Gateway can run continuously for 24 hours without crashes, supports configuration hot reload
+- [ ] At least 2 types of heterogeneous backends (LLM + IoT) work under the same capability layer
+- [ ] Event/capability schema has versioning strategy, compatibility rules documented
+- [ ] Unit test coverage ≥ 70%, integration tests cover core scenarios
+- [ ] Reproducible deployment documentation and demo scripts
+- [ ] Cache layer reduces backend calls ≥ 50% (based on benchmarks)
+- [ ] Plugin installation time < 10 seconds (including signature verification)
+- [ ] Cross-node cache consistency latency < 100ms
 
-### Repo Landing Plan
+### Skills Required
 
-- **Main landing repo**: `mofa` (`mofa-kernel` / `mofa-foundation`)
-- **Optional demo integration**: `mofa-studio`
+- **Required**: Strong Rust programming (async/await, trait design, error handling)
+- **Required**: Understanding of API gateway patterns and reverse proxy principles
+- **Required**: Familiarity with HTTP/WebSocket protocols
+- **Preferred**: IoT protocol experience (MQTT, Home Assistant)
+- **Preferred**: Event-driven architecture and message queue experience
+- **Preferred**: LLM API integration experience (OpenAI, Anthropic)
 
-#### Example Scenario
+### Difficulty
 
-Three developers each vibe code an agent component:
+**High** (350 hours)
 
-- Developer A: a web scraping agent plugin
-- Developer B: a summarization agent plugin
-- Developer C: a notification agent plugin
+### Getting Started
 
-AgentForge validates their interfaces are compatible, composes them into a pipeline, and runs the combined system — without any of the three developers reading each other's code.
+1. **Review existing code**:
+   - https://github.com/mofa-org/mofa/tree/main/crates/mofa-kernel - Microkernel core
+   - https://github.com/mofa-org/mofa/tree/main/crates/mofa-foundation - Foundation layer
 
-#### Refs
+2. **Study reference platforms**:
+   - https://github.com/agentgateway/agentgateway - AgentGateway (Linux Foundation)
+   - https://github.com/plano-ai/plano - Plano AI-native proxy server
 
-* https://github.com/mofa-org/mofa/tree/main
+3. **Complete micro-tasks**:
+   - Implement a basic HTTP reverse proxy (`axum`)
+   - Design capability traits for 3 common IoT devices (Speaker, Camera, Sensor)
+   - Build an MQTT client prototype: connect → subscribe → receive messages
 
-* https://github.com/mofa-org/mofa-studio
+4. **Prepare proposal**:
+   - Describe your understanding of the project architecture
+   - Propose specific technical solutions you plan to implement
+   - Estimate phase durations and define milestones
 
-* https://makepad.dev/
-
-__Skills Required__: Rust, plugin architecture design, type systems, LLM integration
-
-__Time Estimate__: 175 hours (medium project size)
-
-__Difficulty__: Hard
+### Mentors
+  - lijingrs (AmosLi)
+  - yangrudan (CookieYang)
 
 ---
 
-## Idea 2: Studio Observability Dashboard
+## Idea 2: Cognitive Observatory — Panoramic Monitoring Platform for AI Agent Systems + Memory & Knowledge Graph Ecosystem
 
-### Abstract
+### Reference Platform
 
-MoFA Studio runs complex AI pipelines involving multiple models (ASR, LLM, TTS) and agent interactions. Currently, when something goes wrong or runs slowly, developers have limited visibility into what's happening inside. This project will build a **real-time observability dashboard** embedded directly into MoFA Studio, providing developers with instant insight into model performance, resource usage, and agent behavior.
+**LangSmith** — LangChain's unified LLM application development platform covering observability, evaluation, prompt engineering, and deployment management. This project implements the complete LangSmith feature set including distributed tracing, real-time monitoring, insight analysis, evaluation framework, prompt versioning, and monitoring dashboards.
 
-The dashboard will leverage MoFA Studio's existing [makepad-chart](https://github.com/mofa-org/makepad-chart) and [makepad-d3](https://github.com/mofa-org/makepad-d3) GPU-accelerated visualization components.
+**LangChain** — A comprehensive framework for LLM applications. This project implements LangChain's memory systems.
 
-__Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
+**LlamaIndex** — A data framework for LLM applications with knowledge graph support, advanced indexing, and retrieval strategies.
 
-### Goals & Ideas
+### Brief Description
 
-* **Backend Metrics Service**: Build a runtime metrics service with REST + WebSocket APIs
-* **Studio Panels**: Add real-time observability panels in MoFA Studio
-* **Bottleneck Visibility**: Surface latency/throughput/queue/model-state signals for practical debugging
+Build a LangSmith-level observability and evaluation platform providing panoramic visibility for all stages of the AI Agent lifecycle—from development debugging, quality evaluation to production monitoring and continuous improvement. Also integrates a **Three-Layer Memory System** for agent knowledge accumulation, and a **Knowledge Graph Engine** for structured information reasoning and debugging.
 
-### Scope Boundary (vs Idea 4)
+### Detailed Description
 
-- Idea 2 is for online observability only
-- Session replay, time-travel debugging, and breakpointing belong to Idea 4
+When multi-agent systems make wrong decisions, the question isn't "where did it go wrong?"—it's "where do I even start looking?" Traditional debugging tools are blind to the unique challenges of AI systems: non-deterministic LLM outputs, distributed agent decisions, complex workflow topologies.
 
-### MVP
+This project builds **Cognitive Observatory**, implementing LangSmith's complete feature matrix:
 
-- Stable `/api/agents`, `/api/metrics`, and WebSocket `/ws`
-- At least 4 core views in Studio: latency, throughput, queue depth, model load state
-- One end-to-end scenario showing bottleneck localization
-- Basic tests and reproducible setup docs
+**Observability**:
+- **Tracing**: Detailed call chains, error and latency localization, non-intrusive integration, OpenTelemetry compatibility
+- **Real-time Monitoring**: Pre-built dashboards (request count, error rate, P50/P99 latency, token usage, cost), custom charts, webhook alerts
+- **Insights**: Conversation clustering, problem localization, pattern discovery
+
+**Evaluation**:
+- **Offline Evaluation**: Dataset management, benchmarking, regression testing, unit tests, backtesting
+- **Online Evaluation**: Real-time quality monitoring, anomaly detection, production feedback collection
+- **Evaluators**: Human review, code evaluation, LLM-as-judge, pairwise comparison
+- **Continuous Improvement**: Evaluation result trace correlation, issue-to-test-case conversion
+
+**Prompt Engineering**:
+- **Prompt Hub**: Prompt template storage, variable mechanism, Playground instant testing
+- **Version Control**: Commit history, tag marking, branching and merging
+- **Performance Evaluation**: Prompt-dataset association, automatic scoring, multi-version comparison
+
+**Deployment & Collaboration**:
+- **Multi-workspace**: Organization/workspace hierarchy management, environment isolation
+- **Permission Control**: RBAC roles (admin/editor/observer), custom roles
+- **Data Management**: Encrypted storage, data residency, sensitive data masking
+
+**Three-Layer Memory System** (New):
+- **Episodic Memory**: Conversation history, interaction logs, event sequences with temporal indexing
+- **Semantic Memory**: Vector-encoded facts, concepts, knowledge with entity linking
+- **Procedural Memory**: Learned skills, strategies, workflow templates with execution metrics
+- **Memory Consolidation Engine**: LLM-powered automatic knowledge extraction
+- **Memory Decay**: Importance-based retention with configurable policies
+- **Cross-Session Persistence**: Long-term memory with efficient retrieval
+
+**Knowledge Graph Engine** (New):
+- **Entity Extraction**: NER + LLM-powered entity recognition (for trace data entities)
+- **Relation Inference**: Extract relationships from unstructured text (for decision chain analysis)
+- **Graph Storage**: Neo4j or native graph database integration
+- **Graph Retrieval**: Subgraph matching, path queries, neighbor expansion
+- **Graph + Vector Fusion**: Combine structured and semantic retrieval
+- **Schema Inference**: Automatic ontology construction from data
+
+### Expected Outcomes
+
+**Phase 1: Core Tracing & Observability (Weeks 1-4)**
+- `mofa-observability` crate foundation
+- OpenTelemetry-compatible distributed tracing system
+- LLM telemetry: prompt/response logs, token counting, cost attribution
+- Basic monitoring dashboard: request statistics, error rate, latency distribution
+- Trace data storage: in-memory + PostgreSQL backend
+
+**Phase 2: Evaluation Framework (Weeks 5-10)**
+- Offline evaluation system: dataset management, test case organization
+- Evaluator framework: `Evaluator` trait, LLM-as-judge, code evaluation
+- Online evaluation: real-time quality monitoring, anomaly detection rules
+- Evaluation result storage and query API
+- Regression testing and benchmarking tools
+
+**Phase 3: Prompt Engineering & Time Travel (Weeks 11-16)**
+- Prompt hub: template storage, variable system, version control
+- Prompt Playground: instant testing, multi-turn dialogue simulation
+- Time-travel debugging: state snapshots, conversation replay, counterfactual exploration
+- Insight analysis: conversation clustering, pattern discovery algorithms
+- Human feedback integration: annotation queue, scoring system
+
+**Phase 4: Dashboard & Integration (Weeks 17-20)**
+- Web dashboard enhancement: React frontend, real-time WebSocket push
+- Alert system: threshold configuration, webhook notifications (Slack/email)
+- Grafana integration: Prometheus metrics export
+- RBAC permission control: role management, API keys
+- Docker Compose deployment
+- Documentation: API reference, user guide, integration examples
+
+**Phase 5: Memory System & Knowledge Graph (Weeks 21-26)**
+- Three-layer memory system with distinct storage
+- Memory consolidation engine with LLM summarization
+- Memory decay with importance scoring
+- Entity extraction with NER + LLM
+- Relation inference from unstructured text
+- Graph storage integration (Neo4j or native)
+- Graph retrieval: subgraph, path, neighbor queries
+- Memory and trace data integration (time-travel debugging support)
+
+### Minimum Viable Product (MVP)
+
+Participants must deliver the following MVP before the bonding period ends:
+- Running tracing service with HTTP/gRPC data ingestion
+- At least 1 evaluator (LLM-as-judge or code evaluation)
+- Basic Web dashboard showing trace list and details
+- Simple offline evaluation flow (dataset → evaluation → results)
+- Command-line tool for submitting trace data
+- Episodic and semantic memory with consolidation basic implementation
+- Basic entity extraction pipeline
 
 ### Stretch Goals
 
-- Unified monitoring across additional runtime backends (including Dora-based flows)
-- More advanced correlation views and filtering UX
-
-### Out of Scope
-
-- Time-travel replay/debugger capabilities
-- Full historical trace reconstruction (Idea 4 scope)
+- **Advanced insights**: AI-driven automatic problem diagnosis, root cause analysis
+- **Multi-tenant support**: Complete workspace isolation, organization management
+- **SSO integration**: OAuth 2.0, SAML enterprise authentication
+- **Performance optimization**: Trace data compression, hot/cold tiered storage
+- **SDK support**: Python/TypeScript SDK for application integration
+- **Agent deployment**: LangSmith-style Agent Server integration
 
 ### Acceptance Criteria
 
-- Backend metrics service and Studio panels are both delivered
-- API contracts are documented and exercised in tests
-- Operators can identify at least one real bottleneck from the dashboard output
+- [ ] Tracing system captures complete agent execution chains (input, output, tool calls, LLM requests)
+- [ ] Supports OpenTelemetry standard import/export, compatible with Jaeger/Grafana
+- [ ] Evaluation framework supports at least 3 evaluator types
+- [ ] Offline evaluation can execute on datasets and generate scoring reports
+- [ ] Online evaluation can detect production anomalies in real-time and trigger alerts
+- [ ] Prompt version control supports commit history, tags, rollback
+- [ ] Time-travel debugging can replay any historical session
+- [ ] Web dashboard response time < 500ms, supports real-time updates
+- [ ] Unit test coverage ≥ 70%, integration tests cover core scenarios
+- [ ] Reproducible deployment documentation and demo scripts
+- [ ] Three-layer memory system with consolidation and decay fully implemented
+- [ ] Memory retrieval latency < 100ms
+- [ ] Knowledge graph supports entity extraction, relation inference, and graph retrieval
+- [ ] Graph query latency < 200ms
 
-### Repo Landing Plan
+### Skills Required
 
-- **Main landing repo**: `mofa-studio` (UI + API service integration)
-- **Supporting integration**: `mofa` (`mofa-monitoring` / `mofa-runtime`)
+- **Required**: Strong Rust programming (async/await, trait design, error handling)
+- **Required**: Understanding of OpenTelemetry and distributed tracing principles
+- **Required**: Familiarity with SQL databases (PostgreSQL) and data modeling
+- **Preferred**: Observability tool experience (Jaeger, Grafana, Prometheus)
+- **Preferred**: Frontend experience (TypeScript/React)
+- **Preferred**: LLM evaluation methods (LLM-as-judge, RAGAS, etc.)
 
-#### Refs
+### Difficulty
 
-* https://github.com/mofa-org/mofa-studio
-* https://github.com/mofa-org/makepad-chart
-* https://github.com/mofa-org/makepad-d3
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
+**High** (350 hours)
 
-__Skills Required__: Rust, HTTP/WebSocket servers (axum/tokio), real-time data visualization, Makepad UI
+### Getting Started
 
-__Time Estimate__: 90 hours (8 weeks)
+1. **Review existing code**:
+   - https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring - Monitoring module
+   - https://github.com/mofa-org/mofa/tree/main/examples/monitoring_dashboard - Monitoring example
 
-__Difficulty__: Medium
+2. **Study reference platforms**:
+   - https://github.com/langchain-ai/langsmith-sdk - LangSmith SDK
+   - https://github.com/open-telemetry/opentelemetry-rust - OpenTelemetry Rust SDK
+
+3. **Complete micro-tasks**:
+   - Implement a basic tracing subscriber that records function calls
+   - Design an evaluator trait supporting custom scoring logic
+   - Build a simple trace visualization prototype (CLI or Web)
+
+4. **Prepare proposal**:
+   - Describe your understanding of LangSmith's module functionality
+   - Propose specific technical solutions you plan to implement
+   - Estimate phase durations and define milestones
+
+### Mentors
+- lijingrs (AmosLi)
+- BH3GEI (Yao Li)
 
 ---
 
-## Idea 3: Unified Inference Orchestrator (Local + Cloud)
+## Idea 3: Cognitive Compute Mesh — Building the "HTTP Moment" for AI Inference + RAG & Vector Storage Ecosystem
+
+### Reference Platforms
+
+**LiteLLM** — Unified API gateway supporting 100+ LLM providers with consistent interface, automatic fallbacks, and cost tracking.
+
+**vLLM** — High-throughput inference engine with PagedAttention, continuous batching, and production-grade serving.
+
+**Ollama** — Local LLM runtime with model management, GPU acceleration, and REST API compatibility.
+
+**Ray Serve** — General-purpose model serving framework with autoscaling, multi-model orchestration, and cross-cluster deployment.
+
+**Kubernetes** — Container orchestration standard that proved "unified abstraction + pluggable backend" can dominate a domain.
+
+**LlamaIndex** — A data framework for LLM applications with advanced indexing and retrieval strategies.
+
+This project is not just building an inference gateway—it's establishing the **open protocol standard for AI inference**, making "inference as a service" as ubiquitous and plug-and-play as HTTP, while integrating **Production-grade RAG Pipeline** and **Multi-Backend Vector Storage** ecosystem.
 
 ### Abstract
 
-MoFA agents should run with one inference contract across **local runtimes and cloud APIs**. This project builds a unified inference orchestration layer in mofa-rs: pluggable backends, policy-based routing, and runtime-level lifecycle/scheduling.
+**Vision**: Just as HTTP unified information transfer and SQL unified data querying, Cognitive Compute Mesh will establish the **open protocol standard for AI inference**—any agent, any model, any hardware, any location—write once, run everywhere.
 
-For local inference, MoFA should call backends directly at the Rust API level (`load_model()`, `Generate`, `forward()`) with no HTTP middle layer when possible. For cloud inference, MoFA should provide provider adapters (OpenAI-compatible API first) under the same framework abstraction.
+**Core Proposition**: Today's AI inference is fragmented into silos—OpenAI, Anthropic, local Ollama, cloud vLLM, edge devices—each a separate world. Cognitive Compute Mesh builds a **Unified Inference Federation**, eliminating vendor lock-in and establishing an open ecosystem.
 
-The current macOS path with [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) is a strong local reference, especially for unified-memory zero-copy pipelines. But final deliverables must land in the main `mofa` repo and work with both local and cloud backends. [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm) is a prototype/reference repo, not the final landing target.
+**Mentors**: BH3GEI (Yao Li), lijingrs (AmosLi)
 
-__Mentors__: BH3GEI (Yao Li), lijingrs (AmosLi)
+### Problem & Opportunity
 
-### Platform Scope & Hardware Access
+**Current Dilemma**:
+- **Vendor Lock-in**: Migrating from OpenAI to Anthropic requires code rewrites
+- **Fragmented Worlds**: Local inference (Ollama) and cloud inference (OpenAI) are two separate systems
+- **Cost Black Box**: Inference costs are unpredictable, unoptimizable, unattributable
+- **Innovation Barrier**: New inference services require one-by-one integration, no standard exists
+- **Resource Waste**: GPU clusters, edge devices, local compute cannot coordinate
 
-- MoFA inference is not macOS-only. Our vision is a general, pluggable framework across macOS, Linux, and future backends.
-- This idea is not local-only either. Proposal scope must include **at least one local backend path and one cloud API adapter path**.
-- Project deliverables must be integrated into the mofa-rs mainline (`mofa-foundation` / `mofa-runtime`), not kept as a standalone demo.
-- `mofa-local-llm` is for prototyping and experiments; production deliverables must land in the main `mofa` repo.
-- Cross-platform is a core requirement: proposals should include one implemented local backend (macOS or Linux) plus a clear compatibility plan for the other platform.
-- If you need specific hardware or remote servers for final validation, discuss it with mentors early.
+**Historical Inspiration**:
+- Before HTTP: Each information transfer needed a dedicated protocol
+- Before SQL: Each database required learning a new language
+- Before Kubernetes: Each deployment needed custom scripts
+- **Before Inference Protocol (Now)**: Each inference service requires re-integration
 
-### Delivery Boundaries (Recommended)
+### Solution: Cognitive Compute Mesh
 
-- **Must land in the main `mofa` repo**: backend abstractions, local/cloud routing policy, scheduler core, lifecycle management, `mofa-runtime` integration, and core tests.
-- **Can remain in `mofa-local-llm`**: demo GUI, standalone demo server, and experimental scripts/prototypes.
-- **Recommended flow**: validate quickly in `mofa-local-llm`, then migrate stable capabilities into the main `mofa` repo.
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     Cognitive Compute Mesh                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    Open Protocol Layer                               │   │
+│  │  "Define once, compatible everywhere" — HTTP for inference          │   │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────────┐   │   │
+│  │  │ Inference   │ │ Streaming   │ │ Tool Calling/               │   │   │
+│  │  │ Request     │ │ Response    │ │ Multimodal/Embedding        │   │   │
+│  │  │ Protocol    │ │ Protocol    │ │ Unified Abstraction         │   │   │
+│  │  └─────────────┘ └─────────────┘ └─────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                    ↓                                        │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    Intelligent Routing Layer                         │   │
+│  │  "Optimal path, automatic selection" — BGP for inference            │   │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────────┐   │   │
+│  │  │ Cost        │ │ Latency     │ │ Geographic/Compliance       │   │   │
+│  │  │ Optimization│ │ Optimization│ │ Smart Failover              │   │   │
+│  │  └─────────────┘ └─────────────┘ └─────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                    ↓                                        │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    Federated Compute Layer                           │   │
+│  │  "Boundless compute, seamless coordination" — Kubernetes for infer  │   │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────────┐   │   │
+│  │  │ Local       │ │ Cloud       │ │ Edge/Specialized Hardware   │   │   │
+│  │  │ OminiX-MLX  │ │ OpenAI etc. │ │ Groq/Cerebras/Custom        │   │   │
+│  │  └─────────────┘ └─────────────┘ └─────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                    ↓                                        │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    Ecosystem Extension Layer                         │   │
+│  │  "Everyone contributes, value flows" — crates.io for inference      │   │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────────┐   │   │
+│  │  │ Backend SDK │ │ Model       │ │ Protocol Extensions/        │   │   │
+│  │  │ Framework   │ │ Adapters    │ │ Community Contributions     │   │   │
+│  │  └─────────────┘ └─────────────┘ └─────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-### Track Options
+### Core Modules
 
-- **Core requirement (mandatory)**: one unified inference path that supports both local and cloud adapters under one API contract.
-- **Implementation focus (choose one local backend for primary validation)**:
-  - macOS focus: prioritize OminiX-MLX integration and unified-memory scheduling behavior
-  - Linux focus: prioritize Linux backend adaptation + scheduler + benchmarking
-- Cross-platform compatibility design for the non-primary platform is mandatory.
+**1. Open Protocol Layer**
 
-### Goals & Ideas
+Establishing the universal language for inference services:
 
-* **Architecture Design**:
-  
-  - Implement as a core component in mofa-rs (`mofa-foundation` layer)
-  - Define a pluggable backend abstraction for local runtimes and cloud providers
-  - Implement OminiX-MLX as the default macOS local backend and at least one OpenAI-compatible cloud adapter
-  - Keep one unified request/response contract for agents, regardless of local or cloud execution
-  - Design `ModelPool` (local models) and provider session management (cloud)
+- **Inference Request Protocol (IRP)**: Standardized inference request format supporting text, multimodal, tool calling
+- **Streaming Response Protocol (SRP)**: Unified streaming response format with incremental output, heartbeat, cancellation
+- **Capability Discovery Protocol (CDP)**: Automatic discovery of backend capabilities (models, modalities, tools)
+- **Health Check Protocol (HCP)**: Standardized health status reporting and monitoring
+- **Protocol Version Negotiation**: Backward-compatible protocol evolution mechanism
 
-* **Lifecycle Management**:
-  
-  - On-demand model loading with async initialization
-  - Idle timeout-based automatic unloading (LRU eviction)
-  - Memory pressure monitoring on Apple Silicon unified memory
-  - Graceful shutdown with state preservation
+**2. Intelligent Routing Layer**
 
-* **Smart Scheduling**:
-  
-  - Route requests to local or cloud backends based on policy (e.g., local-first, latency-first, cost-first)
-  - Route requests to the right model based on task type (ASR/LLM/TTS) and availability
-  - Memory-aware admission control: reject or defer requests when memory is constrained
-  - Provider-aware retry/failover for cloud calls
-  - Dynamic precision degradation (e.g., auto-switch from 8-bit to 4-bit quantization under pressure)
+Optimal scheduling for inference requests:
 
-* **Inference Pipeline**:
-  
-  - Chain multiple models into a pipeline (ASR → LLM → TTS) with zero-copy tensor passing via MLX Arrays where local backends support it
-  - Support hybrid pipelines (e.g., local ASR/TTS + cloud LLM, or local-first with cloud fallback)
-  - Streaming token output from LLM directly into TTS input
-  - Per-stage latency tracking and bottleneck reporting
+- **Multi-Objective Optimization**: Multi-dimensional tradeoff of cost, latency, quality, compliance
+- **Policy Engine**: Programmable routing policies (DSL or Rhai scripts)
+- **Load-Aware Routing**: Dynamic scheduling based on queue depth, GPU utilization, memory pressure
+- **Self-Healing**: Automatic fault detection, circuit breaking, degradation, recovery
+- **Capacity Prediction**: Load prediction and warmup based on historical data
 
-* **Degradation Strategies**:
-  
-  - Auto-fallback to smaller models when primary models fail or resources are constrained
-  - Quality-of-service levels with corresponding model selections
+**3. Federated Compute Layer**
 
-* **Integration**:
-  
-  - Expose scheduling state and metrics to the Studio observability dashboard (Idea 2)
-  - Provide clean API for agents to request inference without managing model lifecycle
+Integrating global inference compute:
 
-### MVP
+- **Local Inference Backends**:
+  - OminiX-MLX (macOS unified memory optimization)
+  - llama.cpp (cross-platform CPU/GPU)
+  - vLLM (high-performance serving)
+- **Cloud Inference Backends**:
+  - OpenAI, Anthropic, Google, AWS Bedrock
+  - Azure OpenAI, Alibaba Cloud, Baidu Smart Cloud
+- **Specialized Hardware Backends**:
+  - Groq (LPU inference)
+  - Cerebras (wafer-scale computing)
+  - Edge TPU/NPU
+- **Hybrid Pipelines**: Seamless orchestration of local ASR + cloud LLM + local TTS
 
-- Land unified inference abstractions in the main `mofa` repo
-- Deliver at least one local backend + one cloud API adapter under the same runtime contract
-- Implement scheduler core, lifecycle management, and local/cloud routing policies with tests
-- Integrate with `mofa-runtime` so agents can request inference via one unified API
-- Provide reproducible benchmarks (latency, throughput, memory usage, local-vs-cloud routing behavior)
+**4. Ecosystem Extension Layer**
+
+Building open contribution mechanisms:
+
+- **Backend SDK**: Standardized framework for new backend integration in <2 hours
+- **Model Adapters**: Plug-and-play support for new model formats
+- **Protocol Extensions**: Standard extension points for custom capabilities
+- **Contributor Incentives**: Usage statistics, quality ratings, community recognition
+- **Trust System**: Code signing, security audits, vulnerability reporting
+
+**5. Production RAG Pipeline** (New)
+
+Integrating inference with retrieval-augmented generation:
+
+- **Embedding Providers**: OpenAI, Cohere, Voyage, local ONNX/Candle models
+- **Embedding Cache**: LRU cache with configurable TTL and batching
+- **Hybrid Retrieval**: Dense vectors + BM25 sparse + ColBERT late interaction
+- **Reciprocal Rank Fusion**: Combine multiple retrieval signals
+- **Query Expansion**: LLM-powered query transformation and multi-query
+- **Re-Ranking**: Cross-encoder, LLM-based, MMR diversity, freshness boosting
+- **Inference Context Assembly**: Auto-inject retrieved context for inference requests
+
+**6. Multi-Backend Vector Storage** (New)
+
+Unified vector storage abstraction:
+
+- **Unified Interface**: `VectorStore` trait with consistent API
+- **Qdrant**: Production cloud deployment
+- **pgvector**: PostgreSQL-native vector storage
+- **Milvus**: Large-scale vector database
+- **In-Memory HNSW**: Development and testing
+- **Semantic Routing**: Backend selection based on vector similarity
+
+### Ecosystem Value Proposition
+
+| Stakeholder | Value Gained |
+|-------------|--------------|
+| **Agent Developers** | Write once, run everywhere—zero vendor lock-in |
+| **Enterprises** | 50%+ cost optimization, risk distribution, compliance control |
+| **Inference Providers** | One-click access to MoFA ecosystem, global developer reach |
+| **Open Source Community** | Open standards, fair competition, innovation without barriers |
+| **Hardware Vendors** | Standard interface, no need for one-by-one software adaptation |
+
+### Expected Outcomes
+
+**Phase 1: Protocol Foundation (Weeks 1-5)**
+- Inference Request Protocol (IRP) design and implementation
+- OpenAI-compatible protocol adapter
+- Anthropic-compatible protocol adapter
+- Streaming Response Protocol (SRP) implementation
+- Protocol compatibility test suite
+
+**Phase 2: Federated Compute (Weeks 6-12)**
+- OminiX-MLX local backend integration (macOS priority)
+- OpenAI cloud backend integration
+- At least 1 additional cloud provider (Anthropic/Google)
+- Local/cloud hybrid pipeline
+- Zero-copy inference chain verification
+
+**Phase 3: Intelligent Routing (Weeks 13-18)**
+- Multi-objective routing policy engine
+- Cost-optimization routing algorithm
+- Latency-optimization routing algorithm
+- Automatic failover system
+- Capacity prediction and warmup
+
+**Phase 4: Ecosystem Opening (Weeks 19-22)**
+- Backend SDK framework release
+- Model adapter interface
+- Capability Discovery Protocol (CDP)
+- Complete documentation and migration guides
+- Community contribution process
+
+**Phase 5: RAG Pipeline & Vector Storage (Weeks 23-28)**
+- OpenAI and Cohere embedding providers
+- Embedding cache with LRU eviction
+- BM25 sparse retrieval implementation
+- ColBERT late interaction (token-level matching)
+- Reciprocal Rank Fusion algorithm
+- Cross-encoder and LLM re-ranking
+- MMR diversity and freshness boosting
+- Qdrant and pgvector backend integration
+- In-memory HNSW vector storage
+- End-to-end RAG pipeline integration
+
+### Minimum Viable Product (MVP)
+
+Must deliver before bonding period ends:
+- MVP implementation of Unified Inference Protocol (IRP)
+- At least 1 local backend (OminiX-MLX or llama.cpp)
+- At least 1 cloud backend (OpenAI)
+- Basic routing policy (availability-first)
+- End-to-end demo: same Agent code runs on local and cloud
+- OpenAI embedding provider with caching
+- Basic BM25 + dense hybrid retrieval
+- At least 1 vector storage backend (Qdrant or pgvector)
 
 ### Stretch Goals
 
-- Multi-cloud provider support and cost-aware routing
-- Dynamic precision switching policies with workload-aware tuning
-- Additional backend implementations beyond the selected track
-
-### Out of Scope
-
-- Shipping GUI-only demos without mainline runtime integration
-- Local-only designs that cannot interoperate with cloud APIs
-- Platform-specific one-off hacks that bypass backend abstraction
+- **Multi-region Deployment**: Cross-geographic-region inference federation
+- **Cost Attribution System**: Precise cost tracking down to agent, session, request level
+- **Inference Marketplace Prototype**: Supply-demand matching for inference resources
+- **Protocol Standardization Push**: Submit draft to industry standards organizations
+- **More Backends**: Groq, Cerebras, edge devices
 
 ### Acceptance Criteria
 
-- Core orchestration code is merged into `mofa-foundation` / `mofa-runtime`
-- Same agent API can run through local, cloud, and hybrid paths via configuration
-- Chosen local track (macOS or Linux) has end-to-end runnable path with tests
-- At least one failover scenario (local unavailable -> cloud fallback, or reverse) is tested
-- Benchmarks are documented and reproducible by mentors
+- [ ] Unified protocol supports seamless conversion between OpenAI and Anthropic API styles
+- [ ] Local backend implements zero-copy inference pipeline (ASR→LLM→TTS)
+- [ ] Cloud backend supports automatic failover with recovery time <1 second
+- [ ] Routing policies are configurable, supporting cost/latency/quality tradeoffs
+- [ ] Backend SDK allows new backend integration in <4 hours
+- [ ] Same Agent code runs unmodified on local, cloud, and hybrid modes
+- [ ] Benchmarks: latency, throughput, cost vs single-provider optimized ≥30%
+- [ ] Unit test coverage ≥80%, protocol compatibility tests 100% passing
+- [ ] Documentation: protocol specification, backend development guide, migration tutorials
+- [ ] At least 3 embedding providers (OpenAI, Cohere, Local) working
+- [ ] Hybrid retrieval (Dense + BM25 + Graph) improves accuracy by ≥20% over dense-only
+- [ ] Re-ranking improves precision@10 by ≥25%
+- [ ] At least 3 vector storage backends (Qdrant, pgvector, in-memory HNSW) available
+- [ ] Embedding batch of 100 texts < 5s, Hybrid retrieval < 200ms
 
-### Repo Landing Plan
+### Technical Requirements
 
-- **Main landing repo**: `mofa` (`mofa-foundation` / `mofa-runtime`)
-- **Prototype/reference repo**: `mofa-local-llm` (non-final deliverables)
+- **Primary Landing**: `mofa` main repository (`mofa-foundation`/`mofa-runtime`)
+- **Prototype Validation**: `mofa-local-llm` as rapid iteration playground
+- **Cross-Platform**: Must support macOS and Linux, Windows is a plus
+- **Hardware Adaptation**: Priority on Apple Silicon, also support NVIDIA GPU
 
-#### Example Scenario
+### Reference Resources
 
-A voice assistant pipeline with:
+* https://github.com/mofa-org/mofa-local-llm - Local inference prototype
+* https://github.com/OminiX-ai/OminiX-MLX - macOS inference engine
+* https://github.com/BerriAI/litellm - LiteLLM unified gateway
+* https://github.com/vllm-project/vllm - vLLM inference engine
+* https://github.com/ray-project/ray - Ray distributed computing
 
-- FunASR (ASR, ~2GB)
-- Qwen (LLM, ~8GB)
-- GPT-SoVITS (TTS, ~4GB)
+### Skills Required
 
-On a 16GB MacBook, all three cannot be resident simultaneously. The orchestrator will:
+- **Required**: Strong Rust programming (async/await, trait design, systems programming)
+- **Required**: Understanding of LLM inference principles and API design
+- **Required**: Distributed systems experience (routing, load balancing, fault recovery)
+- **Preferred**: Apple Silicon or GPU programming experience
+- **Preferred**: Protocol design and standardization experience
+- **Preferred**: Open source project contribution experience
 
-- Keep local ASR/TTS active for low-latency interaction
-- Route LLM to local by default, with cloud fallback when local memory pressure or latency thresholds are exceeded
-- If local LLM is available, pass tensors via zero-copy local path; otherwise switch to cloud adapter without changing agent code
-- Recover to local path when resources return to healthy state
+### Difficulty
 
-#### Refs
+**High** (350 hours)
 
-* https://github.com/mofa-org/mofa-local-llm
-* https://github.com/OminiX-ai/OminiX-MLX
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-foundation
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-runtime
+### Mentors
+- BH3GEI (Yao Li)
+- lijingrs (AmosLi)
+---
 
-__Skills Required__: Rust, systems programming, resource management, Apple Silicon or Linux GPU computing
+## Idea 4: Cognitive Workflow Engine — Declarative Workflow Orchestration & Visualization Platform
 
-__Time Estimate__: 175 hours (medium project size)
+### Reference Platforms
 
-__Difficulty__: Hard
+**Temporal** — Distributed workflow engine with durable execution, retries, and compensation transactions.
+
+**n8n** — Open-source workflow automation platform with visual node editor, supporting 400+ integrations.
+
+**Airflow** — Data engineering workflow orchestration with DAG definition, scheduling, and monitoring.
+
+This project builds an **AI-native workflow engine** combining declarative DSL, visual editor, and MoFA ecosystem integration.
+
+### Brief Description
+
+Build a **Declarative Workflow Orchestration Engine** that enables users to define complex AI Agent workflows through YAML/JSON DSL or visual editor, supporting conditional branching, loops, error handling, human approval, parallel execution, and deep integration with MoFA's Gateway, Observatory, and Orchestrator.
+
+### Detailed Description
+
+Today's AI applications demand flexible workflow orchestration capabilities—from simple linear processing to complex multi-agent collaboration. Existing solutions are either too generic (Temporal, Airflow) or lack AI-native support (n8n). This project builds **Cognitive Workflow Engine**, a workflow engine designed specifically for AI Agents.
+
+**Architecture**:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Cognitive Workflow Engine                     │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                   Visual Workflow Editor                     ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────────┐   ││
+│  │  │ Drag &  │ │ Node    │ │ Live    │ │ AI-Assisted     │   ││
+│  │  │ Drop    │ │ Library │ │ Preview │ │ Design          │   ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────────────┘   ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                              ↓                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                   DSL & Schema Layer                         ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────────┐   ││
+│  │  │ YAML/   │ │ JSON    │ │ Schema  │ │ Version Control │   ││
+│  │  │ JSON DSL│ │ Schema  │ │ Validator│ │ & Migration    │   ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────────────┘   ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                              ↓                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                   Execution Engine                           ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────────┐   ││
+│  │  │ DAG     │ │ State   │ │ Error   │ │ Persistence &   │   ││
+│  │  │ Executor│ │ Machine │ │ Handler │ │ Recovery        │   ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────────────┘   ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                              ↓                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                   Node Library                               ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────────┐   ││
+│  │  │ Agent   │ │ Cond.   │ │ Loop    │ │ Human Approval  │   ││
+│  │  │ Invoke  │ │ Branch  │ │ Iterate │ │ (HITL)          │   ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────────────┘   ││
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────────┐   ││
+│  │  │ LLM     │ │ Tool    │ │ Data    │ │ Sub-Workflow    │   ││
+│  │  │ Reason  │ │ Call    │ │ Transform│ │ Nesting        │   ││
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────────────┘   ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Core Modules**:
+
+**1. Declarative DSL**
+- **YAML/JSON Workflow Definition**: Human-readable workflow description
+- **Strongly-Typed Schema**: Type-safe node inputs/outputs
+- **Expression Language**: JMESPath/CEL expressions for dynamic computation
+- **Template System**: Parameterized workflows, environment variable substitution
+- **Version Control Friendly**: Git diff-friendly DSL design
+
+**2. Visual Editor**
+- **Drag-and-Drop Node Editing**: React Flow or similar library implementation
+- **Live Preview**: Real-time validation and preview during editing
+- **AI-Assisted Design**: Workflow recommendations from natural language descriptions
+- **Debug Panel**: Breakpoints, variable inspection, step-by-step execution
+- **Import/Export**: Bidirectional conversion between DSL and visualization
+
+**3. Execution Engine**
+- **DAG Executor**: Topological sort, parallel scheduling, dependency resolution
+- **State Machine Management**: Run, pause, resume, cancel, retry
+- **Error Handling**: Retry strategies, compensation transactions, dead letter queue
+- **Persistence**: PostgreSQL execution state storage, crash recovery support
+- **Timeout Control**: Node-level and workflow-level timeouts
+
+**4. Node Library**
+- **Agent Node**: Invoke MoFA Agent (via Orchestrator)
+- **LLM Node**: Direct LLM inference calls (via Compute Mesh)
+- **Tool Node**: Invoke MCP tools (via Gateway)
+- **Control Flow Nodes**: Conditional branching, loops, parallel, wait
+- **Data Nodes**: Transform, filter, aggregate, merge
+- **HITL Node**: Human approval, form input, selection
+
+**5. Ecosystem Integration**
+- **Gateway Integration**: Workflows can access IoT devices and external APIs
+- **Observatory Integration**: Workflow execution tracing, performance analysis
+- **Orchestrator Integration**: Complex multi-agent collaboration as workflow nodes
+
+### Expected Outcomes
+
+**Phase 1: DSL & Execution Engine (Weeks 1-5)**
+- `mofa-workflow` crate foundation
+- YAML/JSON DSL design and parser
+- Schema validation system
+- DAG executor: sequential, parallel execution
+- Basic nodes: Agent invoke, LLM inference, conditional branch
+
+**Phase 2: State Management & Persistence (Weeks 6-10)**
+- State machine implementation: run/pause/resume/cancel
+- PostgreSQL persistence layer
+- Error handling: retry strategies, compensation transactions
+- Crash recovery mechanism
+- Workflow version management
+
+**Phase 3: Visual Editor (Weeks 11-16)**
+- React frontend foundation
+- Drag-and-drop node editor
+- Bidirectional DSL-visualization conversion
+- Real-time validation and error hints
+- Basic debugging features
+
+**Phase 4: Advanced Nodes & Integration (Weeks 17-22)**
+- Loop iteration node
+- Sub-workflow nesting
+- HITL approval node
+- Gateway/Orchestrator integration
+- AI-assisted workflow design
+- Complete documentation and examples
+
+**Phase 5: Production Ready (Weeks 23-26)**
+- Expression language (JMESPath/CEL)
+- Workflow template library
+- Performance optimization and benchmarking
+- CLI tools: `mofa workflow run/validate/export`
+- Docker Compose deployment
+
+### Minimum Viable Product (MVP)
+
+Participants must deliver the following MVP before the bonding period ends:
+- YAML DSL parser and validator
+- Basic DAG executor (sequential + parallel)
+- At least 3 node types (Agent invoke, conditional branch, LLM inference)
+- PostgreSQL persistence
+- Simple CLI runner: `mofa workflow run example.yaml`
+
+### Stretch Goals
+
+- **Distributed Execution**: Cross-node workflow scheduling
+- **Workflow Marketplace**: Share and discover workflow templates
+- **Real-time Collaboration**: Multi-user simultaneous workflow editing
+- **Performance Analysis**: Workflow bottleneck identification and optimization suggestions
+- **Natural Language to Workflow**: LLM-driven workflow generation
+
+### Acceptance Criteria
+
+- [ ] DSL supports both YAML and JSON formats, Schema validation 100% coverage
+- [ ] Executor supports at least 8 node types
+- [ ] State machine supports run/pause/resume/cancel/retry
+- [ ] Can recover execution from persisted state after crash
+- [ ] Visual editor supports drag, connect, delete nodes
+- [ ] Bidirectional DSL-visualization conversion with no information loss
+- [ ] Orchestrator integration: workflows can invoke Swarm orchestration
+- [ ] Gateway integration: workflows can access IoT devices
+- [ ] Unit test coverage ≥ 80%, integration tests cover core scenarios
+- [ ] Documentation: DSL reference, node library, API docs
+
+### Skills Required
+
+- **Required**: Strong Rust programming (async/await, serde, sqlx)
+- **Required**: Understanding of DAG and workflow engine principles
+- **Required**: Frontend development experience (React, TypeScript)
+- **Preferred**: Workflow engine development experience (Temporal, Airflow, n8n)
+- **Preferred**: DSL/parser design experience
+- **Preferred**: Visual graph editor experience (React Flow, X6)
+
+### Difficulty
+
+**High** (350 hours)
+
+### Getting Started
+
+1. **Review existing code**:
+   - https://github.com/mofa-org/mofa/tree/main/examples/workflow_dsl - Workflow DSL example
+   - https://github.com/mofa-org/mofa/tree/main/examples/workflow_orchestration - Workflow orchestration
+
+2. **Study reference platforms**:
+   - https://github.com/temporalio/temporal - Temporal workflow engine
+   - https://github.com/n8n-io/n8n - n8n automation platform
+   - https://github.com/apache/airflow - Airflow workflow orchestration
+
+3. **Complete micro-tasks**:
+   - Design a simple YAML workflow DSL
+   - Implement DAG topological sort and parallel execution
+   - Build a basic workflow state machine
+
+4. **Prepare proposal**:
+   - Describe your design approach for workflow DSL
+   - Propose technical solution for visual editor
+   - Estimate phase durations and define milestones
+
+### Mentors
+- lijingrs (AmosLi)
+- yangrudan (CookieYang)
+
 
 ---
 
-## Idea 4: Session Recorder & Visual Debugger
 
-### Abstract
+## Idea 5: Cognitive Swarm Orchestrator — Swarm Intelligence Coordination with Human-in-the-Loop Governance + Plugin Marketplace & Semantic Discovery Ecosystem
 
-Multi-agent systems are notoriously difficult to debug. When agents exchange dozens of messages and state changes, traditional logs become unreadable. This is especially true in the era of vibe coding, where LLM-generated agent code often works in demo but fails in production with no clear explanation.
+### Reference Platform
 
-This project builds a **time-travel debugger** for MoFA — a differentiating capability that gives developers a reason to run their agents on mofa-rs. Think of it as "Chrome DevTools for Agents": load any agent (hand-written or vibe-coded), record its execution, inspect message flow, and replay with modifications.
+**OpenClaw** — A 24/7 task automation platform emphasizing single-agent execution. This project **does not replicate** OpenClaw's automation path, but builds a **Swarm orchestration layer**.
 
-Building this debugger will also serve as an **architectural audit** for mofa-rs — the process of adding instrumentation hooks will force the framework to define clear internal APIs for event capture, state snapshots, and message interception.
+**ZeroClaw** — A lightweight Rust Agent runtime emphasizing performance. This project **does not compete** on runtime, but builds a **collaboration governance layer**.
 
-__Mentors__: BH3GEI (Yao Li), lijingrs (AmosLi)
+**crates.io** — Rust's official package registry with versioning, dependencies, and publishing workflow.
 
-### Phased Delivery Plan (Required)
+**Differentiation**: 2026 is the "Era of Orchestration"—transitioning from single super-agents to specialized agent **swarm collaboration**. This project builds the **core orchestration and governance engine** for the MoFA ecosystem, integrating **Plugin Marketplace Core** (dependency resolution, trust scoring) and **Semantic Agent Discovery** capabilities.
 
-1. Event capture + storage + CLI replay
-2. Timeline UI
-3. Breakpoints + state diffing
+### Brief Description
 
-### Schema Versioning Requirement
+Build a **Swarm Orchestration Engine** that coordinates multiple specialized agents to complete complex tasks collaboratively, integrating with MoFA's Gateway (capability access), Smith (observability), and SDK (polyglot) to form a complete ecosystem loop, with human-in-the-loop (HITL) mechanisms ensuring critical decisions are supervised by humans. Also integrates **Plugin Marketplace Core** (dependency resolution, trust scoring, signature verification) and **Semantic Agent Discovery** (embedding-based capability matching) to build an open ecosystem.
 
-- Define event schema and schema versioning strategy first
-- Backward/forward compatibility expectations must be documented before scaling features
+### Detailed Description
 
-### Goals & Ideas
+**The Problem**: OpenClaw proved the value of single-agent automation, but complex tasks require **multi-agent collaboration**—just as a company relies on a team with different roles rather than one all-capable employee. The 2026 trend is from "Cambrian Explosion" (model diversity) to "Species Convergence" (**orchestration and integration**).
 
-* **Event Interception**:
-  
-  - Hook into `mofa-kernel` message bus to capture all agent events
-  - Serialize message flow, state transitions, and tool calls
-  - Efficient storage format for long-running sessions
-  - Define a clear, stable Hook API that becomes part of mofa-rs's public contract
+**The Solution**: **Cognitive Swarm Orchestrator** is the "brain center" of the MoFA ecosystem. It doesn't execute tasks directly, but:
+1. **Understand Tasks** → Decompose into subtasks
+2. **Form Teams** → Dynamic agent capability matching
+3. **Orchestrate Collaboration** → Select optimal coordination pattern
+4. **Supervise Execution** → Via Smith observability
+5. **Govern Decisions** → Human approval at critical nodes
 
-* **Timeline Visualization**:
-  
-  - Makepad-integrated or web-based timeline view
-  - See which agent sent what message to whom, when
-  - Filter by agent, message type, or time range
-  - Zoom in/out from millisecond to hour scale
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     MoFA Ecosystem Integration                   │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐   ┌─────────────────────────────────────────┐  │
+│  │   Gateway   │←→│         Cognitive Swarm Orchestrator      │  │
+│  │ (Capability)│   │  ┌─────────┐ ┌─────────┐ ┌──────────┐   │  │
+│  └─────────────┘   │  │ Task    │ │ Swarm   │ │  HITL    │   │  │
+│                    │  │ Analyzer│ │ Composer│ │ Governor │   │  │
+│  ┌─────────────┐   │  └─────────┘ └─────────┘ └──────────┘   │  │
+│  │    SDK     │←→│       ↓            ↓            ↓         │  │
+│  │ (Polyglot) │   │  ┌─────────────────────────────────────┐ │  │
+│  └─────────────┘   │  │     Coordination Patterns Engine     │ │  │
+│                    │  │  Sequential │ Parallel │ Debate │ ... │ │  │
+│  ┌─────────────┐   │  └─────────────────────────────────────┘ │  │
+│  │   Smith    │←→└─────────────────────────────────────────┘  │
+│  │(Observability)│                                             │
+│  └─────────────┘                                               │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-* **State Inspection**:
-  
-  - Capture agent state snapshots at key points
-  - Diff view: compare agent state before/after message handling
-  - Inspect memory, context, and internal variables
+**Core Modules**:
 
-* **Time-Travel Debugging**:
-  
-  - Replay recorded sessions at variable speed
-  - Pause, step forward/backward through execution
-  - Set breakpoints on specific message patterns
-  - Re-run specific agent with modified input
+**1. Task Analyzer**
+- LLM-powered task decomposition: Complex task → subtask DAG
+- Dependency analysis and critical path identification
+- Subtask difficulty and risk rating (for HITL decisions)
+- Structured execution plan output
 
-* **Vibe Coding Support**:
-  
-  - Load and debug agents generated by LLMs without modification
-  - Identify common failure patterns in vibe-coded agents
-  - Export recordings for bug reports or as context for LLM-assisted fixing
+**2. Swarm Composer**
+- **Dynamic team formation**: Auto-match based on agent capability registry
+- **7 coordination patterns**: Sequential, Parallel, Debate, Consensus, MapReduce, Supervision, Routing
+- **LLM pattern recommendation**: Auto-select optimal pattern based on task characteristics
+- **Load balancing**: Consider agent busyness, success rate, expertise
 
-* **Integration**:
-  
-  - Optional Studio panel for seamless development workflow
-  - Export recordings for bug reports or documentation
+**3. HITL Governor**
+- **5-phase Secretary pattern**: Receive → Clarify → Schedule → Monitor → Report
+- **Intelligent approval routing**: Route to appropriate approvers based on risk level
+- **Context assembly**: Auto-summarize key info before human review
+- **AI-assisted decisions**: Generate decision suggestions and risk analysis
+- **Escalation mechanism**: Auto-escalate on timeout/dispute
 
-### MVP
+**4. Governance Layer**
+- **SLA management**: Deadline tracking, delay alerts
+- **Audit trail**: Complete decision chain recording (compliance-ready)
+- **Multi-channel notifications**: WebSocket, Email, Slack, Telegram, DingTalk
+- **RBAC permissions**: Role definitions, capability grants
 
-- Event capture hooks in `mofa-kernel`
-- Durable storage format with schema versioning
-- CLI replay capable of deterministic step-through for recorded sessions
+**5. Ecosystem Integration**
+- **Gateway integration**: Access physical/digital world via capability APIs (Speaker, Camera, Sensor, etc.)
+- **Smith integration**: Auto-report trace data, evaluation feedback for optimization
+- **SDK integration**: Python/Go/Kotlin/Swift orchestration APIs
+
+**6. Plugin Marketplace Core** (New)
+- **Dependency Resolution**: SemVer-compatible dependency graph solver with conflict detection
+- **Version Management**: Multiple versions, deprecation, latest resolution
+- **Trust Scoring**: Community ratings, download counts, security audits
+- **Signature Verification**: Ed25519 cryptographic signatures for plugin authenticity
+- **Capability Composition**: Multi-plugin synergy analysis
+
+**7. Semantic Agent Discovery** (New)
+- **Embedding Matching**: Vector-based agent capability matching
+- **Query Expansion**: LLM-powered task query transformation and multi-query
+- **Hybrid Retrieval**: Dense vectors + BM25 sparse retrieval
+- **Capability Registry API**: Agent capability publish, search, discovery endpoints
+
+### Expected Outcomes (Deliverables)
+
+**Phase 1: Core Orchestration Engine (Weeks 1-4)**
+- `mofa-orchestrator` crate foundation
+- `TaskAnalyzer`: Task decomposition, DAG generation
+- `SwarmComposer`: Dynamic team formation, capability matching
+- Basic coordination patterns: Sequential, Parallel
+
+**Phase 2: Coordination Patterns & HITL (Weeks 5-10)**
+- Complete 7 coordination patterns implementation
+- `HITLGovernor`: 5-phase Secretary lifecycle
+- Approval workflow engine: Role routing, escalation mechanism
+- AI-assisted decisions: Context assembly, suggestion generation
+
+**Phase 3: Governance & Ecosystem Integration (Weeks 11-16)**
+- `GovernanceLayer`: SLA management, audit trail
+- Multi-channel notification adapters (Slack, Telegram, Email, DingTalk)
+- Gateway integration: Capability API calls
+- Smith integration: Trace data reporting, evaluation feedback
+
+**Phase 4: SDK & Production Ready (Weeks 17-20)**
+- Orchestration API polyglot bindings (Python/Go/Kotlin/Swift)
+- REST API for swarm status, approval queue, audit logs (integrated with Observatory for visualization)
+- CLI tools: `mofa swarm deploy`, `mofa swarm status`
+- Docker Compose deployment
+- Documentation: Orchestration guide, best practices, integration examples
+
+**Phase 5: Plugin Marketplace & Semantic Discovery (Weeks 21-26)**
+- SemVer dependency resolver with conflict detection
+- Ed25519 signature verification system
+- Trust scoring and security audit framework
+- Agent capability registry API with semantic search
+- Embedding matching and query expansion
+- Hybrid retrieval (Dense + BM25) integration
+
+### Minimum Viable Product (MVP)
+
+Participants must deliver the following MVP before the bonding period ends:
+- Running orchestration service with task decomposition and subtask scheduling
+- At least 2 coordination patterns (Sequential + Parallel) fully implemented
+- Basic HITL flow: Manual approval API (visualization via Observatory integration)
+- Gateway integration demo (access devices via capability API)
+- Simple CLI demo: `mofa swarm run examples/swarm_demo.yaml`
+- Basic dependency resolution (SemVer)
+- Agent capability registry with simple search
 
 ### Stretch Goals
 
-- Rich timeline UI interactions and breakpoint UX
-- LLM-assisted failure pattern analysis
-
-### Out of Scope
-
-- UI-only trace viewer without reliable replay core
-- Unversioned ad-hoc trace formats
+- **Advanced patterns**: LLM-optimized Debate and Consensus modes
+- **Adaptive scheduling**: Learning-based task assignment from historical data
+- **Cross-cluster orchestration**: Multi-tenant, multi-region swarm collaboration
+- **Deep Smith integration**: Orchestration quality evaluation, auto pattern recommendation
+- **Declarative DSL**: YAML-defined swarm orchestration rules
 
 ### Acceptance Criteria
 
-- Same input + same runtime version can replay key failure traces deterministically
-- Schema versioning and migration notes are documented
-- CLI replay and at least one UI path are available
+- [ ] Support at least 5 coordination patterns, dynamically selectable via API
+- [ ] Task decomposition generates valid DAG with dependency-aware parallel execution
+- [ ] Complete HITL flow: Approval request → Human response → Execution continuation
+- [ ] Audit trail covers all critical decision nodes
+- [ ] Gateway integration: Agents can access devices via capability API
+- [ ] Smith integration: Trace data auto-reported
+- [ ] Unit test coverage ≥ 70%, integration tests cover core scenarios
+- [ ] Reproducible deployment documentation and demo scripts
+- [ ] Dependency resolution supports SemVer, conflict detection accuracy 100%
+- [ ] Signature verification prevents plugin tampering
+- [ ] Semantic search precision ≥ 80% (based on benchmarks)
+- [ ] Trust scoring system fully implemented
 
-### Repo Landing Plan
+### Comparison with Competitors
 
-- **Main landing repo**: `mofa` (`mofa-kernel` / `mofa-monitoring`)
-- **Optional UI integration**: `mofa-studio`
+| Feature | OpenClaw | ZeroClaw | **This Project (Swarm Orchestrator)** |
+|---------|----------|----------|--------------------------------------|
+| **Positioning** | Single-agent automation | Lightweight runtime | **Multi-agent orchestration** |
+| **Execution Mode** | Independent | Independent | **Collaborative orchestration** |
+| **HITL** | Basic | None | **Full governance flow** |
+| **Observability** | Basic logs | None | **Smith integration** |
+| **Capability Access** | Limited | None | **Gateway integration** |
+| **Polyglot** | None | None | **SDK integration** |
 
-#### Use Case
+### Skills Required
 
-A developer vibe-codes a 5-agent workflow. It works in simple tests but fails intermittently with real data. With the recorder:
+- **Required**: Strong Rust programming (async/await, trait design)
+- **Required**: Understanding of distributed systems and coordination patterns
+- **Required**: Understanding of DAG and task scheduling principles
+- **Preferred**: LLM application development experience (prompt engineering, agent patterns)
+- **Preferred**: Workflow engine or orchestration system experience
+- **Preferred**: Notification systems and message queue experience
 
-1. Load the vibe-coded agents into mofa-rs with recording enabled
-2. When failure occurs, open the trace
-3. See exact message sequence leading to error
-4. Inspect agent state at last known good point
-5. Replay with modifications to test fixes
-6. Export the trace as context for LLM to generate a fix
+### Difficulty
 
-#### Refs
+**High** (350 hours)
 
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-kernel
-* https://github.com/mofa-org/mofa/tree/main/crates/mofa-monitoring
+### Getting Started
 
-__Skills Required__: Rust, data visualization, systems design, debugging tools
+1. **Review existing code**:
+   - https://github.com/mofa-org/mofa/tree/main/examples/secretary_agent - Secretary Agent implementation
+   - https://github.com/mofa-org/mofa/tree/main/examples/multi_agent_coordination - Multi-agent coordination examples
 
-__Time Estimate__: 175 hours (medium project size)
+2. **Study reference platforms**:
+   - https://github.com/OpenClaw/OpenClaw - OpenClaw automation patterns
+   - https://github.com/ZeroClaw/zeroclaw - ZeroClaw lightweight runtime
 
-__Difficulty__: Hard
+3. **Complete micro-tasks**:
+   - Implement a simple task decomposer (LLM-powered)
+   - Design 2 coordination pattern schedulers (Sequential, Parallel)
+   - Build a basic approval workflow prototype
+
+4. **Prepare proposal**:
+   - Describe your understanding of swarm orchestration
+   - Propose technical approach for Gateway/Smith integration
+   - Estimate phase durations and define milestones
+
+### Mentors
+-- lijingrs (AmosLi)
+-- BH3GEI (Yao Li)
 
 ---
 
-## Idea 5: MoFA Input — Inference Stack Migration to MoFA's Native Inference Layer
+## Project 6: Cognitive Agent Testing & Evaluation Platform — Testing, Evaluation & Quality Assurance for AI Agents
 
-### Abstract
+### Reference Platforms
 
-[MoFA Input](https://github.com/mofa-org/mofa-input) is a macOS global voice input method that runs entirely on-device. It currently uses llama.cpp with GGUF models for ASR (Whisper) and LLM (Qwen) inference via a C++ interop layer. This project migrates the inference stack to MoFA's own native Rust inference layer (currently backed by [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) on macOS, see Idea 3), replacing the C++ llama.cpp backend entirely.
+**LangSmith** — LangChain's observability and evaluation platform, but lacks systematic Agent testing framework.
 
-Why migrate? Pure Rust eliminates the C++ interop complexity, MLX's Metal GPU acceleration is faster than llama.cpp on Apple Silicon, and aligning with MoFA's pluggable inference backend (Idea 3) ensures MoFA Input benefits from any future backend improvements without additional migration work.
+**TruLens** — LLM application evaluation tool, focused on RAG evaluation with limited Agent capabilities.
 
-__Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
+**Promptfoo** — Prompt testing tool, but doesn't support Agent behavior testing.
 
-### Scope Options
+**AgentBench** — Agent benchmark framework, but only provides evaluation datasets, not a testing framework.
 
-- **Scoped option (90h)**: ASR migration + interface layer integration
-- **Full option (175h)**: ASR + LLM + full C++ to Rust migration
+**DeepEval** — LLM evaluation framework, lacks Agent-specific testing capabilities.
 
-### Rollback Strategy (Required)
+This project builds a **Rust-native Agent Testing & Evaluation Platform**, filling the gap all Agent frameworks have in quality assurance—just as software testing (JUnit/pytest) is to software engineering, Agent testing frameworks are equally important for Agent development.
 
-- Keep legacy path behind feature flags during migration
-- If latency/accuracy regress beyond agreed thresholds, system must switch back safely
+### Brief Description
 
-### Goals & Ideas
+Build an **Agent Testing & Evaluation Platform** that implements: Agent behavior unit testing framework, regression testing system, performance benchmarking, security & adversarial testing, alignment evaluation, A/B testing framework, canary deployment, metrics library, with deep integration into MoFA's Memory System, Orchestrator, and Observatory—making Agent development as testable, verifiable, and trustworthy as software engineering.
 
-* **ASR Migration**: Replace the current llama.cpp-based Whisper ASR with MoFA's inference layer (e.g., `funasr-mlx` or `funasr-nano-mlx` on macOS). Validate accuracy and latency against the current implementation
-* **LLM Migration**: Replace Qwen GGUF inference with MoFA's inference layer (e.g., `qwen3-mlx` on macOS, safetensors format). Ensure streaming token output works with the existing UI
-* **C++→Rust Migration**: Replace the existing C++ llm_server (llama.cpp) with pure Rust inference calls via MoFA's backend abstraction (Idea 3), eliminating the C++ interop layer. Maintain the current macOS input method architecture (Fn hotkey, floating bubble, history window)
-* **Performance Benchmarking**: Compare latency, memory usage, and accuracy before and after migration on representative hardware (M1/M2/M3/M4)
-* **Model Management**: Integrate with `~/.mofa/models/` model storage and leverage OminiX-MLX's safetensors format exclusively
+### Detailed Description
 
-### MVP
+**Agent development faces the same challenges software engineering faced 50 years ago**—without testing frameworks, you can only "run it and see." LangChain has LangSmith, but it's primarily an observability tool, not a testing framework; other frameworks lack systematic testing capabilities entirely. This project builds **Cognitive Agent Testing & Evaluation Platform**, making MoFA the first Agent framework with a complete quality assurance system.
 
-- Complete the selected scope option with measurable benchmark report
-- Add feature-flag rollback path to legacy inference stack
-- Ensure compatibility with current MoFA Input interaction model
+**Architecture**:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                  Cognitive Agent Testing & Evaluation Platform              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                        Test Definition Layer                          │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ Agent Test  │ │ Scenario    │ │ Mock        │ │ Test Data      │  │  │
+│  │  │ Cases DSL   │ │ Builder     │ │ Framework   │ │ Generator      │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ Assertion   │ │ Expectation │ │ Golden      │ │ Parameterized  │  │  │
+│  │  │ Library     │ │ Matchers    │ │ Responses   │ │ Tests          │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                              ↓ Test Execution ↓                            │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                      Test Execution Engine                            │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ Test Runner │ │ Parallel    │ │ Determinism │ │ State           │  │  │
+│  │  │ (Async)     │ │ Execution   │ │ Control     │ │ Isolation       │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ LLM Mock    │ │ Tool Mock   │ │ Time Travel │ │ Record/Replay   │  │  │
+│  │  │ Server      │ │ Server      │ │ (Memory)    │ │ System          │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                              ↓ Test Results ↓                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                      Evaluation & Metrics Layer                       │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ Accuracy    │ │ Consistency │ │ Safety      │ │ Alignment      │  │  │
+│  │  │ Metrics     │ │ Metrics     │ │ Metrics     │ │ Metrics        │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ Performance │ │ Cost        │ │ Latency     │ │ Quality        │  │  │
+│  │  │ Benchmarks  │ │ Analysis    │ │ Percentiles │ │ Scores         │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                              ↓ Reports & Actions ↓                        │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                     Deployment & CI/CD Integration                    │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ A/B Testing │ │ Canary      │ │ Rollback    │ │ Gate            │  │  │
+│  │  │ Framework   │ │ Deployment  │ │ Mechanism   │ │ Enforcement     │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐  │  │
+│  │  │ Report      │ │ Alerting    │ │ Trend       │ │ GitHub/GitLab  │  │  │
+│  │  │ Generator   │ │ System      │ │ Analysis    │ │ Integration    │  │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Core Modules**:
+
+**1. Test Definition Layer**
+- **Agent Test DSL**: Declarative test case definition, similar to Jest/pytest style
+- **Scenario Builder**: Build complex multi-turn dialogue scenarios, tool calling scenarios, multi-agent collaboration scenarios
+- **Mock Framework**: Mock LLM responses, Mock tool execution, Mock external APIs
+- **Test Data Generator**: Auto-generate variant test cases, boundary conditions, adversarial samples
+- **Assertion Library**: Agent behavior assertions (response contains, tool call correct, state change as expected)
+- **Expectation Matchers**: Semantic matching, fuzzy matching, structured matching
+- **Golden Responses**: Record and replay expected responses
+- **Parameterized Tests**: Same test case supports multiple input parameters
+
+**2. Test Execution Engine**
+- **Async Test Runner**: Support concurrent execution of large number of tests
+- **Parallel Execution**: Multi-thread/multi-process test execution
+- **Determinism Control**: Fixed random seed, Mock time, Mock LLM output
+- **State Isolation**: Independent environment for each test case
+- **LLM Mock Server**: Simulate LLM API, support preset responses and rule-based responses
+- **Tool Mock Server**: Simulate tool execution, support preset results
+- **Time Travel**: Replay historical states of Memory System
+- **Record/Replay System**: Record real interactions, replay for testing
+
+**3. Evaluation & Metrics Layer**
+- **Accuracy Metrics**: Task completion rate, tool call accuracy, information extraction accuracy
+- **Consistency Metrics**: Response consistency for same input, behavioral stability
+- **Safety Metrics**: Refusal rate for harmful requests, no sensitive info leakage rate
+- **Alignment Metrics**: Instruction following degree, value alignment
+- **Performance Benchmarks**: Throughput, latency distribution, resource consumption
+- **Cost Analysis**: Token consumption, API call count, cost estimation
+- **Latency Percentiles**: P50/P90/P99 latency statistics
+- **Quality Scores**: LLM-as-Judge, human evaluation interface
+
+**4. Deployment & CI/CD Integration**
+- **A/B Testing Framework**: Traffic splitting, metric comparison, statistical significance testing
+- **Canary Deployment**: Small traffic validation, automatic rollback mechanism
+- **Rollback Mechanism**: Automatic rollback to stable version based on metrics
+- **Gate Enforcement**: Block deployment if tests fail
+- **Report Generator**: HTML/JSON/JUnit format reports
+- **Alerting System**: Metric anomaly alerts, regression alerts
+- **Trend Analysis**: Historical metric trends, performance degradation detection
+- **GitHub/GitLab Integration**: PR checks, CI pipeline integration
+
+**5. Advanced Testing Capabilities**
+- **Adversarial Testing**: Auto-generate adversarial samples, jailbreak attack testing, prompt injection testing
+- **Boundary Testing**: Extreme inputs, extra-long context, concurrency stress
+- **Regression Testing**: Auto-detect behavioral regressions, Golden Response comparison
+- **Exploratory Testing**: Random exploration of Agent behavior space
+- **Fault Injection**: Simulate LLM failures, network failures, tool failures
+
+**6. MoFA Ecosystem Integration**
+- **Memory System Integration**: Test memory persistence, memory retrieval accuracy
+- **Orchestrator Integration**: Test multi-agent collaboration, task decomposition
+- **Observatory Integration**: Correlate test results with observability
+- **Gateway Integration**: Test IoT scenarios, physical world interaction
+
+### Expected Outcomes
+
+**Phase 1: Testing Framework Foundation (Weeks 1-5)**
+- `mofa-testing` crate foundation
+- Test case definition DSL
+- Basic assertion library
+- Test runner (sync)
+- Simple report generation
+
+**Phase 2: Mock System (Weeks 6-10)**
+- LLM Mock Server implementation
+- Tool Mock framework
+- Determinism control (seed, time Mock)
+- Test isolation mechanism
+- Record/replay system foundation
+
+**Phase 3: Evaluation Metrics Library (Weeks 11-16)**
+- Accuracy, consistency, safety metrics
+- Performance benchmarking framework
+- LLM-as-Judge integration
+- Metric aggregation and statistics
+- Observatory integration
+
+**Phase 4: Advanced Testing Capabilities (Weeks 17-22)**
+- Adversarial test generator
+- Boundary condition testing
+- Regression testing system
+- Fault injection framework
+- Parameterized test support
+
+**Phase 5: CI/CD Integration (Weeks 23-28)**
+- A/B testing framework
+- Canary deployment support
+- GitHub/GitLab CI integration
+- Gate system
+- Alerting and notification
+
+**Phase 6: Ecosystem Integration & Optimization (Weeks 29-35)**
+- Memory System testing support
+- Orchestrator testing support
+- Gateway testing support (IoT Mock)
+- Performance optimization (large-scale testing)
+- Complete documentation and examples
+
+### Minimum Viable Product (MVP)
+
+Participants must deliver the following MVP before the bonding period ends:
+- Basic test case definition DSL
+- At least 10 common assertions
+- Simple LLM Mock (preset responses)
+- Test runner + basic reports
+- Demo: Write 5+ test cases for a simple Agent
 
 ### Stretch Goals
 
-- Complete full migration if starting from scoped option
-- Broaden model compatibility and tuning presets
-
-### Out of Scope
-
-- Removing rollback path before production confidence
-- Unmeasured migration with no before/after benchmark evidence
+- **Visual Test Editor**: Web UI to edit and run tests
+- **Test Case Recommendation**: Auto-recommend test cases based on Agent behavior
+- **Cross-Framework Compatibility**: Support testing LangChain/CrewAI Agents
+- **Fuzzing Tests**: Auto-discover Agent boundary conditions
+- **Evaluation Dataset**: Build open-source Agent evaluation dataset
 
 ### Acceptance Criteria
 
-- Migration path is functional and benchmarked on representative hardware
-- Rollback path is tested and documented
-- No critical regression in core user flow (voice input to text output)
+- [ ] Support at least 50 assertion types
+- [ ] LLM Mock supports OpenAI/Anthropic/Gemini protocols
+- [ ] Test execution supports 1000+ concurrent tests
+- [ ] Single test execution latency < 100ms (excluding LLM calls)
+- [ ] Deterministic testing: 100% same output for same input
+- [ ] Metrics library contains at least 30 metrics
+- [ ] Support at least 5 report formats (HTML/JSON/JUnit/Allure/Markdown)
+- [ ] GitHub Actions integration available
+- [ ] Adversarial testing covers OWASP LLM Top 10
+- [ ] A/B testing supports statistical significance testing
+- [ ] Memory System integration testing available
+- [ ] Orchestrator integration testing available
+- [ ] Unit test coverage ≥ 90%
+- [ ] Documentation: Testing guide, assertion reference, CI/CD integration guide
 
-### Repo Landing Plan
+### Skills Required
 
-- **Main landing repo**: `mofa-input`
-- **Shared backend dependencies**: `mofa` inference abstractions from Idea 3
+- **Required**: Strong Rust programming (traits, macros, async/await)
+- **Required**: Understanding of software testing principles (unit testing, integration testing, mocking)
+- **Required**: Familiarity with CI/CD processes (GitHub Actions, GitLab CI)
+- **Preferred**: LLM evaluation experience (LLM-as-Judge, benchmarking)
+- **Preferred**: Security testing experience (adversarial attacks, jailbreak testing)
+- **Preferred**: A/B testing and statistical analysis experience
 
-#### Refs
+### Difficulty
 
-* https://github.com/mofa-org/mofa-input
-* https://github.com/OminiX-ai/OminiX-MLX
+**High** (350 hours)
 
-__Skills Required__: Rust, C++/Rust interop, macOS development, Apple Silicon
+### Getting Started
 
-__Time Estimate__: 90 hours (scoped) or 175 hours (full migration)
+1. **Review existing code**:
+   - https://github.com/mofa-org/mofa/tree/main/crates/mofa-kernel/src/agent - Agent core
+   - https://github.com/mofa-org/mofa/tree/main/crates/mofa-foundation - Foundation implementations
 
-__Difficulty__: Medium
+2. **Study reference platforms**:
+   - https://github.com/traceloop/openllmetry - OpenTelemetry for LLM
+   - https://github.com/promptfoo/promptfoo - Prompt testing tool
+   - https://github.com/confident-ai/deepeval - LLM evaluation framework
+   - https://github.com/EvalStore/EvalStore - Evaluation store
 
----
+3. **Complete micro-tasks**:
+   - Implement a simple Agent test assertion library (at least 5 assertions)
+   - Implement basic LLM Mock Server (preset responses)
+   - Write test cases for a simple Agent
+   - Implement test report generation (JSON format)
 
-## Idea 6: Makepad AI Application Toolkit
+4. **Prepare proposal**:
+   - Describe your understanding of Agent testing challenges
+   - Analyze limitations of existing tools
+   - Propose your feasible architecture design
+   - Estimate phase durations and define milestones
 
-### Abstract
-
-MoFA's desktop applications (Studio, moly-ai) are built with [Makepad](https://makepad.dev/), a GPU-accelerated UI framework in Rust. Traditional "component catalog + manual composition" workflows are not enough for AI-native products: agents can generate code quickly, but cannot reliably use generic UI libraries without a task-aware UI contract.
-
-This project keeps the `makepad-ai-toolkit` name, but focuses on an **AI-native UI generation model**: agents generate structured UI intents/patches, the toolkit validates and renders them safely, and Studio/MoFA runtime can manage them in real time. The primary value is runtime integration and controllable generation, not building a large generic component list.
-
-__Mentors__: BH3GEI (Yao Li), yangrudan (CookieYang)
-
-### Goals & Ideas
-
-* **AI-Native UI Contract**:
-  
-  - Define a structured schema for agent-generated UI intents and incremental UI patches
-  - Support task-oriented primitives and composable layouts for agent products (not just low-level widget calls)
-  - Include validation rules, versioning, and clear error reporting for invalid patches
-
-* **Generation Runtime**:
-  
-  - Build a runtime path where agents can stream UI patches and Studio can apply updates in real time
-  - Add safety gates for high-risk actions (approval, reject, rollback)
-  - Preserve deterministic fallback to manual/static UI when generation fails
-
-* **MoFA Integration (Primary Deliverable)**:
-  
-  - Integrate with `mofa-studio` so generated UI can be inspected, controlled, and updated at runtime
-  - Integrate with `mofa` runtime events (agent state, tool calls, trace metadata) as first-class UI data sources
-  - Keep Idea 2 (GUI orchestration) and Idea 6 decoupled: this idea provides generation/runtime capability, not orchestration product scope
-
-* **Component Work (Limited and Purpose-Driven)**:
-  
-  - Add or refine base components only when required by AI-native generation flows
-  - Reuse existing Makepad ecosystem work whenever possible
-
-### MVP
-
-- Define and document the AI-native UI generation contract (schema + patch protocol + validation rules)
-- Implement one end-to-end runtime demo: `agent output -> UI patch stream -> Studio render -> user feedback -> runtime update`
-- Integrate at least 2 real MoFA workflows where UI is generated/updated at runtime
-- Provide guardrail behavior (approve/reject/rollback) with tests and reproducible demo steps
-
-### Stretch Goals
-
-- Multi-provider generation adapters and richer policy controls
-- Better prompt-to-UI templates and domain presets
-- Publish crate and maintain versioned changelog/release notes
-
-### Out of Scope
-
-- Building a large generic component catalog without AI-generation runtime value
-- Re-implementing existing sibling projects (for example A2UI renderer work) from scratch
-- Component gallery with no production integration
-
-### Acceptance Criteria
-
-- At least 2 MoFA workflows support runtime AI-generated UI updates in `mofa-studio`
-- Invalid/unsafe UI patches are rejected with clear errors and safe fallback behavior
-- Approve/reject/rollback paths are test-covered and reproducible
-- Toolkit contract/runtime APIs are documented and reusable by contributors
-
-### Repo Landing Plan
-
-- **Main landing repo**: `makepad-ai-toolkit` (new repo)
-- **Required production integration**: `mofa-studio`
-- **Required runtime integration**: `mofa` (event/trace interfaces)
-
-#### Refs
-
-* https://github.com/mofa-org/mofa-studio
-* https://github.com/mofa-org/makepad-chart
-* https://github.com/mofa-org/makepad-d3
-* https://github.com/mofa-org/makepad-element
-* https://github.com/ZhangHanDong/makepad-component
-* https://makepad.dev/
-
-__Skills Required__: Rust, UI/UX design, Makepad framework
-
-__Time Estimate__: 90 hours (8 weeks)
-
-__Difficulty__: Medium
+### Mentors
+- lijingrs (AmosLi)
+- yangrudan (CookieYang)
 
 ---
 
