@@ -230,6 +230,7 @@ Our journey started with a Python/Dora-based prototype that taught us what works
 - README: [zh/README.md](./zh/README.md)
 - Project ideas: [zh/ideas-list.md](./zh/ideas-list.md)
 - Proposal template: [zh/proposal-template.md](./zh/proposal-template.md)
+- proposal-template:[zh/proposal-template.md](.zh/proposal-template.md)
 
 ## Directory Notes
 

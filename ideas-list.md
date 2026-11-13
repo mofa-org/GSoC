@@ -18,7 +18,7 @@ All current ideas are listed below in one table (ordered by idea number).
 | 2. Cognitive Observatory | `Rust` `Observability` `Evaluation` | [mofa-studio](https://github.com/mofa-org/mofa-studio) | [mofa](https://github.com/mofa-org/mofa) (`mofa-monitoring`), [makepad-chart](https://github.com/mofa-org/makepad-chart), [makepad-d3](https://github.com/mofa-org/makepad-d3) |
 | 3. Cognitive Compute Mesh | `Rust` `Systems Programming` `Local + Cloud Inference` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-local-llm](https://github.com/mofa-org/mofa-local-llm), [OminiX-MLX](https://github.com/OminiX-ai/OminiX-MLX) |
 | 4. Cognitive Workflow Engine | `Rust` `Workflow Orchestration` `DSL` | [mofa](https://github.com/mofa-org/mofa) (`mofa-kernel`, `mofa-foundation`) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
-| 5. Cognitive Swarm Orchestrator | `Rust` `Multi-Agent` `HITL Governance` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa-sdk](https://github.com/mofa-org/mofa/tree/main/crates/mofa-sdk) |
+| 5. Cognitive Swarm Orchestrator | `Rust` `Multi-Agent` `HILT Governance` | [mofa](https://github.com/mofa-org/mofa) (`mofa-foundation`, `mofa-runtime`) | [mofa-studio](https://github.com/mofa-org/mofa-studio), [mofa-sdk](https://github.com/mofa-org/mofa/tree/main/crates/mofa-sdk) |
 | 6. Cognitive Agent Testing & Evaluation Platform | `Rust` `Testing Framework` `Quality Evaluation` | [mofa](https://github.com/mofa-org/mofa) | [mofa-studio](https://github.com/mofa-org/mofa-studio) |
 
 ## CFP Index (English Only)
@@ -62,7 +62,7 @@ These are concrete, self-contained tasks across the MoFA codebase. They are a go
 | 24  | Complete `mofa-cli` subcommand implementations — `agent logs`, `plugin install/uninstall`, plugin repository integration (currently stub commands) | [mofa](https://github.com/mofa-org/mofa) |
 | 25  | Implement OpenAI/Anthropic-compatible API Gateway — `/v1/chat/completions` endpoint, multi-backend load balancing, rate limiting, request routing | [mofa](https://github.com/mofa-org/mofa) |
 | 26  | Implement production-grade observability — Prometheus metrics, OpenTelemetry tracing, structured logging, alerting rules | [mofa](https://github.com/mofa-org/mofa) |
-| 27  | Implement complete RAG Pipeline — Document loading, chunking, embedding, vector storage (Qdrant), retrieval with full workflow | [mofa](https://github.com/mofa-org/mofa) |
+| 27  | Implement complete RAG Pipeline — Document loading, chunking, embedding, vector storage (Quant), retrieval with full workflow | [mofa](https://github.com/mofa-org/mofa) |
 | 28  | Implement Agent testing framework — Unit testing, integration testing, Mock tools, standard test utilities for Agent development | [mofa](https://github.com/mofa-org/mofa) |
 | 29  | Agent state persistence and recovery — Checkpoint/restore Agent execution state for fault tolerance and resumption | [mofa](https://github.com/mofa-org/mofa) |
 | 30  | Streaming response optimization — Unified abstraction for SSE/WebSocket streaming across LLM providers | [mofa](https://github.com/mofa-org/mofa) |
