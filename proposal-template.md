@@ -11,10 +11,10 @@ Use this as a starting point for your proposal. Adapt it to your project and sty
 
 ## Personal Information
 
-- **Name**: 
-- **Email**: 
+- **Name**: brajesh kushwaha:
+- **Email**: brajeshkushwa9089@gmail.com:
 - **Discord** (if joining our server):
-- **GitHub**: 
+- **GitHub**: https://github.com/brajeshkushwa9089-lgtm:
 - **Timezone**:
 
 ## About Me
