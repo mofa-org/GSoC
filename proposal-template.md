@@ -11,10 +11,10 @@ Use this as a starting point for your proposal. Adapt it to your project and sty
 
 ## Personal Information
 
-- **Name**:
-- **Email**:
+- **Name**: 
+- **Email**: 
 - **Discord** (if joining our server):
-- **GitHub**:
+- **GitHub**: 
 - **Timezone**:
 
 ## About Me
