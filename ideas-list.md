@@ -252,9 +252,9 @@ Participants must deliver the following MVP before the bonding period ends:
 - **Advanced routing**: Inference-aware routing (GPU queue depth, KV cache utilization)
 - **Complete voice pipeline**: Streaming audio, continuous dialogue, interruption control
 - **Observability integration**: OpenTelemetry tracing, Prometheus metrics, Grafana dashboard
-- **More adapters**: Zigbee, Socket.IO, vendor cloud APIs (Xiaomi, Tuya)
+- **More adapters**: Zigged, Socket.IO, vendor cloud APIs (Xiaomi, Tuya)
 - **Digital twin framework**: Device simulation, scenario replay
-
+ 
 ### Acceptance Criteria
 
 - [ ] Agent-side code does not contain specific protocol details, only accesses services through capability APIs
@@ -301,7 +301,7 @@ Participants must deliver the following MVP before the bonding period ends:
    - Estimate phase durations and define milestones
 
 ### Mentors
-  - lijingrs (AmosLi)
+  - linings (AmosLi)
   - yangrudan (CookieYang)
 
 ---
@@ -504,7 +504,7 @@ This project is not just building an inference gateway—it's establishing the *
 
 **Core Proposition**: Today's AI inference is fragmented into silos—OpenAI, Anthropic, local Ollama, cloud vLLM, edge devices—each a separate world. Cognitive Compute Mesh builds a **Unified Inference Federation**, eliminating vendor lock-in and establishing an open ecosystem.
 
-**Mentors**: BH3GEI (Yao Li), lijingrs (AmosLi)
+**Mentors**: BH3GEI (Yao Li), linings (AmosLi)
 
 ### Problem & Opportunity
 
